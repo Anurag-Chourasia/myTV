@@ -1,0 +1,155 @@
+//
+//  Localizable.strings
+//  myTV
+//
+//  Created by Anurag Chourasia on 24/01/26.
+//
+
+
+/* =========================
+   App
+   ========================= */
+
+"app.name" = "My TV";
+"app.cancel" = "Cancel";
+"app.retry" = "Retry";
+"app.ok" = "OK";
+"app.grouping.name" = "Name";
+"app.grouping.country" = "Country";
+"app.grouping.category" = "Category";
+"app.offline.banner" = "You’re offline. Showing cached content.";
+"app.showLess" = "Show Less";
+"app.readMore" = "Read More";
+"app.appearance.color.system" = "System";
+"app.appearance.color.light" = "Light";
+"app.appearance.color.dark" = "Dark";
+"app.search" = "Search";
+"app.normalize.regex" = "[^a-z0-9]";
+"app.developer.firstName" = "Anurag";
+/* =========================
+   Errors
+   ========================= */
+
+"error.generic.title" = "Something went wrong";
+
+/* =========================
+   Loading
+   ========================= */
+
+"loading.preparing.stream" = "Preparing stream…";
+
+/* =========================
+   Channel List – Alerts
+   ========================= */
+
+"channel.alert.clear.cache.title" = "Clear cached channel data?";
+"channel.alert.clear.filters.title" = "Clear filters and grouping?";
+"channel.alert.remove.favorites.title" = "Remove all favorites?";
+
+"channel.alert.clear.cache.confirm" = "Clear Cache";
+"channel.alert.clear.filters.confirm" = "Clear Filters";
+"channel.alert.remove.favorites.confirm" = "Remove Favorites";
+
+/* =========================
+   Channel List - Menu Sections
+   ========================= */
+"channel.menu.section.sortAndFilter.title" = "Sort & Filter";
+"channel.menu.section.group_by.title" = "Group By";
+"channel.menu.section.sorting.title" = "Sorting";
+"channel.menu.section.Filter.title" = "Filter";
+"channel.filter.countries" = "Countries";
+"channel.filter.categories" = "Categories";
+"channel.menu.section.section.title" = "Section";
+"channel.menu.section.channel.title" = "Channel";
+
+"channel.menu.section.actions" = "Actions";
+"channel.menu.section.layout" = "Layout";
+"channel.menu.section.appearance" = "Appearance";
+"channel.menu.section.about" = "About";
+
+"channel.menu.action.clearCache" = "Clear Cache";
+"channel.menu.action.clearFilters" = "Clear Filters & Grouping";
+"channel.menu.action.removeFavorites" = "Remove All Favorites";
+
+"channel.scope.all" = "All Channels";
+"channel.scope.favorites" = "Favorites";
+"channel.sort.order.ascending" = "A-Z ↓";
+"channel.sort.order.descending" = "Z-A ↑";
+
+"channel.layout.list" = "List";
+"channel.layout.grid" = "Grid";
+"channel.layout.title" = "Layout";
+/* =========================
+   Channel List – Empty / States
+   ========================= */
+
+"channel.empty.title" = "No Channels";
+"channel.empty.message" = "There are no channels available right now.";
+"channel.no.results.title" = "No Results";
+"channel.no.results.message" = "Try changing your search, filters, or tabs.";
+
+/* =========================
+   Multi Select View
+   ========================= */
+"multiSelectView.section.selected" = "Selected";
+"multiSelectView.section.all" = "All";
+
+/* =========================
+   Stream List View
+   ========================= */
+
+"stream.list.empty.title" = "No Streams Available";
+"stream.list.empty.message" = "This channel does not have any playable streams.";
+"stream.player.error.title" = "Playback Error";
+"stream.player.error.noWorkingStreams" = "No working streams found.";
+"stream.player.error.invalidURL" = "Invalid stream URL.";
+"stream.player.error.cannotPlay" = "This stream cannot be played.";
+"stream.player.error.failed" = "Playback failed.";
+
+/*  =========================
+    About Screen
+    ========================= */
+
+"about.title" = "About";
+
+/* Alerts */
+"about.alert.error.title" = "Error";
+"about.alert.error.ok" = "OK";
+"about.alert.error.invalidLink" = "Unable to open this link.";
+
+/* Menu */
+"about.menu.layout" = "Layout";
+"about.menu.appearance" = "Appearance";
+
+/* About – Developer */
+
+"about.developer.name" = "Anurag Chourasia";
+"about.developer.role" = "iOS Engineer";
+
+"about.developer.summary" =
+"Dynamic iOS Engineer with around 4 years of experience delivering high-performance, production-grade mobile applications for global brands such as Lloyds, Halifax, BOS, MBNA, and ITC Hotels.\n\nSpecialized in Swift, Objective-C, SwiftUI, and modular architectures (MVVM, MVVM-C, MVC).\n\nProven expertise in CI/CD pipelines, automated testing (unit, UI, snapshot), and Agile/Scrum collaboration.\n\nPassionate about building scalable, user-centric iOS applications.";
+
+/* App Info */
+"about.app.info.title" = "App Information";
+"about.app.name" = "My TV";
+"about.app.version.prefix" = "Version";
+
+/* Disclaimer */
+"about.disclaimer.title" = "Disclaimer";
+"about.disclaimer.text" =
+"My TV is a demo application built for educational purposes only.\n\nThis app does not host, stream, or redistribute any media content. All IPTV channel metadata is sourced from the open-source project iptv-org.\n\nContent availability, legality, and usage rights are the sole responsibility of the respective content providers.\n\nSource:\nhttps://github.com/iptv-org";
+
+/* Social */
+"about.social.title" = "Let’s Connect";
+
+"about.social.github" = "GitHub";
+"about.social.linkedin" = "LinkedIn";
+"about.social.email" = "Email";
+"about.social.gmail" = "Gmail";
+"about.social.cv" = "CV";
+
+"about.social.github.url" = "https://github.com/Anurag-Chourasia";
+"about.social.linkedin.url" = "https://www.linkedin.com/in/anurag-chourasia-b66710178/";
+"about.social.email.url" = "mailto:anuragchourasiaios@gmail.com";
+"about.social.cv.url" = "https://drive.google.com/file/d/16lYgU9C3WyBlL1Jzf__tKiaXxnsNZ_jd/view";
+
