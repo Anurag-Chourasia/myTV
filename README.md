@@ -1,6 +1,6 @@
 # myTV 📺
 
-**myTV** is a production-grade IPTV browser built with **SwiftUI**, demonstrating real-world iOS engineering practices: **Clean Architecture**, **MVVM**, async data pipelines, caching, accessibility, localization, and robust media playback.
+**myTV** is a production-grade IPTV browser built with **SwiftUI**, demonstrating real-world iOS engineering practices: **Clean Architecture**, **MVVM**, async data pipelines, caching, localization, and robust media playback.
 
 This is a **portfolio-level reference application**, designed to reflect how a modern iOS app is structured and shipped in production — not a toy demo.
 
@@ -61,8 +61,6 @@ This is a **portfolio-level reference application**, designed to reflect how a m
 ### ♿ Accessibility & UX
 - Haptic feedback for key interactions
 - Respects **Reduced Motion**
-- Dynamic Type support
-- Proper VoiceOver labels
 - Offline banner handling
 - Comprehensive empty, loading, and error states
 
@@ -244,6 +242,8 @@ Content availability, legality, and usage rights are the responsibility of the r
 ⸻
 
 ## 🚧 Roadmap
+ - Dynamic Type support
+ - Accessibility Support
  - Unit & UI tests
  - CI/CD pipeline
  - Snapshot testing
