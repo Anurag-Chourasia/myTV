@@ -31,7 +31,7 @@ final class AppDI {
         )
 
     func makeChannelListViewModel() -> ChannelListViewModel {
-        let fetchChannels = FetchChannelsInteractor(
+        let fetchChannels = DefaultFetchChannelsUseCase(
             repository: channelRepository
         )
         return ChannelListViewModel(
@@ -42,7 +42,7 @@ final class AppDI {
     }
 
     func makeStreamListViewModel() -> StreamListViewModel {
-        let fetchStreams = FetchStreamsForChannelInteractor(
+        let fetchStreams = DefaultFetchStreamsForChannelUseCase(
             repository: channelRepository
         )
         return StreamListViewModel(

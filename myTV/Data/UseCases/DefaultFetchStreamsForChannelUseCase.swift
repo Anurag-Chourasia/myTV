@@ -1,5 +1,5 @@
 //
-//  FetchStreamsForChannelInteractor.swift
+//  DefaultFetchStreamsForChannelUseCase.swift
 //  myTV
 //
 //  Created by Anurag Chourasia on 23/01/26.
@@ -10,7 +10,7 @@ protocol FetchStreamsForChannelUseCase {
     func execute(channelId: String) async throws -> [Stream]
 }
 
-final class FetchStreamsForChannelInteractor {
+final class DefaultFetchStreamsForChannelUseCase: FetchStreamsForChannelUseCase {
 
     private let repository: ChannelRepository
 

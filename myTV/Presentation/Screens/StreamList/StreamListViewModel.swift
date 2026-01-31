@@ -30,7 +30,7 @@ final class StreamListViewModel: ObservableObject {
     @Published var showOfflineBanner = false
 
     // MARK: - Dependencies
-    private let fetchStreams: FetchStreamsForChannelInteractor
+    private let fetchStreams: FetchStreamsForChannelUseCase
     private let reachability: ReachabilityService
     private let haptics: HapticService
     // MARK: - Internal
@@ -46,7 +46,7 @@ final class StreamListViewModel: ObservableObject {
 
     // MARK: - Init
     init(
-        fetchStreams: FetchStreamsForChannelInteractor,
+        fetchStreams: DefaultFetchStreamsForChannelUseCase,
         reachability: ReachabilityService,
         haptics: HapticService
     ) {

@@ -116,6 +116,9 @@ myTV
     │       └── CachedAsyncImage.swift
     │
     ├── Data
+    │   ├── Repositories
+    │   │   └── ChannelRepositoryImpl.swift
+    |   |
     │   ├── Cache
     │   │   ├── ChannelCache.swift
     │   │   └── ChannelDiskCache.swift
@@ -149,12 +152,11 @@ myTV
     │   │   └── Category.swift
     │   │
     │   ├── Repositories
-    │   │   ├── ChannelRepository.swift
-    │   │   └── ChannelRepositoryImpl.swift
+    │   │   └── ChannelRepository.swift
     │   │
     │   └── UseCases
-    │       ├── FetchChannelsInteractor.swift
-    │       └── FetchStreamsForChannelInteractor.swift
+    │       ├── DefaultFetchChannelsUseCase.swift
+    │       └── DefaultFetchStreamsForChannel.swift
     │
     ├── Presentation
     │   ├── Components
@@ -217,7 +219,7 @@ myTV
 ```
 Each top-level module has a single, well-defined responsibility.
 
-⸻
+---
 
 ## 🧪 Error & State Handling
  - Skeleton loading views
@@ -227,7 +229,7 @@ Each top-level module has a single, well-defined responsibility.
  - Safe fallbacks for all failures
  - User-friendly, localized error messaging
 
-⸻
+---
 
 ## 🧠 Data Source Disclaimer
 
@@ -239,7 +241,7 @@ All channel metadata is sourced from the open-source project:
 
 Content availability, legality, and usage rights are the responsibility of the respective content providers.
 
-⸻
+---
 
 ## 🚧 Roadmap
  - Dynamic Type support
@@ -250,7 +252,7 @@ Content availability, legality, and usage rights are the responsibility of the r
  - Performance profiling
  - Modularization using Swift Packages
 
-⸻
+---
 
 ## 👨‍💻 Author
 
@@ -259,8 +261,10 @@ Content availability, legality, and usage rights are the responsibility of the r
  - **GitHub**: https://github.com/Anurag-Chourasia
  - **LinkedIn**: https://www.linkedin.com/in/anurag-chourasia-b66710178/
 
-⸻
+---
 
 ## 📜 License
 
 **Provided for educational and portfolio demonstration purposes only.**
+
+---

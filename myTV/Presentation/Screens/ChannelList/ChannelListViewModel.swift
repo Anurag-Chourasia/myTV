@@ -116,14 +116,14 @@ final class ChannelListViewModel: ObservableObject {
     @AppStorage("channelLayout") private(set) var layout: ChannelLayout = .list
 
     // MARK: - Dependencies
-    private let fetchChannels: FetchChannelsInteractor
+    private let fetchChannels: FetchChannelsUseCase
     private let reachability: ReachabilityService
     private let haptics: HapticService
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Init
     init(
-        fetchChannels: FetchChannelsInteractor,
+        fetchChannels: DefaultFetchChannelsUseCase,
         reachability: ReachabilityService,
         haptics: HapticService
     ) {

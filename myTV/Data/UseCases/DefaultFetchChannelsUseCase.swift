@@ -1,5 +1,5 @@
 //
-//  FetchChannelsInteractor.swift
+//  DefaultFetchChannelsUseCase.swift
 //  myTV
 //
 //  Created by Anurag Chourasia on 23/01/26.
@@ -7,9 +7,10 @@
 
 protocol FetchChannelsUseCase {
     func execute() async throws -> [Channel]
+    func clearCache()
 }
 
-final class FetchChannelsInteractor: FetchChannelsUseCase {
+final class DefaultFetchChannelsUseCase: FetchChannelsUseCase {
 
     private let repository: ChannelRepository
 
@@ -20,7 +21,7 @@ final class FetchChannelsInteractor: FetchChannelsUseCase {
     public func execute() async throws -> [Channel] {
         try await repository.fetchChannels()
     }
-    
+
     public func clearCache() {
        repository.clearCache()
     }
