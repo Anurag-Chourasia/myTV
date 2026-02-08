@@ -270,14 +270,26 @@ Content availability, legality, and usage rights are the responsibility of the r
 ---
 
 ## 🚧 Roadmap
- - Dynamic Type support ✅
- - Accessibility Support ✅ (Partially)
- - Accessibility Identifiers for automation testing
- - Unit & UI tests
- - CI/CD pipeline
- - Snapshot testing
- - Performance profiling
- - Modularization using Swift Packages
+- Phase 1: Core app architecture and fully functional MVP ✅
+  - Implemented production-ready SwiftUI architecture (MVVM + DI)
+  - Built channel listing with search, grouping, sorting, favorites, and layout switching
+  - Added stream playback, image caching, offline handling, localization, and persistent preferences
+- Phase 2: Dynamic Type, accessibility UX hardening, and presentation-layer refactor ✅
+  - Added Dynamic Type support with app-wide clamp and accessibility-size handling
+  - Enforced grid-to-list fallback with alerts for auto-switch and unavailable grid actions
+  - Refactored presentation layer to move view logic/localized text into ViewModels
+- Phase 3: Accessibility full support, accessibility identifiers, and Unit/UI tests
+  - Add complete VoiceOver accessibility coverage for all user flows
+  - Add accessibility identifiers for key UI components to enable automation
+  - Add unit tests and UI tests for critical flows and regressions
+- Phase 4: CI/CD pipeline and snapshot testing
+  - Add CI pipeline for build, lint, and automated test execution
+  - Add snapshot tests for visual regression checks
+  - Add quality gates for pull requests and release readiness
+- Phase 5: Performance profiling and modularization using Swift Packages
+  - Profile startup/rendering/network performance and optimize bottlenecks
+  - Split modules into Swift Packages for scalability and reuse
+  - Improve maintainability for long-term feature growth
 
 ---
 
