@@ -92,7 +92,7 @@ private extension ChannelRepositoryImpl {
         value
             .lowercased()
             .replacingOccurrences(
-                of: L10n.App.Normalize.regex,
+                of: Localizable.App.Normalize.regex,
                 with: "",
                 options: .regularExpression
             )

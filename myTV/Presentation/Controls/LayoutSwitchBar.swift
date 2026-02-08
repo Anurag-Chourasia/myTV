@@ -13,13 +13,6 @@ enum ChannelLayout: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var title: String {
-        switch self {
-        case .list: return L10n.Channel.Layout.list
-        case .grid: return L10n.Channel.Layout.grid
-        }
-    }
-
     var icon: String {
         switch self {
         case .list: return "list.bullet"
@@ -30,27 +23,47 @@ enum ChannelLayout: String, CaseIterable, Identifiable {
 
 struct LayoutSwitchMenu: View {
 
-    @AppStorage("channelLayout")
-    private var layout: ChannelLayout = .list
+    let selectedLayout: ChannelLayout
+    let onSelectLayout: (ChannelLayout) -> Void
+    let onGridUnavailable: () -> Void
+    let isAccessibilitySize: Bool
+    let menuTitle: String
+    let titleForLayout: (ChannelLayout) -> String
 
-    private let haptics = AppDI.shared.getHaptics()
+    init(
+        selectedLayout: ChannelLayout,
+        onSelectLayout: @escaping (ChannelLayout) -> Void,
+        onGridUnavailable: @escaping () -> Void = {},
+        isAccessibilitySize: Bool = false,
+        menuTitle: String,
+        titleForLayout: @escaping (ChannelLayout) -> String
+    ) {
+        self.selectedLayout = selectedLayout
+        self.onSelectLayout = onSelectLayout
+        self.onGridUnavailable = onGridUnavailable
+        self.isAccessibilitySize = isAccessibilitySize
+        self.menuTitle = menuTitle
+        self.titleForLayout = titleForLayout
+    }
 
     var body: some View {
         Menu {
             ForEach(ChannelLayout.allCases) { option in
                 Button {
-                    guard layout != option else { return }
-                    layout = option
-                    haptics.selection()
+                    if option == .grid && isAccessibilitySize {
+                        onGridUnavailable()
+                        return
+                    }
+                    onSelectLayout(option)
                 } label: {
                     Label(
-                        option.title,
-                        systemImage: layout == option ? "checkmark" : option.icon
+                        titleForLayout(option),
+                        systemImage: selectedLayout == option ? "checkmark" : option.icon
                     )
                 }
             }
         } label: {
-            Label(L10n.Channel.Layout.title, systemImage: layout.icon)
+            Label(menuTitle, systemImage: selectedLayout.icon)
         }
     }
 }

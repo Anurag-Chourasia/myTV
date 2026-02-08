@@ -24,7 +24,7 @@ final class TypingEffectViewModel: ObservableObject {
     init(previewWordLimit: Int = 13, typingInterval: TimeInterval = 0.15) {
         self.previewWordLimit = previewWordLimit
         self.typingInterval = typingInterval
-        setText(L10n.About.Developer.summary)
+        setText(Localizable.About.Developer.summary)
     }
 
     func setText(_ text: String) {
@@ -46,6 +46,10 @@ final class TypingEffectViewModel: ObservableObject {
         currentWordIndex = min(previewWordLimit, words.count)
         let preview = words.prefix(currentWordIndex).joined(separator: " ")
         displayedText = words.count > previewWordLimit ? "\(preview)..." : preview
+    }
+
+    var toggleButtonTitle: String {
+        isExpanded ? Localizable.App.showLess : Localizable.App.readMore
     }
 
     private func startTyping() {

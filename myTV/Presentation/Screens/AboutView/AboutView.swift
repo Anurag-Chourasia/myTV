@@ -7,12 +7,14 @@
 
 
 import SwiftUI
-import Combine
 
 struct AboutView: View {
 
     // MARK: - ViewModel
     @StateObject private var viewModel: AboutViewModel
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.openURL) private var openURL
 
     // MARK: - Init
     init(viewModel: AboutViewModel) {
@@ -25,7 +27,7 @@ struct AboutView: View {
             VStack(spacing: 0) {
 
                 if viewModel.showOfflineBanner {
-                    OfflineBanner()
+                    OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
                 }
 
                 ScrollView {
@@ -40,7 +42,7 @@ struct AboutView: View {
                     }
                 }
             }
-            .navigationTitle(L10n.About.title)
+            .navigationTitle(viewModel.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 menuBar
@@ -48,12 +50,42 @@ struct AboutView: View {
         }
         .background(Color(UIColor.systemGroupedBackground))
         .alert(
-            L10n.About.Alert.Error.title,
+            viewModel.invalidLinkAlertTitle,
             isPresented: $viewModel.showAlert
         ) {
-            Button(L10n.About.Alert.Error.ok, role: .cancel) {}
+            Button(viewModel.invalidLinkAlertOk, role: .cancel) {}
         } message: {
-            Text(L10n.About.Alert.Error.invalidLink)
+            Text(viewModel.invalidLinkAlertMessage)
+        }
+        .alert(
+            viewModel.gridAlertTitle,
+            isPresented: Binding(
+                get: { viewModel.gridAlert != nil },
+                set: { if !$0 { viewModel.clearGridAlert() } }
+            )
+        ) {
+            Button(viewModel.gridAlertOk, role: .cancel) {}
+        } message: {
+            Text(viewModel.gridAlertMessage)
+        }
+        .onAppear {
+            viewModel.refreshAccessibilityLayoutState(
+                isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+            )
+        }
+        .onChange(of: dynamicTypeSize) { _ in
+            viewModel.refreshAccessibilityLayoutState(
+                isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+            )
+        }
+        .onChange(of: scenePhase) { phase in
+            guard phase == .active else { return }
+            Task { @MainActor in
+                await Task.yield()
+                viewModel.refreshAccessibilityLayoutState(
+                    isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+                )
+            }
         }
     }
 }
@@ -63,15 +95,24 @@ private extension AboutView {
     var menuBar: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             Menu {
-                Section(L10n.About.Menu.layout) {
-                    LayoutSwitchMenu()
+                Section(viewModel.layoutMenuSectionTitle) {
+                    LayoutSwitchMenu(
+                        selectedLayout: viewModel.layout,
+                        onSelectLayout: viewModel.setLayout,
+                        onGridUnavailable: viewModel.handleGridUnavailable,
+                        isAccessibilitySize: dynamicTypeSize.isAccessibilitySize,
+                        menuTitle: viewModel.layoutMenuTitle,
+                        titleForLayout: viewModel.title(for:)
+                    )
                 }
 
-                Section(L10n.About.Menu.appearance) {
+                Section(viewModel.appearanceMenuSectionTitle) {
                     AppearanceMenu()
                 }
             } label: {
                 Image(systemName: "line.3.horizontal.decrease.circle")
+                    .accessibilityLabel(Text(VoiceOver.A11y.Menu.options))
+                    .accessibilityHint(Text(VoiceOver.A11y.Menu.Options.hint))
             }
         }
     }
@@ -82,7 +123,7 @@ private extension AboutView {
 
     var developerSection: some View {
         VStack(spacing: 16) {
-            Image(L10n.App.Developer.firstName)
+            Image(viewModel.developerImageName)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100)
@@ -90,12 +131,13 @@ private extension AboutView {
                 .overlay(
                     Circle().stroke(.secondary, lineWidth: 1)
                 )
+                .accessibilityHidden(true)
 
-            Text(L10n.About.Developer.name)
+            Text(viewModel.developerName)
                 .font(.title2)
                 .fontWeight(.bold)
 
-            Text(L10n.About.Developer.role)
+            Text(viewModel.developerRole)
                 .foregroundStyle(.secondary)
 
             TypingEffectView()
@@ -105,13 +147,13 @@ private extension AboutView {
 
     var appInfoSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(L10n.About.App.Info.title)
+            Text(viewModel.appInfoTitle)
                 .font(.headline)
 
-            Text(L10n.About.App.name)
+            Text(viewModel.appName)
 
             Text(
-                "\(L10n.About.App.Version.prefix) \(Bundle.main.appVersion) (\(Bundle.main.buildNumber))"
+                "\(viewModel.appVersionPrefix) \(Bundle.main.appVersion) (\(Bundle.main.buildNumber))"
             )
             .foregroundStyle(.secondary)
         }
@@ -121,10 +163,10 @@ private extension AboutView {
 
     var disclaimerSection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(L10n.About.Disclaimer.title)
+            Text(viewModel.disclaimerTitle)
                 .font(.headline)
 
-            Text(LocalizedStringKey(L10n.About.Disclaimer.text))
+            Text(LocalizedStringKey(viewModel.disclaimerText))
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.leading)
@@ -145,50 +187,24 @@ private extension AboutView {
 
 // MARK: - Social
 private extension AboutView {
-
-    var socialLinks: [SocialLink] {
-        [
-            .init(
-                title: L10n.About.Social.github,
-                icon: L10n.About.Social.github,
-                url: URL(string: L10n.About.Social.Github.url)!
-            ),
-            .init(
-                title: L10n.About.Social.linkedin,
-                icon: L10n.About.Social.linkedin,
-                url: URL(string: L10n.About.Social.Linkedin.url)!
-            ),
-            .init(
-                title: L10n.About.Social.email,
-                icon: L10n.About.Social.gmail,
-                url: URL(string: L10n.About.Social.Email.url)!
-            ),
-            .init(
-                title: L10n.About.Social.cv,
-                icon: L10n.About.Social.cv,
-                url: URL(string: L10n.About.Social.Cv.url)!
-            )
-        ]
-    }
-
     @ViewBuilder
     var socialLinksSection: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text(L10n.About.Social.title)
+            Text(viewModel.socialTitle)
                 .font(.headline)
             
-            if viewModel.layout == .grid {
+            if viewModel.shouldUseGridLayout(isAccessibilitySize: dynamicTypeSize.isAccessibilitySize) {
                 LazyVGrid(columns: [.init(.adaptive(minimum: 110))]) {
-                    ForEach(socialLinks, id: \.title) { link in
+                    ForEach(viewModel.socialLinks) { link in
                         gridLinkButton(link)
                     }
                 }
             } else {
                 VStack(spacing: 0) {
-                    ForEach(socialLinks, id: \.title) { link in
+                    ForEach(viewModel.socialLinks) { link in
                         listLinkButton(link)
                         
-                        if link.title != socialLinks.last?.title {
+                        if link.id != viewModel.socialLinks.last?.id {
                             Divider()
                                 .padding(.leading, 60)
                                 .padding(.trailing, 12)
@@ -204,13 +220,14 @@ private extension AboutView {
 
     func listLinkButton(_ link: SocialLink) -> some View {
         Button {
-            linkButtonAction(link)
+            openLink(link)
         } label: {
             HStack(spacing: 12) {
                 Image(link.icon)
                     .resizable()
                     .background(Color(UIColor.secondarySystemGroupedBackground))
                     .frame(width: 36, height: 36)
+                    .accessibilityHidden(true)
 
                 Text(link.title)
                     .font(.headline)
@@ -222,18 +239,22 @@ private extension AboutView {
                 Spacer()
             }
             .padding()
+            .accessibilityElement(children: .combine)
         }
+        .accessibilityLabel(Text(link.title))
+        .accessibilityHint(Text(VoiceOver.A11y.Openlink.hint))
     }
     
     func gridLinkButton(_ link: SocialLink) -> some View {
         Button {
-            linkButtonAction(link)
+            openLink(link)
         } label: {
             VStack(spacing: 12) {
                 Image(link.icon)
                     .resizable()
                     .background(Color(UIColor.secondarySystemGroupedBackground))
-                    .frame(width: 64, height: 64)
+                    .frame(width: socialIconSize, height: socialIconSize)
+                    .accessibilityHidden(true)
 
                 Text(link.title)
                     .font(.headline)
@@ -242,36 +263,27 @@ private extension AboutView {
                     .lineLimit(2)
                     .padding(.horizontal, 8)
             }
-            .frame(width: 110, height: 110)
+            .frame(width: socialContentSize, height: socialContentSize)
+            .accessibilityElement(children: .combine)
         }
-        .frame(width: 120, height: 120)
+        .frame(width: socialCardSize, height: socialCardSize)
         .background(Color(UIColor.secondarySystemGroupedBackground))
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .accessibilityLabel(Text(link.title))
+        .accessibilityHint(Text(VoiceOver.A11y.Openlink.hint))
     }
-    
-    private func linkButtonAction(_ link: SocialLink) {
-        if UIApplication.shared.canOpenURL(link.url) {
-            UIApplication.shared.open(link.url)
-        } else {
-            viewModel.handleInvalidLink()
+
+    private func openLink(_ link: SocialLink) {
+        openURL(link.url) { accepted in
+            if !accepted {
+                viewModel.handleInvalidLink()
+            }
         }
     }
 }
 
-// MARK: - Models
-private struct SocialLink {
-    let title: String
-    let icon: String
-    let url: URL
-}
-
-// MARK: - Bundle Helpers
-extension Bundle {
-    var appVersion: String {
-        infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-    }
-
-    var buildNumber: String {
-        infoDictionary?["CFBundleVersion"] as? String ?? "1"
-    }
+private extension AboutView {
+    var socialIconSize: CGFloat { 64 }
+    var socialContentSize: CGFloat { 110 }
+    var socialCardSize: CGFloat { 120 }
 }

@@ -9,13 +9,8 @@ import SwiftUI
 
 struct MultiSelectView: View {
 
-    let title: String
-    let options: [String]
-    let allowsMultipleSelection: Bool
-
     @Binding var committedSelection: Set<String>
-    @State private var draftSelection: Set<String>
-    @State private var searchText = ""
+    @StateObject private var viewModel: MultiSelectViewModel
 
     @Environment(\.dismiss) private var dismiss
 
@@ -23,126 +18,101 @@ struct MultiSelectView: View {
         title: String,
         options: [String],
         selection: Binding<Set<String>>,
-        allowsMultipleSelection: Bool = true
+        allowsMultipleSelection: Bool = true,
+        labelForOption: @escaping (String) -> String = { $0 },
+        sortKeyForOption: @escaping (String) -> String = { $0 }
     ) {
-        self.title = title
-        self.options = options
         self._committedSelection = selection
-        self.allowsMultipleSelection = allowsMultipleSelection
-        _draftSelection = State(initialValue: selection.wrappedValue)
+        _viewModel = StateObject(
+            wrappedValue: MultiSelectViewModel(
+                title: title,
+                options: options,
+                initialSelection: selection.wrappedValue,
+                allowsMultipleSelection: allowsMultipleSelection,
+                labelForOption: labelForOption,
+                sortKeyForOption: sortKeyForOption,
+                haptics: AppDI.shared.getHaptics()
+            )
+        )
     }
 
     var body: some View {
         List {
 
             // MARK: - Selected Section (Top)
-            if !selectedOptions.isEmpty {
-                Section(L10n.Multiselectview.Section.selected) {
-                    ForEach(selectedOptions, id: \.self) { option in
-                        row(option, isSelected: true)
+            if !viewModel.selectedOptions.isEmpty {
+                Section(viewModel.selectedSectionTitle) {
+                    ForEach(viewModel.selectedOptions, id: \.self) { option in
+                        row(option)
                     }
                 }
             }
 
             // MARK: - All Options
-            Section(L10n.Multiselectview.Section.all) {
-                ForEach(unselectedOptions, id: \.self) { option in
-                    row(option, isSelected: false)
+            Section(viewModel.allSectionTitle) {
+                ForEach(viewModel.unselectedOptions, id: \.self) { option in
+                    row(option)
                 }
             }
         }
-        .navigationTitle(title)
+        .navigationTitle(viewModel.title)
         .searchable(
-            text: $searchText,
+            text: $viewModel.searchText,
             placement: .navigationBarDrawer(displayMode: .always),
-            prompt: "\(L10n.App.search) \(title)"
+            prompt: viewModel.searchPrompt
         )
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    apply()
+                    committedSelection = viewModel.apply()
                     dismiss()
                 } label: {
                     Image(systemName: "checkmark")
                 }
-                .disabled(draftSelection == committedSelection)
+                .disabled(!viewModel.canApply)
+                .accessibilityLabel(Text(viewModel.applyButtonTitle))
             }
         }
     }
 }
 
 private extension MultiSelectView {
-
-    // MARK: - Derived Data
-
-    var filteredOptions: [String] {
-        guard !searchText.isEmpty else { return options }
-        return options.filter {
-            $0.localizedCaseInsensitiveContains(searchText)
-        }
-    }
-
-    var selectedOptions: [String] {
-        filteredOptions
-            .filter { draftSelection.contains($0) }
-            .sorted()
-    }
-
-    var unselectedOptions: [String] {
-        filteredOptions
-            .filter { !draftSelection.contains($0) }
-            .sorted()
-    }
-
     // MARK: - Row
 
-    func row(_ option: String, isSelected: Bool) -> some View {
+    func row(_ option: String) -> some View {
         Button {
-            toggle(option)
+            viewModel.toggle(option)
         } label: {
             HStack {
-                Text(option)
+                Text(viewModel.labelForOption(option))
                 Spacer()
-                selectionIndicator(isSelected: isSelected)
+                selectionIndicator(isSelected: viewModel.isSelected(option))
             }
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-    }
-
-    // MARK: - Actions
-
-    func toggle(_ option: String) {
-        if allowsMultipleSelection {
-            if draftSelection.contains(option) {
-                draftSelection.remove(option)
-            } else {
-                draftSelection.insert(option)
-            }
-        } else {
-            draftSelection = [option]
-        }
-        AppDI.shared.getHaptics().selection()
-    }
-
-    func apply() {
-        committedSelection = draftSelection
+        .accessibilityLabel(Text(viewModel.labelForOption(option)))
+        .accessibilityValue(
+            viewModel.isSelected(option) ? Text(VoiceOver.A11y.selected) : Text("")
+        )
     }
 
     // MARK: - Indicator
 
     @ViewBuilder
     func selectionIndicator(isSelected: Bool) -> some View {
-        if allowsMultipleSelection {
+        if viewModel.allowsMultipleSelection {
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
                     .foregroundColor(.accentColor)
+                    .accessibilityHidden(true)
             }
         } else {
             Image(systemName: isSelected
                   ? "largecircle.fill.circle"
                   : "circle")
                 .foregroundColor(isSelected ? .accentColor : .secondary)
+                .accessibilityHidden(true)
         }
     }
 }

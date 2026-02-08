@@ -11,16 +11,30 @@ import SwiftUI
 struct ChannelListView: View {
 
     @StateObject private var viewModel: ChannelListViewModel
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.scenePhase) private var scenePhase
+    private let makeStreamListViewModel: () -> StreamListViewModel
+    private let makeAboutViewModel: () -> AboutViewModel
 
-    init(viewModel: ChannelListViewModel) {
+    init(
+        viewModel: ChannelListViewModel,
+        makeStreamListViewModel: @escaping () -> StreamListViewModel = {
+            AppDI.shared.makeStreamListViewModel()
+        },
+        makeAboutViewModel: @escaping () -> AboutViewModel = {
+            AppDI.shared.makeAboutViewModel()
+        }
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.makeStreamListViewModel = makeStreamListViewModel
+        self.makeAboutViewModel = makeAboutViewModel
     }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 if viewModel.showOfflineBanner {
-                    OfflineBanner()
+                    OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
                 }
 
                 ChannelStickyBar(
@@ -31,42 +45,54 @@ struct ChannelListView: View {
                 )
 
                 content
+                    .task { await viewModel.load() }
+                    .onAppear {
+                        viewModel.refreshAccessibilityLayoutState(
+                            isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+                        )
+                    }
+                    .onChange(of: dynamicTypeSize) { _ in
+                        viewModel.refreshAccessibilityLayoutState(
+                            isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+                        )
+                    }
             }
             .background(Color(UIColor.systemGroupedBackground))
             .searchable(text: $viewModel.searchText)
-            .navigationTitle(L10n.App.name)
+            .navigationTitle(viewModel.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { menuBar }
             .alert(
-                viewModel.pendingAction == nil ? "" : alertTitle,
+                viewModel.toolbarAlertTitle,
                 isPresented: $viewModel.showAlertDialog
             ) {
-                Button(alertConfirm, role: .destructive) {
+                Button(viewModel.toolbarAlertConfirm, role: .destructive) {
                     viewModel.confirmAction()
                 }
-                Button(L10n.App.cancel, role: .cancel) {
+                Button(viewModel.cancelButtonTitle, role: .cancel) {
                     viewModel.cancelAction()
                 }
             }
+            .alert(
+                viewModel.gridAlertTitle,
+                isPresented: Binding(
+                    get: { viewModel.gridAlert != nil },
+                    set: { if !$0 { viewModel.clearGridAlert() } }
+                )
+            ) {
+                Button(viewModel.gridAlertOk, role: .cancel) {}
+            } message: {
+                Text(viewModel.gridAlertMessage)
+            }
         }
-        .task { await viewModel.load() }
-    }
-
-    private var alertTitle: String {
-        switch viewModel.pendingAction {
-        case .clearCache: return L10n.Channel.Alert.Clear.Cache.title
-        case .clearFilters: return L10n.Channel.Alert.Clear.Filters.title
-        case .removeFavorites: return L10n.Channel.Alert.Remove.Favorites.title
-        case .none: return ""
-        }
-    }
-
-    private var alertConfirm: String {
-        switch viewModel.pendingAction {
-        case .clearCache: return L10n.Channel.Alert.Clear.Cache.confirm
-        case .clearFilters: return L10n.Channel.Alert.Clear.Filters.confirm
-        case .removeFavorites: return L10n.Channel.Alert.Remove.Favorites.confirm
-        case .none: return ""
+        .onChange(of: scenePhase) { phase in
+            guard phase == .active else { return }
+            Task { @MainActor in
+                await Task.yield()
+                viewModel.refreshAccessibilityLayoutState(
+                    isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+                )
+            }
         }
     }
 }
@@ -81,22 +107,22 @@ private extension ChannelListView {
             SkeletonListView()
 
         case .error(let message):
-            ErrorView(message: message) {
+            ErrorView(viewModel: viewModel.errorViewModel, message: message) {
                 Task { await viewModel.load() }
             }
 
         case .empty:
             EmptyStateView(
-                title: L10n.Channel.Empty.title,
-                message: L10n.Channel.Empty.message,
+                title: viewModel.channelEmptyTitle,
+                message: viewModel.channelEmptyMessage,
                 systemImage: "tv.slash"
             )
 
         case .loaded:
             if viewModel.isFilteredEmpty {
                 EmptyStateView(
-                    title: L10n.Channel.No.Results.title,
-                    message: L10n.Channel.No.Results.message,
+                    title: viewModel.noResultsTitle,
+                    message: viewModel.noResultsMessage,
                     systemImage: "magnifyingglass"
                 )
             } else {
@@ -111,22 +137,21 @@ private extension ChannelListView {
 
     @ViewBuilder
     var channelContent: some View {
-        switch viewModel.layout {
-        case .list:
-            channelList
-        case .grid:
+        if viewModel.shouldShowGrid(isAccessibilitySize: dynamicTypeSize.isAccessibilitySize) {
             channelGrid
+        } else {
+            channelList
         }
     }
 
     var channelList: some View {
         List {
             ForEach(viewModel.groupedResult, id: \.0) { section, channels in
-                Section(section) {
+                Section(viewModel.sectionTitle(for: section)) {
                     ForEach(channels) { channel in
                         NavigationLink {
                             StreamListView(
-                                viewModel: AppDI.shared.makeStreamListViewModel(),
+                                viewModel: makeStreamListViewModel(),
                                 channelId: channel.id,
                                 channelName: channel.name
                             )
@@ -139,6 +164,7 @@ private extension ChannelListView {
                                 }
                             )
                         }
+                        .accessibilityHint(Text(VoiceOver.A11y.Channel.Open.hint))
                     }
                 }
             }
@@ -149,12 +175,12 @@ private extension ChannelListView {
         ScrollView {
             LazyVStack(alignment: .leading) {
                 ForEach(viewModel.groupedResult, id: \.0) { section, channels in
-                    ChannelSectionHeader(title: section)
-                    LazyVGrid(columns: [.init(.adaptive(minimum: 110), spacing: 10)]) {
+                    ChannelSectionHeader(title: viewModel.sectionTitle(for: section))
+                    LazyVGrid(columns: [.init(.adaptive(minimum: gridMinWidth), spacing: 10)]) {
                         ForEach(channels) { channel in
                             NavigationLink {
                                 StreamListView(
-                                    viewModel: AppDI.shared.makeStreamListViewModel(),
+                                    viewModel: makeStreamListViewModel(),
                                     channelId: channel.id,
                                     channelName: channel.name
                                 )
@@ -167,6 +193,7 @@ private extension ChannelListView {
                                     }
                                 )
                             }
+                            .accessibilityHint(Text(VoiceOver.A11y.Channel.Open.hint))
                         }
                     }
                 }
@@ -174,6 +201,10 @@ private extension ChannelListView {
             .padding()
         }
     }
+}
+
+private extension ChannelListView {
+    var gridMinWidth: CGFloat { dynamicTypeSize.isAccessibilitySize ? 160 : 110 }
 }
 
 // MARK: - Toolbar
@@ -184,7 +215,7 @@ private extension ChannelListView {
             Menu {
 
                 // MARK: - Sort & Filter
-                Section(L10n.Channel.Menu.Section.Sortandfilter.title) {
+                Section(viewModel.sortAndFilterSectionTitle) {
 
                     // MARK: Group By
                     Menu {
@@ -200,7 +231,7 @@ private extension ChannelListView {
                         }
                     } label: {
                         Label(
-                            L10n.Channel.Menu.Section.GroupBy.title,
+                            viewModel.groupByMenuTitle,
                             systemImage: "square.grid.2x2"
                         )
                     }
@@ -208,10 +239,10 @@ private extension ChannelListView {
                     // MARK: Sorting
                     Menu {
 
-                        Section(L10n.Channel.Menu.Section.Section.title) {
+                        Section(viewModel.sectionSortingTitle) {
                             ForEach(ChannelListViewModel.SortOrder.allCases) { order in
                                 Button {
-                                    viewModel.sectionSort = order
+                                    viewModel.setSectionSort(order)
                                 } label: {
                                     menuLabel(
                                         title: order.title,
@@ -223,10 +254,10 @@ private extension ChannelListView {
 
                         Divider()
 
-                        Section(L10n.Channel.Menu.Section.Channel.title) {
+                        Section(viewModel.channelSortingTitle) {
                             ForEach(ChannelListViewModel.SortOrder.allCases) { order in
                                 Button {
-                                    viewModel.channelSort = order
+                                    viewModel.setChannelSort(order)
                                 } label: {
                                     menuLabel(
                                         title: order.title,
@@ -238,7 +269,7 @@ private extension ChannelListView {
 
                     } label: {
                         Label(
-                            L10n.Channel.Menu.Section.Sorting.title,
+                            viewModel.sortingMenuTitle,
                             systemImage: "arrow.up.arrow.down"
                         )
                     }
@@ -248,33 +279,39 @@ private extension ChannelListView {
 
                         NavigationLink {
                             MultiSelectView(
-                                title: L10n.Channel.Filter.countries,
+                                title: viewModel.countriesFilterTitle,
                                 options: viewModel.allCountries,
-                                selection: $viewModel.selectedCountries
+                                selection: $viewModel.selectedCountries,
+                                labelForOption: viewModel.countryDisplayName,
+                                sortKeyForOption: viewModel.countrySortKey
                             )
                         } label: {
-                            Label(
-                                L10n.Channel.Filter.countries,
-                                systemImage: "globe"
+                            menuLabel(
+                                title: viewModel.countriesFilterTitle,
+                                systemImage: "globe",
+                                isSelected: viewModel.hasSelectedCountryFilters
                             )
                         }
 
                         NavigationLink {
                             MultiSelectView(
-                                title: L10n.Channel.Filter.categories,
+                                title: viewModel.categoriesFilterTitle,
                                 options: viewModel.allCategories,
-                                selection: $viewModel.selectedCategories
+                                selection: $viewModel.selectedCategories,
+                                labelForOption: viewModel.categoryDisplayName,
+                                sortKeyForOption: viewModel.categorySortKey
                             )
                         } label: {
-                            Label(
-                                L10n.Channel.Filter.categories,
-                                systemImage: "tag"
+                            menuLabel(
+                                title: viewModel.categoriesFilterTitle,
+                                systemImage: "tag",
+                                isSelected: viewModel.hasSelectedCategoryFilters
                             )
                         }
 
                     } label: {
                         Label(
-                            L10n.Channel.Menu.Section.Filter.title,
+                            viewModel.filterMenuTitle,
                             systemImage: "line.3.horizontal.decrease.circle"
                         )
                     }
@@ -283,24 +320,24 @@ private extension ChannelListView {
                 Divider()
 
                 // MARK: - Actions
-                Section(L10n.Channel.Menu.Section.actions) {
+                Section(viewModel.actionsSectionTitle) {
 
                     Button(
-                        L10n.Channel.Menu.Action.clearCache,
+                        viewModel.clearCacheActionTitle,
                         role: .destructive
                     ) {
                         viewModel.requestAction(.clearCache)
                     }
 
                     Button(
-                        L10n.Channel.Menu.Action.clearFilters,
+                        viewModel.clearFiltersActionTitle,
                         role: .destructive
                     ) {
                         viewModel.requestAction(.clearFilters)
                     }
 
                     Button(
-                        L10n.Channel.Menu.Action.removeFavorites,
+                        viewModel.removeFavoritesActionTitle,
                         role: .destructive
                     ) {
                         viewModel.requestAction(.removeFavorites)
@@ -310,12 +347,19 @@ private extension ChannelListView {
                 Divider()
 
                 // MARK: - Layout
-                Section(L10n.Channel.Menu.Section.layout) {
-                    LayoutSwitchMenu()
+                Section(viewModel.layoutSectionTitle) {
+                    LayoutSwitchMenu(
+                        selectedLayout: viewModel.layout,
+                        onSelectLayout: viewModel.setLayout,
+                        onGridUnavailable: viewModel.handleGridUnavailable,
+                        isAccessibilitySize: dynamicTypeSize.isAccessibilitySize,
+                        menuTitle: viewModel.layoutMenuTitle,
+                        titleForLayout: viewModel.title(for:)
+                    )
                 }
 
                 // MARK: - Appearance
-                Section(L10n.Channel.Menu.Section.appearance) {
+                Section(viewModel.appearanceSectionTitle) {
                     AppearanceMenu()
                 }
 
@@ -325,11 +369,11 @@ private extension ChannelListView {
                 Section {
                     NavigationLink {
                         AboutView(
-                            viewModel: AppDI.shared.makeAboutViewModel()
+                            viewModel: makeAboutViewModel()
                         )
                     } label: {
                         Label(
-                            L10n.Channel.Menu.Section.about,
+                            viewModel.aboutSectionTitle,
                             systemImage: "info.circle"
                         )
                     }
@@ -337,8 +381,11 @@ private extension ChannelListView {
 
             } label: {
                 Image(systemName: "line.3.horizontal.decrease.circle")
+                    .accessibilityLabel(Text(VoiceOver.A11y.Menu.options))
+                    .accessibilityHint(Text(VoiceOver.A11y.Menu.Options.hint))
             }
         }
+       
     }
 
     // MARK: - Menu Label Helper
@@ -350,6 +397,18 @@ private extension ChannelListView {
             Text(title)
         }
     }
+
+    @ViewBuilder
+    func menuLabel(
+        title: String,
+        systemImage: String,
+        isSelected: Bool
+    ) -> some View {
+        Label(
+            title,
+            systemImage: isSelected ? "checkmark" : systemImage
+        )
+    }
 }
 
 #Preview {
@@ -357,4 +416,3 @@ private extension ChannelListView {
         viewModel: AppDI.shared.makeChannelListViewModel()
     )
 }
-

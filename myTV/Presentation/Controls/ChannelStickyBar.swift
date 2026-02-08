@@ -29,6 +29,10 @@ struct ChannelStickyBar: View {
                         .cornerRadius(10)
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(Text(tab.title))
+                .accessibilityValue(
+                    scope == tab ? Text(VoiceOver.A11y.selected) : Text("")
+                )
             }
         }
         .padding(8)

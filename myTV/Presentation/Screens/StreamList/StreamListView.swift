@@ -19,7 +19,7 @@ struct StreamListView: View {
         ZStack {
             content
             if viewModel.isPreparingPlayback {
-                LoadingView()
+                LoadingView(viewModel: viewModel.loadingViewModel)
             }
         }
     }
@@ -27,21 +27,19 @@ struct StreamListView: View {
     private var content: some View {
         VStack(spacing: 0) {
             if viewModel.showOfflineBanner {
-                OfflineBanner()
+                OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
             }
             streamBody
         }
         .navigationTitle(channelName)
         .navigationBarTitleDisplayMode(.inline)
         .task {
-            if case .loading = viewModel.state {
-                await viewModel.loadStreams(channelId: channelId)
-            }
+            await viewModel.loadIfNeeded(channelId: channelId)
         }
         .sheet(
             isPresented: $viewModel.isPresentingPlayer,
             onDismiss: {
-                viewModel.teardown()
+                viewModel.dismissPlayer()
             }
         ) {
             if let player = viewModel.player {
@@ -51,13 +49,13 @@ struct StreamListView: View {
             }
         }
         .alert(
-            L10n.Stream.Player.Error.title,
+            viewModel.playbackErrorTitle,
             isPresented: Binding(
-                get: { viewModel.playbackError != nil },
-                set: { if !$0 { viewModel.playbackError = nil } }
+                get: { viewModel.isShowingPlaybackError },
+                set: { if !$0 { viewModel.clearPlaybackError() } }
             )
         ) {
-            Button(L10n.App.ok, role: .cancel) {}
+            Button(viewModel.okButtonTitle, role: .cancel) {}
         } message: {
             Text(viewModel.playbackError ?? "")
         }
@@ -74,16 +72,16 @@ private extension StreamListView {
             SkeletonListView()
 
         case .error(let message):
-            ErrorView(message: message) {
+            ErrorView(viewModel: .generic, message: message) {
                 Task {
-                    await viewModel.loadStreams(channelId: channelId)
+                    await viewModel.reload(channelId: channelId)
                 }
             }
 
         case .empty:
             EmptyStateView(
-                title: L10n.Stream.List.Empty.title,
-                message: L10n.Stream.List.Empty.message,
+                title: viewModel.emptyStateTitle,
+                message: viewModel.emptyStateMessage,
                 systemImage: "antenna.radiowaves.left.and.right.slash"
             )
 
@@ -113,9 +111,12 @@ private extension StreamListView {
             }
             .buttonStyle(.plain)
             .disabled(viewModel.isPreparingPlayback)
+            .accessibilityHint(Text(VoiceOver.A11y.Stream.Play.hint))
+            .accessibilityLabel(Text(stream.title))
+            .accessibilityValue(Text(stream.quality ?? ""))
         }
         .refreshable {
-            await viewModel.loadStreams(channelId: channelId)
+            await viewModel.reload(channelId: channelId)
         }
     }
 }

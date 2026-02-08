@@ -81,6 +81,29 @@ private extension StreamListViewModel {
     }
 }
 extension StreamListViewModel {
+    var offlineBannerViewModel: OfflineBannerViewModel {
+        .default
+    }
+
+    var loadingViewModel: LoadingViewModel {
+        .streamPreparationDefault
+    }
+
+    var emptyStateTitle: String {
+        Localizable.Stream.List.Empty.title
+    }
+
+    var emptyStateMessage: String {
+        Localizable.Stream.List.Empty.message
+    }
+
+    var playbackErrorTitle: String {
+        Localizable.Stream.Player.Error.title
+    }
+
+    var okButtonTitle: String {
+        Localizable.App.ok
+    }
 
     func loadStreams(channelId: String) async {
         lastChannelId = channelId
@@ -94,6 +117,27 @@ extension StreamListViewModel {
             state = .error(error.localizedDescription)
         }
     }
+
+    func loadIfNeeded(channelId: String) async {
+        guard case .loading = state else { return }
+        await loadStreams(channelId: channelId)
+    }
+
+    func reload(channelId: String) async {
+        await loadStreams(channelId: channelId)
+    }
+
+    func dismissPlayer() {
+        teardown()
+    }
+
+    func clearPlaybackError() {
+        playbackError = nil
+    }
+
+    var isShowingPlaybackError: Bool {
+        playbackError != nil
+    }
 }
 
 extension StreamListViewModel {
@@ -104,12 +148,12 @@ extension StreamListViewModel {
     ) {
         haptics.impact(.light)
         guard !allStreams.isEmpty else {
-            playbackError = L10n.Stream.List.Empty.title
+            playbackError = Localizable.Stream.List.Empty.title
             return
         }
 
         guard let startIndex = allStreams.firstIndex(of: stream) else {
-            playbackError = L10n.Stream.Player.Error.title
+            playbackError = Localizable.Stream.Player.Error.title
             return
         }
 
@@ -136,7 +180,7 @@ private extension StreamListViewModel {
     func attemptPlay() {
         guard currentStreamIndex < playbackQueue.count else {
             isAttemptingPlayback = false
-            playbackError = L10n.Stream.Player.Error.noWorkingStreams
+            playbackError = Localizable.Stream.Player.Error.noWorkingStreams
             return
         }
 
@@ -145,7 +189,7 @@ private extension StreamListViewModel {
 
     func play(stream: Stream) {
         guard let url = URL(string: stream.url) else {
-            handlePlaybackFailure(message: L10n.Stream.Player.Error.invalidURL)
+            handlePlaybackFailure(message: Localizable.Stream.Player.Error.invalidURL)
             return
         }
 
@@ -170,7 +214,7 @@ private extension StreamListViewModel {
                 case .failed:
                     self.handlePlaybackFailure(
                         message: item.error?.localizedDescription
-                            ?? L10n.Stream.Player.Error.cannotPlay
+                            ?? Localizable.Stream.Player.Error.cannotPlay
                     )
 
                 case .unknown:
@@ -189,7 +233,7 @@ private extension StreamListViewModel {
         ) { [weak self] _ in
             guard let self else { return }
             Task { @MainActor in
-                self.handlePlaybackFailure(message: L10n.Stream.Player.Error.cannotPlay)
+                self.handlePlaybackFailure(message: Localizable.Stream.Player.Error.cannotPlay)
             }
         }
     }

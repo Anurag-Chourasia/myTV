@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct LoadingView: View {
+    let viewModel: LoadingViewModel
+
     var body: some View {
         ZStack {
             Color.black.opacity(0.35)
@@ -15,13 +17,15 @@ struct LoadingView: View {
 
             VStack(spacing: 12) {
                 ProgressView()
-                Text(L10n.Loading.Preparing.stream)
+                Text(viewModel.message)
                     .font(.footnote)
                     .foregroundColor(.secondary)
             }
             .padding(20)
             .background(.ultraThinMaterial)
             .cornerRadius(12)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(Text(viewModel.message))
             
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

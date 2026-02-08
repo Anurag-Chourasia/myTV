@@ -1,0 +1,20 @@
+//
+//  VoiceOver.strings
+//  myTV
+//
+//  Created by Anurag Chourasia on 08/02/26.
+//
+
+/* =========================
+   Accessibility
+   ========================= */
+
+"a11y.menu.options" = "Options";
+"a11y.menu.options.hint" = "Opens sorting, filtering, and settings.";
+"a11y.favorite.add" = "Add to favorites";
+"a11y.favorite.remove" = "Remove from favorites";
+"a11y.favorite.hint" = "Double tap to toggle favorite.";
+"a11y.channel.open.hint" = "Opens streams for this channel.";
+"a11y.stream.play.hint" = "Plays this stream.";
+"a11y.openLink.hint" = "Opens link.";
+"a11y.selected" = "Selected";

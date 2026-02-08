@@ -32,7 +32,7 @@ OUTPUT_FILE = (
     PROJECT_ROOT
     / "Resources"
     / "Localization"
-    / "Localized.generated.swift"
+    / "Localizable.generated.swift"
 )
 
 if not LOCALIZABLE_FILE.exists():
@@ -144,7 +144,7 @@ def emit_enum(
     return lines
 
 def generate_swift(tree: Dict) -> str:
-    lines = [HEADER, "enum L10n {"]
+    lines = [HEADER, "enum Localizable {"]
 
     for top in sorted(tree.keys()):
         lines.extend(emit_enum(top, tree[top], [top], 4))

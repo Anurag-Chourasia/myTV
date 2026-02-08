@@ -24,6 +24,7 @@
 "app.appearance.color.light" = "Light";
 "app.appearance.color.dark" = "Dark";
 "app.search" = "Search";
+"app.apply" = "Apply";
 "app.normalize.regex" = "[^a-z0-9]";
 "app.developer.firstName" = "Anurag";
 /* =========================
@@ -79,6 +80,13 @@
 "channel.layout.list" = "List";
 "channel.layout.grid" = "Grid";
 "channel.layout.title" = "Layout";
+"channel.layout.grid.unavailable.title" = "Grid Layout Unavailable";
+"channel.layout.grid.unavailable.message" = "Grid layout is not available in the current Accessibility text size. Switch to a smaller text size to enable it.";
+"channel.layout.grid.unavailable.ok" = "OK";
+"channel.layout.grid.unavailable.banner" = "Grid isn’t available at this text size. Reduce text size to see grid.";
+"channel.layout.grid.auto_list.title" = "Switched to List";
+"channel.layout.grid.auto_list.message" = "Grid layout isn’t available at the current Accessibility text size, so we switched to list.";
+"channel.layout.grid.auto_list.ok" = "OK";
 /* =========================
    Channel List – Empty / States
    ========================= */
@@ -152,4 +160,3 @@
 "about.social.linkedin.url" = "https://www.linkedin.com/in/anurag-chourasia-b66710178/";
 "about.social.email.url" = "mailto:anuragchourasiaios@gmail.com";
 "about.social.cv.url" = "https://drive.google.com/file/d/16lYgU9C3WyBlL1Jzf__tKiaXxnsNZ_jd/view";
-

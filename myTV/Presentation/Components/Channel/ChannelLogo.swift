@@ -25,5 +25,6 @@ struct ChannelLogo: View {
         .frame(width: width, height: height)
         .background(Color(UIColor.systemGroupedBackground))
         .cornerRadius(6)
+        .accessibilityHidden(true)
     }
 }

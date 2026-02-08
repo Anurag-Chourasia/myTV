@@ -12,6 +12,7 @@ struct ChannelRowView: View {
     let channel: Channel
     let isFavorite: Bool
     let onFavoriteToggle: () -> Void
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         HStack(spacing: 12) {
@@ -20,7 +21,7 @@ struct ChannelRowView: View {
             Text(channel.name)
                 .font(.headline)
                 .multilineTextAlignment(.leading)
-                .lineLimit(2)
+                .lineLimit(dynamicTypeSize.isAccessibilitySize ? 3 : 2)
                 .padding(.horizontal, 8)
 
             Spacer(minLength: 0)

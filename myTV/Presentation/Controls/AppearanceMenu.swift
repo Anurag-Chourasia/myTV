@@ -14,14 +14,6 @@ enum AppAppearance: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var title: String {
-        switch self {
-        case .system: return L10n.App.Appearance.Color.system
-        case .light: return L10n.App.Appearance.Color.light
-        case .dark: return L10n.App.Appearance.Color.dark
-        }
-    }
-
     var colorScheme: ColorScheme? {
         switch self {
         case .system: return nil
@@ -34,8 +26,12 @@ enum AppAppearance: String, CaseIterable, Identifiable {
 struct AppearanceMenu: View {
 
     @AppStorage("appAppearance") private var appAppearance: AppAppearance = .system
-
+    private let viewModel: AppearanceMenuViewModel
     private let haptics: HapticService = AppDI.shared.getHaptics()
+
+    init(viewModel: AppearanceMenuViewModel = AppearanceMenuViewModel()) {
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         Menu {
@@ -46,14 +42,14 @@ struct AppearanceMenu: View {
                     haptics.selection()
                 } label: {
                     if appAppearance == appearance {
-                        Label(appearance.title, systemImage: "checkmark")
+                        Label(viewModel.title(for: appearance), systemImage: "checkmark")
                     } else {
-                        Text(appearance.title)
+                        Text(viewModel.title(for: appearance))
                     }
                 }
             }
         } label: {
-            Label("Appearance", systemImage: "circle.lefthalf.filled")
+            Label(viewModel.menuTitle, systemImage: "circle.lefthalf.filled")
         }
     }
 }

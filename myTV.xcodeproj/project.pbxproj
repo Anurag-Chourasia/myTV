@@ -146,15 +146,17 @@
 			);
 			inputPaths = (
 				"$(SRCROOT)/myTV/Resources/Localization/Base.lproj/Localizable.strings",
+				"$(SRCROOT)/myTV/Resources/Localization/Base.lproj/VoiceOver.strings",
 			);
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(SRCROOT)/myTV/Resources/Localization/Localized.generated.swift",
+				"$(SRCROOT)/myTV/Resources/Localization/Localizable.generated.swift",
+				"$(SRCROOT)/myTV/Resources/Localization/VoiceOver.generated.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n/usr/bin/env python3 \"${SRCROOT}/myTV/Scripts/generate_localization.py\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n/usr/bin/env python3 \"${SRCROOT}/myTV/Scripts/generate_localization.py\"\n/usr/bin/env python3 \"${SRCROOT}/myTV/Scripts/generate_voiceover.py\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

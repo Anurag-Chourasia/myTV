@@ -19,6 +19,18 @@ final class ChannelListViewModel: ObservableObject {
         case empty
         case error(String)
     }
+    
+    enum GridAlert: Identifiable {
+        case autoList
+        case gridUnavailable
+
+        var id: String {
+            switch self {
+            case .autoList: return "autoList"
+            case .gridUnavailable: return "gridUnavailable"
+            }
+        }
+    }
 
     enum Grouping: String, CaseIterable, Identifiable {
         case name
@@ -30,11 +42,11 @@ final class ChannelListViewModel: ObservableObject {
         var title: String {
             switch self {
             case .name:
-                return L10n.App.Grouping.name
+                return Localizable.App.Grouping.name
             case .country:
-                return L10n.App.Grouping.country
+                return Localizable.App.Grouping.country
             case .category:
-                return L10n.App.Grouping.category
+                return Localizable.App.Grouping.category
             }
         }
     }
@@ -48,9 +60,9 @@ final class ChannelListViewModel: ObservableObject {
         var title: String {
             switch self {
             case .ascending:
-                return L10n.Channel.Sort.Order.ascending
+                return Localizable.Channel.Sort.Order.ascending
             case .descending:
-                return L10n.Channel.Sort.Order.descending
+                return Localizable.Channel.Sort.Order.descending
             }
         }
     }
@@ -64,9 +76,9 @@ final class ChannelListViewModel: ObservableObject {
         var title: String {
             switch self {
             case .all:
-                return L10n.Channel.Scope.all
+                return Localizable.Channel.Scope.all
             case .favorites:
-                return L10n.Channel.Scope.favorites
+                return Localizable.Channel.Scope.favorites
             }
         }
     }
@@ -90,6 +102,7 @@ final class ChannelListViewModel: ObservableObject {
     @Published var favoriteChannelIDs: Set<String> = []
     @Published var showOfflineBanner = false
     @Published var showAlertDialog = false
+    @Published var gridAlert: GridAlert?
 
     @Published var grouping: Grouping = .name {
         didSet { storedGroupingRaw = grouping.rawValue }
@@ -113,7 +126,9 @@ final class ChannelListViewModel: ObservableObject {
     @AppStorage("channelSort")
     private var storedChannelSortRaw = SortOrder.ascending.rawValue
 
-    @AppStorage("channelLayout") private(set) var layout: ChannelLayout = .list
+    @AppStorage("channelLayout")
+    private var storedLayoutRaw = ChannelLayout.list.rawValue
+    @Published private(set) var layout: ChannelLayout = .list
 
     // MARK: - Dependencies
     private let fetchChannels: FetchChannelsUseCase
@@ -134,6 +149,7 @@ final class ChannelListViewModel: ObservableObject {
         grouping = Grouping(rawValue: storedGroupingRaw) ?? .name
         sectionSort = SortOrder(rawValue: storedSectionSortRaw) ?? .ascending
         channelSort = SortOrder(rawValue: storedChannelSortRaw) ?? .ascending
+        layout = ChannelLayout(rawValue: storedLayoutRaw) ?? .list
 
         observeReachability()
         setupDebouncedSearch()
@@ -174,6 +190,150 @@ final class ChannelListViewModel: ObservableObject {
 
     var allCategories: [String] {
         Array(Set(channels.flatMap(\.categories))).sorted()
+    }
+
+    var offlineBannerViewModel: OfflineBannerViewModel {
+        .default
+    }
+
+    var errorViewModel: ErrorViewModel {
+        .generic
+    }
+
+    var navigationTitle: String {
+        Localizable.App.name
+    }
+
+    var cancelButtonTitle: String {
+        Localizable.App.cancel
+    }
+
+    var channelEmptyTitle: String {
+        Localizable.Channel.Empty.title
+    }
+
+    var channelEmptyMessage: String {
+        Localizable.Channel.Empty.message
+    }
+
+    var noResultsTitle: String {
+        Localizable.Channel.No.Results.title
+    }
+
+    var noResultsMessage: String {
+        Localizable.Channel.No.Results.message
+    }
+
+    var sortAndFilterSectionTitle: String {
+        Localizable.Channel.Menu.Section.Sortandfilter.title
+    }
+
+    var groupByMenuTitle: String {
+        Localizable.Channel.Menu.Section.GroupBy.title
+    }
+
+    var sectionSortingTitle: String {
+        Localizable.Channel.Menu.Section.Section.title
+    }
+
+    var channelSortingTitle: String {
+        Localizable.Channel.Menu.Section.Channel.title
+    }
+
+    var sortingMenuTitle: String {
+        Localizable.Channel.Menu.Section.Sorting.title
+    }
+
+    var countriesFilterTitle: String {
+        Localizable.Channel.Filter.countries
+    }
+
+    var categoriesFilterTitle: String {
+        Localizable.Channel.Filter.categories
+    }
+
+    var filterMenuTitle: String {
+        Localizable.Channel.Menu.Section.Filter.title
+    }
+
+    var actionsSectionTitle: String {
+        Localizable.Channel.Menu.Section.actions
+    }
+
+    var clearCacheActionTitle: String {
+        Localizable.Channel.Menu.Action.clearCache
+    }
+
+    var clearFiltersActionTitle: String {
+        Localizable.Channel.Menu.Action.clearFilters
+    }
+
+    var removeFavoritesActionTitle: String {
+        Localizable.Channel.Menu.Action.removeFavorites
+    }
+
+    var layoutSectionTitle: String {
+        Localizable.Channel.Menu.Section.layout
+    }
+
+    var appearanceSectionTitle: String {
+        Localizable.Channel.Menu.Section.appearance
+    }
+
+    var aboutSectionTitle: String {
+        Localizable.Channel.Menu.Section.about
+    }
+
+    var layoutMenuTitle: String {
+        Localizable.Channel.Layout.title
+    }
+
+    func title(for layout: ChannelLayout) -> String {
+        switch layout {
+        case .list:
+            return Localizable.Channel.Layout.list
+        case .grid:
+            return Localizable.Channel.Layout.grid
+        }
+    }
+
+    var hasSelectedCountryFilters: Bool {
+        !selectedCountries.isEmpty
+    }
+
+    var hasSelectedCategoryFilters: Bool {
+        !selectedCategories.isEmpty
+    }
+
+    func shouldShowGrid(isAccessibilitySize: Bool) -> Bool {
+        layout == .grid && !isAccessibilitySize
+    }
+
+    func sectionTitle(for key: String) -> String {
+        switch grouping {
+        case .country:
+            return CountryDisplay.label(for: key)
+        case .category:
+            return CategoryDisplay.label(for: key)
+        case .name:
+            return key
+        }
+    }
+
+    func countryDisplayName(_ value: String) -> String {
+        CountryDisplay.label(for: value)
+    }
+
+    func categoryDisplayName(_ value: String) -> String {
+        CategoryDisplay.label(for: value)
+    }
+
+    func countrySortKey(_ value: String) -> String {
+        CountryDisplay.sortKey(for: value)
+    }
+
+    func categorySortKey(_ value: String) -> String {
+        CategoryDisplay.sortKey(for: value)
     }
 
     // MARK: - Toolbar Actions
@@ -219,6 +379,37 @@ final class ChannelListViewModel: ObservableObject {
         haptics.selection()
     }
 
+    func setSectionSort(_ sortOrder: SortOrder) {
+        guard sectionSort != sortOrder else { return }
+        sectionSort = sortOrder
+        haptics.selection()
+    }
+
+    func setChannelSort(_ sortOrder: SortOrder) {
+        guard channelSort != sortOrder else { return }
+        channelSort = sortOrder
+        haptics.selection()
+    }
+
+    func setLayout(_ layout: ChannelLayout) {
+        guard self.layout != layout else { return }
+        self.layout = layout
+        storedLayoutRaw = layout.rawValue
+        haptics.selection()
+    }
+
+    func syncLayoutFromStorage() {
+        let persisted = ChannelLayout(rawValue: storedLayoutRaw) ?? .list
+        if layout != persisted {
+            layout = persisted
+        }
+    }
+
+    func refreshAccessibilityLayoutState(isAccessibilitySize: Bool) {
+        syncLayoutFromStorage()
+        enforceListIfAccessibility(isAccessibilitySize)
+    }
+
     func clearAllPreferences() {
         grouping = .name
         sectionSort = .ascending
@@ -241,6 +432,80 @@ final class ChannelListViewModel: ObservableObject {
         fetchChannels.clearCache()
         DefaultImageCache.shared.clear()
         await load()
+    }
+
+    func enforceListIfAccessibility(_ isAccessibilitySize: Bool) {
+        guard isAccessibilitySize, layout == .grid else { return }
+        storedLayoutRaw = ChannelLayout.list.rawValue
+        gridAlert = .autoList
+        layout = .list
+    }
+
+    func handleGridUnavailable() {
+        gridAlert = .gridUnavailable
+    }
+
+    func clearGridAlert() {
+        gridAlert = nil
+    }
+
+    var toolbarAlertTitle: String {
+        switch pendingAction {
+        case .clearCache:
+            return Localizable.Channel.Alert.Clear.Cache.title
+        case .clearFilters:
+            return Localizable.Channel.Alert.Clear.Filters.title
+        case .removeFavorites:
+            return Localizable.Channel.Alert.Remove.Favorites.title
+        case .none:
+            return ""
+        }
+    }
+
+    var toolbarAlertConfirm: String {
+        switch pendingAction {
+        case .clearCache:
+            return Localizable.Channel.Alert.Clear.Cache.confirm
+        case .clearFilters:
+            return Localizable.Channel.Alert.Clear.Filters.confirm
+        case .removeFavorites:
+            return Localizable.Channel.Alert.Remove.Favorites.confirm
+        case .none:
+            return ""
+        }
+    }
+
+    var gridAlertTitle: String {
+        switch gridAlert {
+        case .autoList:
+            return Localizable.Channel.Layout.Grid.AutoList.title
+        case .gridUnavailable:
+            return Localizable.Channel.Layout.Grid.Unavailable.title
+        case .none:
+            return ""
+        }
+    }
+
+    var gridAlertMessage: String {
+        switch gridAlert {
+        case .autoList:
+            return Localizable.Channel.Layout.Grid.AutoList.message
+        case .gridUnavailable:
+            return Localizable.Channel.Layout.Grid.Unavailable.message
+        case .none:
+            return ""
+        }
+    }
+
+    var gridAlertOk: String {
+        switch gridAlert {
+        case .autoList:
+            return Localizable.Channel.Layout.Grid.AutoList.ok
+        case .gridUnavailable:
+            return Localizable.Channel.Layout.Grid.Unavailable.ok
+        case .none:
+            return Localizable.Channel.Layout.Grid.Unavailable.ok
+        }
     }
 }
 
@@ -319,9 +584,12 @@ private extension ChannelListViewModel {
         }
 
         func sortChannels(_ c: [Channel]) -> [Channel] {
-            channelSort == .ascending
-            ? c.sorted { $0.name < $1.name }
-            : c.sorted { $0.name > $1.name }
+            let comparer: (Channel, Channel) -> Bool = { lhs, rhs in
+                lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
+            }
+            return channelSort == .ascending
+                ? c.sorted(by: comparer)
+                : c.sorted { comparer($1, $0) }
         }
 
         var dict: [String: [Channel]] = [:]
@@ -339,9 +607,20 @@ private extension ChannelListViewModel {
             }
         }
 
+        let displayKey: (String) -> String = { key in
+            switch grouping {
+            case .country:
+                return CountryDisplay.sortKey(for: key)
+            case .category:
+                return CategoryDisplay.sortKey(for: key)
+            case .name:
+                return key
+            }
+        }
+
         let keys = sectionSort == .ascending
-            ? dict.keys.sorted()
-            : dict.keys.sorted(by: >)
+            ? dict.keys.sorted { displayKey($0) < displayKey($1) }
+            : dict.keys.sorted { displayKey($0) > displayKey($1) }
 
         return keys.map { ($0, sortChannels(dict[$0] ?? [])) }
     }

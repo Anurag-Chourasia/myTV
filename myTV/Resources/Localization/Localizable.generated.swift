@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum L10n {
+enum Localizable {
     enum About {
         enum Alert {
             enum Error {
@@ -181,6 +181,10 @@ enum L10n {
                 comment: ""
             )
         }
+        static let apply = NSLocalizedString(
+            "app.apply",
+            comment: ""
+        )
         static let cancel = NSLocalizedString(
             "app.cancel",
             comment: ""
@@ -268,6 +272,40 @@ enum L10n {
             )
         }
         enum Layout {
+            enum Grid {
+                enum AutoList {
+                    static let message = NSLocalizedString(
+                        "channel.layout.grid.auto_list.message",
+                        comment: ""
+                    )
+                    static let ok = NSLocalizedString(
+                        "channel.layout.grid.auto_list.ok",
+                        comment: ""
+                    )
+                    static let title = NSLocalizedString(
+                        "channel.layout.grid.auto_list.title",
+                        comment: ""
+                    )
+                }
+                enum Unavailable {
+                    static let banner = NSLocalizedString(
+                        "channel.layout.grid.unavailable.banner",
+                        comment: ""
+                    )
+                    static let message = NSLocalizedString(
+                        "channel.layout.grid.unavailable.message",
+                        comment: ""
+                    )
+                    static let ok = NSLocalizedString(
+                        "channel.layout.grid.unavailable.ok",
+                        comment: ""
+                    )
+                    static let title = NSLocalizedString(
+                        "channel.layout.grid.unavailable.title",
+                        comment: ""
+                    )
+                }
+            }
             static let grid = NSLocalizedString(
                 "channel.layout.grid",
                 comment: ""

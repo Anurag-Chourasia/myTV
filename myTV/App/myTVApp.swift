@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 @main
 struct myTVApp: App {
     @AppStorage("appAppearance") private var appAppearance: AppAppearance = .system
@@ -18,6 +17,7 @@ struct myTVApp: App {
                 viewModel: AppDI.shared.makeChannelListViewModel()
             )
             .preferredColorScheme(appAppearance.colorScheme)
+            .dynamicTypeSize(.xSmall ... .accessibility2)
         }
     }
 }

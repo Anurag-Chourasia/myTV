@@ -18,8 +18,11 @@ This is a **portfolio-level reference application**, designed to reflect how a m
 - Sorting controls:
   - Section sorting (Ascending / Descending)
   - Channel sorting (Ascending / Descending)
+- Country and category display-name mapping (friendly labels + emoji)
+- Filter and section ordering by display name for country/category
 - Debounced search
 - Multi-select filters for **Country** and **Category**
+- Selected filters shown with checkmark indicators
 - Favorites with persistent storage
 
 ---
@@ -59,6 +62,14 @@ This is a **portfolio-level reference application**, designed to reflect how a m
 ---
 
 ### ♿ Accessibility & UX
+- Dynamic Type support across app screens
+- App Dynamic Type clamp via `.dynamicTypeSize(.xSmall ... .accessibility2)`
+- Accessibility-aware layout guard:
+  - Grid auto-switches to List in accessibility text sizes
+  - Alert shown when auto-switch happens
+  - Alert shown if Grid is tapped while accessibility size is active
+- Foreground revalidation of accessibility layout state after returning to app
+- Dedicated `VoiceOver.strings` + generated `VoiceOver.generated.swift`
 - Haptic feedback for key interactions
 - Respects **Reduced Motion**
 - Offline banner handling
@@ -74,7 +85,7 @@ This is a **portfolio-level reference application**, designed to reflect how a m
 - Async/Await networking
 - Combine-based reactive pipelines
 - Disk and memory caching layers
-- No business logic inside Views
+- ViewModels own view text/behavior logic
 
 ### Layering Model
 
@@ -101,13 +112,20 @@ myTV
     │   └── myTVApp.swift
     │
     ├── Core
+    │   ├── Extensions
+    │   │   └── Bundle+AppInfo.swift
+    │   │
     │   ├── Haptic
     │   │   ├── HapticService.swift
     │   │   └── HapticServiceImpl.swift
     │   │
-    │   ├── Reachability
+    │   ├── Reachibility
     │   │   ├── ReachabilityService.swift
     │   │   └── ReachabilityServiceImpl.swift
+    │   │
+    │   ├── Localization
+    │   │   ├── CountryDisplay.swift
+    │   │   └── CategoryDisplay.swift
     │   │
     │   └── ImageCaching
     │       ├── ImageCache.swift
@@ -118,7 +136,7 @@ myTV
     ├── Data
     │   ├── Repositories
     │   │   └── ChannelRepositoryImpl.swift
-    |   |
+    │   │
     │   ├── Cache
     │   │   ├── ChannelCache.swift
     │   │   └── ChannelDiskCache.swift
@@ -127,23 +145,27 @@ myTV
     │   │   ├── Channel+Mapper.swift
     │   │   └── Stream+Mapper.swift
     │   │
-    │   └── Network
-    │       ├── DTO
-    │       │   ├── ChannelDTO.swift
-    │       │   ├── LogoDTO.swift
-    │       │   └── StreamDTO.swift
-    │       │
-    │       ├── Client
-    │       │   └── IPTVAPIService.swift
-    │       │
-    │       ├── Endpoints
-    │       │   └── IPTVEndpoint.swift
-    │       │
-    │       ├── Parsers
-    │       │   └── HTTPClient.swift
-    │       │
-    │       └── Services
-    │           └── M3UParser.swift
+    │   ├── Network
+    │   │   ├── DTO
+    │   │   │   ├── ChannelDTO.swift
+    │   │   │   ├── LogoDTO.swift
+    │   │   │   └── StreamDTO.swift
+    │   │   │
+    │   │   ├── Client
+    │   │   │   └── HTTPClient.swift
+    │   │   │
+    │   │   ├── Endpoints
+    │   │   │   └── IPTVEndpoint.swift
+    │   │   │
+    │   │   ├── Parsers
+    │   │   │   └── M3UParser.swift
+    │   │   │
+    │   │   └── Services
+    │   │       └── IPTVAPIService.swift
+    │   │
+    │   └── UseCases
+    │       ├── DefaultFetchChannelsUseCase.swift
+    │       └── DefaultFetchStreamsForChannelUseCase.swift
     │
     ├── Domain
     │   ├── Entities
@@ -151,17 +173,14 @@ myTV
     │   │   ├── Stream.swift
     │   │   └── Category.swift
     │   │
-    │   ├── Repositories
-    │   │   └── ChannelRepository.swift
-    │   │
-    │   └── UseCases
-    │       ├── DefaultFetchChannelsUseCase.swift
-    │       └── DefaultFetchStreamsForChannel.swift
+    │   └── Repositories
+    │       └── ChannelRepository.swift
     │
     ├── Presentation
     │   ├── Components
     │   │   ├── Banner
-    │   │   │   └── OfflineBanner.swift
+    │   │   │   ├── OfflineBanner.swift
+    │   │   │   └── OfflineBannerViewModel.swift
     │   │   │
     │   │   ├── Channel
     │   │   │   ├── ChannelLogo.swift
@@ -181,13 +200,17 @@ myTV
     │   │   └── State
     │   │       ├── EmptyStateView.swift
     │   │       ├── ErrorView.swift
-    │   │       └── LoadingView.swift
+    │   │       ├── ErrorViewModel.swift
+    │   │       ├── LoadingView.swift
+    │   │       └── LoadingViewModel.swift
     │   │
     │   ├── Controls
     │   │   ├── AppearanceMenu.swift
+    │   │   ├── AppearanceMenuViewModel.swift
     │   │   ├── LayoutSwitchBar.swift
     │   │   ├── ChannelStickyBar.swift
-    │   │   └── MultiSelectView.swift
+    │   │   ├── MultiSelectView.swift
+    │   │   └── MultiSelectViewModel.swift
     │   │
     │   └── Screens
     │       ├── ChannelList
@@ -209,11 +232,14 @@ myTV
     │   ├── Assets.xcassets
     │   └── Localization
     │       ├── Base.lproj
-    │       │   └── Localizable.strings
-    │       └── Localized.generated.swift
+    │       │   ├── Localizable.strings
+    │       │   └── VoiceOver.strings
+    │       ├── Localizable.generated.swift
+    │       └── VoiceOver.generated.swift
     │
     ├── Scripts
-    │   └── generate_localization.py
+    │   ├── generate_localization.py
+    │   └── generate_voiceover.py
     │
     └── Info.plist
 ```
@@ -244,8 +270,9 @@ Content availability, legality, and usage rights are the responsibility of the r
 ---
 
 ## 🚧 Roadmap
- - Dynamic Type support
- - Accessibility Support
+ - Dynamic Type support ✅
+ - Accessibility Support ✅ (Partially)
+ - Accessibility Identifiers for automation testing
  - Unit & UI tests
  - CI/CD pipeline
  - Snapshot testing

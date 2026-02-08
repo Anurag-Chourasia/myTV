@@ -17,6 +17,7 @@ struct EmptyStateView: View {
         VStack(spacing: 16) {
             Image(systemName: systemImage)
                 .font(.largeTitle)
+                .accessibilityHidden(true)
 
             Text(title)
                 .font(.headline)
@@ -28,5 +29,6 @@ struct EmptyStateView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityElement(children: .combine)
     }
 }

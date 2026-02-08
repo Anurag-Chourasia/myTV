@@ -22,5 +22,9 @@ struct FavoriteButton: View {
         .buttonStyle(.plain)
         .frame(width: 24, height: 24)
         .scaleEffect(isFavorite ? 1.15 : 1.0)
+        .accessibilityLabel(
+            Text(isFavorite ? VoiceOver.A11y.Favorite.remove : VoiceOver.A11y.Favorite.add)
+        )
+        .accessibilityHint(Text(VoiceOver.A11y.Favorite.hint))
     }
 }

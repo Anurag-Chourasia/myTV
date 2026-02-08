@@ -10,12 +10,13 @@ import SwiftUI
 
 struct TypingEffectView: View {
     @StateObject private var viewModel = TypingEffectViewModel()
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(viewModel.displayedText)
-                .font(.system(size: 16))
-                .lineLimit(viewModel.isExpanded ? nil : 2)
+                .font(.body)
+                .lineLimit(viewModel.isExpanded ? nil : (dynamicTypeSize.isAccessibilitySize ? 3 : 2))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .animation(.none, value: viewModel.displayedText)
 
@@ -28,8 +29,8 @@ struct TypingEffectView: View {
                     }
                 }
             } label: {
-                Text(viewModel.isExpanded ? L10n.App.showLess : L10n.App.readMore)
-                    .font(.system(size: 16, weight: .bold))
+                Text(viewModel.toggleButtonTitle)
+                    .font(.body.weight(.semibold))
             }
         }
         .padding()
