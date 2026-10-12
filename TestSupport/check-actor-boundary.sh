@@ -1,0 +1,4 @@
+#!/bin/bash
+set -euo pipefail
+sdk="$(xcrun --sdk iphonesimulator --show-sdk-path)"
+xcrun swiftc -sdk "$sdk" -target arm64-apple-ios16.6-simulator -swift-version 5 -strict-concurrency=complete -warnings-as-errors -default-isolation MainActor -enable-upcoming-feature DisableOutwardActorInference -enable-upcoming-feature InferSendableFromCaptures -enable-upcoming-feature GlobalActorIsolatedTypesUsability -enable-upcoming-feature MemberImportVisibility -enable-upcoming-feature InferIsolatedConformances -enable-upcoming-feature NonisolatedNonsendingByDefault -I "$1/Build/Products/Debug-iphonesimulator" -typecheck myTV/Data/Network/Client/HTTPClient.swift TestSupport/AdapterProbe.swift myTV/Data/Network/DTO/ChannelDTO.swift myTV/Data/Network/DTO/LogoDTO.swift myTV/Data/Network/DTO/StreamDTO.swift

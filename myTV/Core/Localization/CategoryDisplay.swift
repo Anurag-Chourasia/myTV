@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import FoundationKit
 
 enum CategoryDisplay {
 
     static func label(for value: String) -> String {
-        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmed = StringFormatting.trimmed(value)
         guard !trimmed.isEmpty else { return value }
 
         let key = normalizedKey(from: trimmed)
@@ -43,7 +44,7 @@ enum CategoryDisplay {
     }
 
     private static func normalizedSortKey(from value: String) -> String {
-        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmed = StringFormatting.trimmed(value)
         var result = trimmed
 
         while let first = result.unicodeScalars.first {
@@ -53,7 +54,7 @@ enum CategoryDisplay {
             result.removeFirst()
         }
 
-        return result.trimmingCharacters(in: .whitespacesAndNewlines)
+        return StringFormatting.trimmed(result)
     }
 
     private static let mapping: [String: String] = [
