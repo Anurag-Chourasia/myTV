@@ -7,6 +7,8 @@
 
 
 import SwiftUI
+import DesignTokensKit
+import UIComponentsKit
 
 struct ChannelGridView: View {
     let channel: Channel
@@ -15,28 +17,32 @@ struct ChannelGridView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            VStack(spacing: 0) {
-                ChannelLogo(url: channel.logoURL, height: logoSize.height, width: logoSize.width)
-                    .padding(.vertical, 10)
-                Spacer(minLength: 0)
-                Text(channel.name)
-                    .font(.headline)
-                    .foregroundColor(.primary)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                    .padding(.bottom, 10)
-                Spacer(minLength: 0)
-            }
-            .frame(width: contentWidth)
-            .frame(minHeight: contentMinHeight)
+        SurfaceCard(
+            metrics: SurfaceMetrics(padding: EdgeInsets(), cornerRadius: 20),
+            colors: SemanticColors(surface: Color(UIColor.secondarySystemGroupedBackground)),
+            clipsContent: true
+        ) {
+            ZStack(alignment: .topTrailing) {
+                VStack(spacing: 0) {
+                    ChannelLogo(url: channel.logoURL, height: logoSize.height, width: logoSize.width)
+                        .padding(.vertical, 10)
+                    Spacer(minLength: 0)
+                    Text(channel.name)
+                        .font(.headline)
+                        .foregroundColor(.primary)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                        .padding(.bottom, 10)
+                    Spacer(minLength: 0)
+                }
+                .frame(width: contentWidth)
+                .frame(minHeight: contentMinHeight)
 
-            FavoriteButton(isFavorite: isFavorite, action: onFavoriteToggle)
+                FavoriteButton(isFavorite: isFavorite, action: onFavoriteToggle)
+            }
+            .frame(width: cardWidth)
+            .frame(minHeight: cardMinHeight)
         }
-        .frame(width: cardWidth)
-        .frame(minHeight: cardMinHeight)
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 }
 

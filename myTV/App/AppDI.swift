@@ -13,7 +13,7 @@ final class AppDI {
             HapticServiceImpl()
 
     private lazy var httpClient: HTTPClient =
-        URLSessionHTTPClient()
+        CommonNetworkingHTTPClient()
 
     private lazy var reachability: ReachabilityService =
         ReachabilityServiceImpl()
