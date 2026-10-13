@@ -6,13 +6,14 @@
 //
 
 import SwiftUI
+import DesignTokensKit
 
 struct ChannelStickyBar: View {
 
     @Binding var scope: ChannelListViewModel.ChannelScope
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: Spacing.eight) {
             ForEach(ChannelListViewModel.ChannelScope.allCases) { tab in
                 Button {
                     scope = tab
@@ -20,13 +21,13 @@ struct ChannelStickyBar: View {
                     Text(tab.title)
                         .font(.subheadline.weight(.semibold))
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
+                        .padding(.vertical, Spacing.eight)
                         .background(
                             scope == tab
                             ? Color.accentColor.opacity(0.15)
                             : Color.clear
                         )
-                        .cornerRadius(10)
+                        .cornerRadius(CornerRadius.ten)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text(tab.title))
@@ -35,10 +36,10 @@ struct ChannelStickyBar: View {
                 )
             }
         }
-        .padding(8)
+        .padding(Spacing.eight)
         .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: CornerRadius.fourteen))
         .padding(.horizontal)
-        .padding(.top, 4)
+        .padding(.top, Spacing.four)
     }
 }

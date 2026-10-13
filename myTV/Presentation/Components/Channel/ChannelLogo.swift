@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DesignTokensKit
 
 struct ChannelLogo: View {
     let url: URL?
@@ -24,7 +25,7 @@ struct ChannelLogo: View {
         .scaledToFit()
         .frame(width: width, height: height)
         .background(Color(UIColor.systemGroupedBackground))
-        .cornerRadius(6)
+        .cornerRadius(CornerRadius.six)
         .accessibilityHidden(true)
     }
 }

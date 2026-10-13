@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import DesignTokensKit
 
 struct ChannelRowView: View {
     let channel: Channel
@@ -15,14 +16,14 @@ struct ChannelRowView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: Spacing.twelve) {
             ChannelLogo(url: channel.logoURL)
 
             Text(channel.name)
                 .font(.headline)
                 .multilineTextAlignment(.leading)
                 .lineLimit(dynamicTypeSize.isAccessibilitySize ? 3 : 2)
-                .padding(.horizontal, 8)
+                .padding(.horizontal, Spacing.eight)
 
             Spacer(minLength: 0)
 

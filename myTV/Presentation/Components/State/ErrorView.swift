@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIComponentsKit
 
 struct ErrorView: View {
     let viewModel: ErrorViewModel
@@ -13,19 +14,13 @@ struct ErrorView: View {
     let retry: () -> Void
 
     var body: some View {
-        VStack(spacing: 16) {
+        StateMessage {
             Image(systemName: "wifi.exclamationmark")
-                .font(.largeTitle)
-                .accessibilityHidden(true)
-
+        } title: {
             Text(viewModel.title)
-                .font(.headline)
-
+        } detail: {
             Text(message)
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-
+        } actions: {
             Button(viewModel.retryTitle, action: retry)
         }
         .padding()
