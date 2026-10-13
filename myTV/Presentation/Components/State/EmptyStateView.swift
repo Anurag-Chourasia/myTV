@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIComponentsKit
 
 struct EmptyStateView: View {
 
@@ -14,18 +15,12 @@ struct EmptyStateView: View {
     let systemImage: String
 
     var body: some View {
-        VStack(spacing: 16) {
+        StateMessage {
             Image(systemName: systemImage)
-                .font(.largeTitle)
-                .accessibilityHidden(true)
-
+        } title: {
             Text(title)
-                .font(.headline)
-
+        } detail: {
             Text(message)
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -18,21 +18,21 @@ struct ChannelGridView: View {
 
     var body: some View {
         SurfaceCard(
-            metrics: SurfaceMetrics(padding: EdgeInsets(), cornerRadius: 20),
+            metrics: SurfaceMetrics(padding: EdgeInsets(), cornerRadius: CornerRadius.twenty),
             colors: SemanticColors(surface: Color(UIColor.secondarySystemGroupedBackground)),
             clipsContent: true
         ) {
             ZStack(alignment: .topTrailing) {
                 VStack(spacing: 0) {
                     ChannelLogo(url: channel.logoURL, height: logoSize.height, width: logoSize.width)
-                        .padding(.vertical, 10)
+                        .padding(.vertical, Spacing.ten)
                     Spacer(minLength: 0)
                     Text(channel.name)
                         .font(.headline)
                         .foregroundColor(.primary)
                         .multilineTextAlignment(.center)
                         .lineLimit(2)
-                        .padding(.bottom, 10)
+                        .padding(.bottom, Spacing.ten)
                     Spacer(minLength: 0)
                 }
                 .frame(width: contentWidth)

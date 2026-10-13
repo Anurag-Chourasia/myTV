@@ -6,21 +6,19 @@
 //
 
 import SwiftUI
+import UIComponentsKit
 
 struct OfflineBanner: View {
     let viewModel: OfflineBannerViewModel
 
     var body: some View {
-        HStack {
+        IconMessageBanner(foreground: .white) {
             Image(systemName: "wifi.slash")
-                .accessibilityHidden(true)
+        } message: {
             Text(viewModel.message)
+        } background: {
+            Color.red
         }
-        .font(.caption)
-        .foregroundColor(.white)
-        .padding(8)
-        .frame(maxWidth: .infinity)
-        .background(Color.red)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(viewModel.message))
     }

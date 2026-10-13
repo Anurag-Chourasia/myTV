@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DesignTokensKit
 
 struct LoadingView: View {
     let viewModel: LoadingViewModel
@@ -15,15 +16,15 @@ struct LoadingView: View {
             Color.black.opacity(0.35)
                 .ignoresSafeArea()
 
-            VStack(spacing: 12) {
+            VStack(spacing: Spacing.twelve) {
                 ProgressView()
                 Text(viewModel.message)
                     .font(.footnote)
                     .foregroundColor(.secondary)
             }
-            .padding(20)
+            .padding(Spacing.twenty)
             .background(.ultraThinMaterial)
-            .cornerRadius(12)
+            .cornerRadius(CornerRadius.twelve)
             .accessibilityElement(children: .combine)
             .accessibilityLabel(Text(viewModel.message))
             
