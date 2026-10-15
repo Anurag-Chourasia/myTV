@@ -1,3 +1,4 @@
+import DesignTokensKit
 //
 //  ErrorView.swift
 //  myTV
@@ -23,7 +24,7 @@ struct ErrorView: View {
         } actions: {
             Button(viewModel.retryTitle, action: retry)
         }
-        .padding()
+        .padding(.all, Spacing.system)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityElement(children: .combine)
     }

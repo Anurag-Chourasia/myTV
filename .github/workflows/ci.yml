@@ -52,11 +52,17 @@ jobs:
           python3 Scripts/verify_pins.py
           git diff --exit-code -- '*.resolved'
 
+      - name: Enforce shared design tokens
+        run: python3 Scripts/check_design_tokens.py
+
       - name: Test exact package revisions
         run: python3 Scripts/test_dependencies.py
 
       - name: Test deterministic networking adapter
         run: python3 TestSupport/run-adapter-tests.py
+
+      - name: Test playback callback lifecycle
+        run: python3 TestSupport/run-playback-tests.py
 
       - name: Build app Debug for iOS Simulator
         run: >-

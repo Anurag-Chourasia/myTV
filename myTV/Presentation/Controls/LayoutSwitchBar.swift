@@ -6,20 +6,9 @@
 //
 
 import SwiftUI
+import UIComponentsKit
 
-enum ChannelLayout: String, CaseIterable, Identifiable {
-    case list
-    case grid
-
-    var id: String { rawValue }
-
-    var icon: String {
-        switch self {
-        case .list: return "list.bullet"
-        case .grid: return "square.grid.2x2"
-        }
-    }
-}
+typealias ChannelLayout = CatalogLayout
 
 struct LayoutSwitchMenu: View {
 
@@ -47,23 +36,8 @@ struct LayoutSwitchMenu: View {
     }
 
     var body: some View {
-        Menu {
-            ForEach(ChannelLayout.allCases) { option in
-                Button {
-                    if option == .grid && isAccessibilitySize {
-                        onGridUnavailable()
-                        return
-                    }
-                    onSelectLayout(option)
-                } label: {
-                    Label(
-                        titleForLayout(option),
-                        systemImage: selectedLayout == option ? "checkmark" : option.icon
-                    )
-                }
-            }
-        } label: {
-            Label(menuTitle, systemImage: selectedLayout.icon)
-        }
+        CatalogLayoutMenu(selection: selectedLayout, isAccessibilitySize: isAccessibilitySize,
+                          title: menuTitle, titleForLayout: titleForLayout,
+                          onSelect: onSelectLayout, onGridUnavailable: onGridUnavailable)
     }
 }

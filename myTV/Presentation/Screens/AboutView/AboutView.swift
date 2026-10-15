@@ -1,3 +1,4 @@
+import DesignTokensKit
 //
 //  AboutView.swift
 //  myTV
@@ -24,14 +25,14 @@ struct AboutView: View {
     // MARK: - Body
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
+            VStack(spacing: DesignMetric.p0) {
 
                 if viewModel.showOfflineBanner {
                     OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
                 }
 
                 ScrollView {
-                    VStack(spacing: 0) {
+                    VStack(spacing: DesignMetric.p0) {
                         developerSection
                         divider
                         appInfoSection
@@ -48,7 +49,7 @@ struct AboutView: View {
                 menuBar
             }
         }
-        .background(Color(UIColor.systemGroupedBackground))
+        .background(DesignColor.grouped)
         .alert(
             viewModel.invalidLinkAlertTitle,
             isPresented: $viewModel.showAlert
@@ -122,66 +123,66 @@ private extension AboutView {
 private extension AboutView {
 
     var developerSection: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: DesignMetric.p16) {
             Image(viewModel.developerImageName)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 100)
+                .frame(width: DesignMetric.p100)
                 .clipShape(Circle())
                 .overlay(
-                    Circle().stroke(.secondary, lineWidth: 1)
+                    Circle().stroke(DesignColor.secondary, lineWidth: DesignMetric.p1)
                 )
                 .accessibilityHidden(true)
 
             Text(viewModel.developerName)
-                .font(.title2)
+                .font(Typography.title2)
                 .fontWeight(.bold)
 
             Text(viewModel.developerRole)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(DesignColor.secondary)
 
             TypingEffectView()
         }
-        .padding()
+        .padding(.all, Spacing.system)
     }
 
     var appInfoSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: DesignMetric.p8) {
             Text(viewModel.appInfoTitle)
-                .font(.headline)
+                .font(Typography.headline)
 
             Text(viewModel.appName)
 
             Text(
                 "\(viewModel.appVersionPrefix) \(Bundle.main.appVersion) (\(Bundle.main.buildNumber))"
             )
-            .foregroundStyle(.secondary)
+            .foregroundStyle(DesignColor.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
+        .padding(.all, Spacing.system)
     }
 
     var disclaimerSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: DesignMetric.p10) {
             Text(viewModel.disclaimerTitle)
-                .font(.headline)
+                .font(Typography.headline)
 
             Text(LocalizedStringKey(viewModel.disclaimerText))
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+                .font(Typography.footnote)
+                .foregroundStyle(DesignColor.secondary)
                 .multilineTextAlignment(.leading)
-                .tint(.blue)
+                .tint(DesignColor.blue)
                 .fixedSize(horizontal: false, vertical: true)
                 .textSelection(.disabled)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
+        .padding(.all, Spacing.system)
     }
 
     var divider: some View {
         Rectangle()
-            .frame(height: 1)
-            .foregroundColor(Color(uiColor: .separator))
+            .frame(height: DesignMetric.p1)
+            .foregroundColor(DesignColor.separator)
     }
 }
 
@@ -189,56 +190,56 @@ private extension AboutView {
 private extension AboutView {
     @ViewBuilder
     var socialLinksSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: DesignMetric.p16) {
             Text(viewModel.socialTitle)
-                .font(.headline)
+                .font(Typography.headline)
             
             if viewModel.shouldUseGridLayout(isAccessibilitySize: dynamicTypeSize.isAccessibilitySize) {
-                LazyVGrid(columns: [.init(.adaptive(minimum: 110))]) {
+                LazyVGrid(columns: [.init(.adaptive(minimum: DesignMetric.p110))]) {
                     ForEach(viewModel.socialLinks) { link in
                         gridLinkButton(link)
                     }
                 }
             } else {
-                VStack(spacing: 0) {
+                VStack(spacing: DesignMetric.p0) {
                     ForEach(viewModel.socialLinks) { link in
                         listLinkButton(link)
                         
                         if link.id != viewModel.socialLinks.last?.id {
                             Divider()
-                                .padding(.leading, 60)
-                                .padding(.trailing, 12)
+                                .padding(.leading, DesignMetric.p60)
+                                .padding(.trailing, DesignMetric.p12)
                         }
                     }
                 }
-                .background(Color(UIColor.secondarySystemGroupedBackground))
-                .cornerRadius(12)
+                .background(DesignColor.groupedSecondary)
+                .cornerRadius(DesignMetric.p12)
             }
         }
-        .padding()
+        .padding(.all, Spacing.system)
     }
 
     func listLinkButton(_ link: SocialLink) -> some View {
         Button {
             openLink(link)
         } label: {
-            HStack(spacing: 12) {
+            HStack(spacing: DesignMetric.p12) {
                 Image(link.icon)
                     .resizable()
-                    .background(Color(UIColor.secondarySystemGroupedBackground))
-                    .frame(width: 36, height: 36)
+                    .background(DesignColor.groupedSecondary)
+                    .frame(width: DesignMetric.p36, height: DesignMetric.p36)
                     .accessibilityHidden(true)
 
                 Text(link.title)
-                    .font(.headline)
-                    .foregroundColor(.primary)
+                    .font(Typography.headline)
+                    .foregroundColor(DesignColor.primary)
                     .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                    .padding(.horizontal, 8)
+                    .lineLimit(TextLineLimit.p2)
+                    .padding(.horizontal, DesignMetric.p8)
 
                 Spacer()
             }
-            .padding()
+            .padding(.all, Spacing.system)
             .accessibilityElement(children: .combine)
         }
         .accessibilityLabel(Text(link.title))
@@ -249,26 +250,26 @@ private extension AboutView {
         Button {
             openLink(link)
         } label: {
-            VStack(spacing: 12) {
+            VStack(spacing: DesignMetric.p12) {
                 Image(link.icon)
                     .resizable()
-                    .background(Color(UIColor.secondarySystemGroupedBackground))
+                    .background(DesignColor.groupedSecondary)
                     .frame(width: socialIconSize, height: socialIconSize)
                     .accessibilityHidden(true)
 
                 Text(link.title)
-                    .font(.headline)
-                    .foregroundColor(.primary)
+                    .font(Typography.headline)
+                    .foregroundColor(DesignColor.primary)
                     .multilineTextAlignment(.center)
-                    .lineLimit(2)
-                    .padding(.horizontal, 8)
+                    .lineLimit(TextLineLimit.p2)
+                    .padding(.horizontal, DesignMetric.p8)
             }
             .frame(width: socialContentSize, height: socialContentSize)
             .accessibilityElement(children: .combine)
         }
         .frame(width: socialCardSize, height: socialCardSize)
-        .background(Color(UIColor.secondarySystemGroupedBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .background(DesignColor.groupedSecondary)
+        .clipShape(RoundedRectangle(cornerRadius: DesignMetric.p20, style: .continuous))
         .accessibilityLabel(Text(link.title))
         .accessibilityHint(Text(VoiceOver.A11y.Openlink.hint))
     }
@@ -283,7 +284,7 @@ private extension AboutView {
 }
 
 private extension AboutView {
-    var socialIconSize: CGFloat { 64 }
-    var socialContentSize: CGFloat { 110 }
-    var socialCardSize: CGFloat { 120 }
+    var socialIconSize: CGFloat { DesignMetric.p64 }
+    var socialContentSize: CGFloat { DesignMetric.p110 }
+    var socialCardSize: CGFloat { DesignMetric.p120 }
 }

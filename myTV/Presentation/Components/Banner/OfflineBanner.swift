@@ -1,3 +1,4 @@
+import DesignTokensKit
 //
 //  OfflineBanner.swift
 //  myTV
@@ -12,12 +13,12 @@ struct OfflineBanner: View {
     let viewModel: OfflineBannerViewModel
 
     var body: some View {
-        IconMessageBanner(foreground: .white) {
+        IconMessageBanner(foreground: DesignColor.white) {
             Image(systemName: "wifi.slash")
         } message: {
             Text(viewModel.message)
         } background: {
-            Color.red
+            DesignColor.red
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(viewModel.message))

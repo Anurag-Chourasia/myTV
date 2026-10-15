@@ -17,47 +17,21 @@ struct ChannelGridView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        SurfaceCard(
-            metrics: SurfaceMetrics(padding: EdgeInsets(), cornerRadius: CornerRadius.twenty),
-            colors: SemanticColors(surface: Color(UIColor.secondarySystemGroupedBackground)),
-            clipsContent: true
-        ) {
-            ZStack(alignment: .topTrailing) {
-                VStack(spacing: 0) {
-                    ChannelLogo(url: channel.logoURL, height: logoSize.height, width: logoSize.width)
-                        .padding(.vertical, Spacing.ten)
-                    Spacer(minLength: 0)
-                    Text(channel.name)
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                        .padding(.bottom, Spacing.ten)
-                    Spacer(minLength: 0)
-                }
-                .frame(width: contentWidth)
-                .frame(minHeight: contentMinHeight)
-
-                FavoriteButton(isFavorite: isFavorite, action: onFavoriteToggle)
-            }
-            .frame(width: cardWidth)
-            .frame(minHeight: cardMinHeight)
+        CatalogTile(layout: .grid, metrics: .compactGrid(accessibility: dynamicTypeSize.isAccessibilitySize),
+                    colors: SemanticColors(surface: DesignColor.groupedSecondary)) {
+            ChannelLogo(url: channel.logoURL, height: logoSize.height, width: logoSize.width)
+        } details: {
+            Text(channel.name)
+                .font(Typography.headline)
+                .foregroundColor(DesignColor.primary)
+                .multilineTextAlignment(.center)
+                .lineLimit(CatalogMetrics.gridTitleLines)
+        } accessory: {
+            FavoriteButton(isFavorite: isFavorite, action: onFavoriteToggle)
         }
     }
-}
 
-private extension ChannelGridView {
-    var isAccessibilitySize: Bool { dynamicTypeSize.isAccessibilitySize }
-
-    var logoSize: CGSize {
-        isAccessibilitySize
-        ? CGSize(width: 120, height: 80)
-        : CGSize(width: 90, height: 64)
+    private var logoSize: CGSize {
+        dynamicTypeSize.isAccessibilitySize ? CatalogMetrics.accessibleLogoSize : CatalogMetrics.compactLogoSize
     }
-
-    var contentWidth: CGFloat { isAccessibilitySize ? 150 : 110 }
-    var contentMinHeight: CGFloat { isAccessibilitySize ? 150 : 110 }
-
-    var cardWidth: CGFloat { isAccessibilitySize ? 160 : 120 }
-    var cardMinHeight: CGFloat { isAccessibilitySize ? 170 : 120 }
 }

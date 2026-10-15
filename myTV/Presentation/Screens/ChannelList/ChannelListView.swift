@@ -1,3 +1,4 @@
+import DesignTokensKit
 //
 //  ChannelListView.swift
 //  myTV
@@ -32,7 +33,7 @@ struct ChannelListView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
+            VStack(spacing: DesignMetric.p0) {
                 if viewModel.showOfflineBanner {
                     OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
                 }
@@ -57,7 +58,7 @@ struct ChannelListView: View {
                         )
                     }
             }
-            .background(Color(UIColor.systemGroupedBackground))
+            .background(DesignColor.grouped)
             .searchable(text: $viewModel.searchText)
             .navigationTitle(viewModel.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
@@ -176,7 +177,7 @@ private extension ChannelListView {
             LazyVStack(alignment: .leading) {
                 ForEach(viewModel.groupedResult, id: \.0) { section, channels in
                     ChannelSectionHeader(title: viewModel.sectionTitle(for: section))
-                    LazyVGrid(columns: [.init(.adaptive(minimum: gridMinWidth), spacing: 10)]) {
+                    LazyVGrid(columns: [.init(.adaptive(minimum: gridMinWidth), spacing: DesignMetric.p10)]) {
                         ForEach(channels) { channel in
                             NavigationLink {
                                 StreamListView(
@@ -198,13 +199,13 @@ private extension ChannelListView {
                     }
                 }
             }
-            .padding()
+            .padding(.all, Spacing.system)
         }
     }
 }
 
 private extension ChannelListView {
-    var gridMinWidth: CGFloat { dynamicTypeSize.isAccessibilitySize ? 160 : 110 }
+    var gridMinWidth: CGFloat { dynamicTypeSize.isAccessibilitySize ? DesignMetric.p160 : DesignMetric.p110 }
 }
 
 // MARK: - Toolbar

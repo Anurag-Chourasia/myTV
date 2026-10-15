@@ -1,3 +1,4 @@
+import DesignTokensKit
 //
 //  MultiSelectView.swift
 //  myTV
@@ -104,14 +105,14 @@ private extension MultiSelectView {
         if viewModel.allowsMultipleSelection {
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(.accentColor)
+                    .foregroundColor(DesignColor.accentColor)
                     .accessibilityHidden(true)
             }
         } else {
             Image(systemName: isSelected
                   ? "largecircle.fill.circle"
                   : "circle")
-                .foregroundColor(isSelected ? .accentColor : .secondary)
+                .foregroundColor(isSelected ? DesignColor.accentColor : DesignColor.secondary)
                 .accessibilityHidden(true)
         }
     }
