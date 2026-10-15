@@ -17,7 +17,7 @@ struct TypingEffectView: View {
         VStack(alignment: .leading, spacing: DesignMetric.p12) {
             Text(viewModel.displayedText)
                 .font(Typography.body)
-                .lineLimit(viewModel.isExpanded ? nil : (dynamicTypeSize.isAccessibilitySize ? TextLineLimit.p3 : TextLineLimit.p2))
+                .lineLimit(viewModel.isExpanded ? nil : (dynamicTypeSize.isAccessibilitySize ? CatalogMetrics.accessibleTitleLines : TextLineLimit.p2))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .animation(.none, value: viewModel.displayedText)
 

@@ -61,6 +61,9 @@ jobs:
       - name: Test deterministic networking adapter
         run: python3 TestSupport/run-adapter-tests.py
 
+      - name: Test playback callback lifecycle
+        run: python3 TestSupport/run-playback-tests.py
+
       - name: Build app Debug for iOS Simulator
         run: >-
           xcodebuild -project myTV.xcodeproj -scheme myTV
