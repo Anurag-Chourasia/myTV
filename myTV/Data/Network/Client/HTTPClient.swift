@@ -20,7 +20,11 @@ final class CommonNetworkingHTTPClient: HTTPClient {
     private let transport: CommonNetworking.HTTPClient
 
     init(session: URLSession = .shared) {
+        #if DEBUG
+        self.transport = CommonNetworking.HTTPClient(session: session, logger: .console)
+        #else
         self.transport = CommonNetworking.HTTPClient(session: session)
+        #endif
     }
 
     func get<T: Decodable>(_ url: URL) async throws -> T {
