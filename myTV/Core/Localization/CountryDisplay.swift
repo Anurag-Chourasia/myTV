@@ -9,7 +9,7 @@ import Foundation
 
 enum CountryDisplay {
 
-    static func label(for value: String, locale: Locale = .current) -> String {
+    nonisolated static func label(for value: String, locale: Locale = .current) -> String {
         let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return value }
 
@@ -28,11 +28,11 @@ enum CountryDisplay {
         return flag ?? trimmed
     }
 
-    static func sortKey(for value: String, locale: Locale = .current) -> String {
+    nonisolated static func sortKey(for value: String, locale: Locale = .current) -> String {
         normalizedSortKey(from: label(for: value, locale: locale))
     }
 
-    private static func normalizedRegionCode(from value: String) -> String? {
+    private nonisolated static func normalizedRegionCode(from value: String) -> String? {
         let upper = value.uppercased()
         if upper.count == 2, upper.unicodeScalars.allSatisfy({ $0.isASCII }) {
             return upper
@@ -40,7 +40,7 @@ enum CountryDisplay {
         return nil
     }
 
-    private static func localizedCountryName(
+    private nonisolated static func localizedCountryName(
         for value: String,
         locale: Locale
     ) -> String? {
@@ -51,7 +51,7 @@ enum CountryDisplay {
         return nil
     }
 
-    private static func flagEmoji(from regionCode: String) -> String? {
+    private nonisolated static func flagEmoji(from regionCode: String) -> String? {
         guard regionCode.count == 2 else { return nil }
         let base: UInt32 = 127397
         var scalars: [UnicodeScalar] = []
@@ -64,7 +64,7 @@ enum CountryDisplay {
         return String(String.UnicodeScalarView(scalars))
     }
 
-    private static func normalizedSortKey(from value: String) -> String {
+    private nonisolated static func normalizedSortKey(from value: String) -> String {
         let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
         var result = trimmed
 

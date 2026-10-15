@@ -13,14 +13,14 @@ struct LoadingView: View {
 
     var body: some View {
         ZStack {
-            Color.black.opacity(0.35)
+            DesignColor.black.opacity(OpacityToken.p0_35)
                 .ignoresSafeArea()
 
             VStack(spacing: Spacing.twelve) {
                 ProgressView()
                 Text(viewModel.message)
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
+                    .font(Typography.footnote)
+                    .foregroundColor(DesignColor.secondary)
             }
             .padding(Spacing.twenty)
             .background(.ultraThinMaterial)

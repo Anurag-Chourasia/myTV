@@ -12,12 +12,12 @@ struct SkeletonRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.eight) {
             RoundedRectangle(cornerRadius: CornerRadius.four)
-                .fill(Color.gray.opacity(0.3))
-                .frame(height: 16)
+                .fill(DesignColor.gray.opacity(OpacityToken.p0_3))
+                .frame(height: DesignMetric.p16)
 
             RoundedRectangle(cornerRadius: CornerRadius.four)
-                .fill(Color.gray.opacity(0.2))
-                .frame(width: 80, height: 12)
+                .fill(DesignColor.gray.opacity(OpacityToken.p0_2))
+                .frame(width: DesignMetric.p80, height: DesignMetric.p12)
         }
         .redacted(reason: .placeholder)
     }

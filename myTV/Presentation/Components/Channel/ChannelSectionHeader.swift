@@ -1,3 +1,4 @@
+import DesignTokensKit
 //
 //  ChannelSectionHeader.swift
 //  myTV
@@ -15,12 +16,12 @@ struct ChannelSectionHeader: View {
     var body: some View {
         HStack {
             Text(title)
-                .font(.headline)
+                .font(Typography.headline)
                 .fontWeight(.semibold)
-                .foregroundStyle(.secondary) 
+                .foregroundStyle(DesignColor.secondary)
             Spacer()
         }
-        .padding(.horizontal)
-        .background(Color.clear)
+        .padding(.horizontal, Spacing.system)
+        .background(DesignColor.clear)
     }
 }

@@ -1,3 +1,4 @@
+import DesignTokensKit
 //
 //  FavoriteButton.swift
 //  myTV
@@ -17,11 +18,11 @@ struct FavoriteButton: View {
             action()
         } label: {
             Image(systemName: isFavorite ? "heart.fill" : "heart")
-                .foregroundColor(isFavorite ? .red : .secondary)
+                .foregroundColor(isFavorite ? DesignColor.red : DesignColor.secondary)
         }
         .buttonStyle(.plain)
-        .frame(width: 24, height: 24)
-        .scaleEffect(isFavorite ? 1.15 : 1.0)
+        .frame(width: DesignMetric.p24, height: DesignMetric.p24)
+        .scaleEffect(isFavorite ? ScaleToken.p1_15 : ScaleToken.p1_0)
         .accessibilityLabel(
             Text(isFavorite ? VoiceOver.A11y.Favorite.remove : VoiceOver.A11y.Favorite.add)
         )

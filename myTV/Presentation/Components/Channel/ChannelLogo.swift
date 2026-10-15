@@ -10,21 +10,21 @@ import DesignTokensKit
 
 struct ChannelLogo: View {
     let url: URL?
-    var height: CGFloat = 40
-    var width: CGFloat = 40
+    var height: CGFloat = DesignMetric.p40
+    var width: CGFloat = DesignMetric.p40
 
     var body: some View {
         CachedAsyncImage(url: url) {
             ZStack {
-                Color(UIColor.systemGroupedBackground)
+                DesignColor.grouped
 
                 Image(systemName: "tv")
-                    .foregroundColor(.secondary)
+                    .foregroundColor(DesignColor.secondary)
             }
         }
         .scaledToFit()
         .frame(width: width, height: height)
-        .background(Color(UIColor.systemGroupedBackground))
+        .background(DesignColor.grouped)
         .cornerRadius(CornerRadius.six)
         .accessibilityHidden(true)
     }

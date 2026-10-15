@@ -1,3 +1,4 @@
+import DesignTokensKit
 //
 //  StreamListView.swift
 //  myTV
@@ -25,7 +26,7 @@ struct StreamListView: View {
     }
 
     private var content: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: DesignMetric.p0) {
             if viewModel.showOfflineBanner {
                 OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
             }
@@ -98,12 +99,12 @@ private extension StreamListView {
                     allStreams: viewModel.streams
                 )
             } label: {
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: DesignMetric.p4) {
                     Text(stream.title)
                     if let quality = stream.quality {
                         Text(quality)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+                            .font(Typography.caption)
+                            .foregroundColor(DesignColor.secondary)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)

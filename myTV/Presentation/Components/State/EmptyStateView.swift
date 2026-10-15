@@ -1,3 +1,4 @@
+import DesignTokensKit
 //
 //  EmptyStateView.swift
 //  myTV
@@ -22,7 +23,7 @@ struct EmptyStateView: View {
         } detail: {
             Text(message)
         }
-        .padding()
+        .padding(.all, Spacing.system)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityElement(children: .combine)
     }

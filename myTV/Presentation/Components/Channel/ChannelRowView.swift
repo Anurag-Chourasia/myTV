@@ -8,6 +8,7 @@
 
 import SwiftUI
 import DesignTokensKit
+import UIComponentsKit
 
 struct ChannelRowView: View {
     let channel: Channel
@@ -16,17 +17,15 @@ struct ChannelRowView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        HStack(spacing: Spacing.twelve) {
+        CatalogTile(layout: .list, metrics: .plainRow) {
             ChannelLogo(url: channel.logoURL)
-
+        } details: {
             Text(channel.name)
-                .font(.headline)
+                .font(Typography.headline)
                 .multilineTextAlignment(.leading)
-                .lineLimit(dynamicTypeSize.isAccessibilitySize ? 3 : 2)
+                .lineLimit(dynamicTypeSize.isAccessibilitySize ? CatalogMetrics.accessibleTitleLines : CatalogMetrics.listTitleLines)
                 .padding(.horizontal, Spacing.eight)
-
-            Spacer(minLength: 0)
-
+        } accessory: {
             FavoriteButton(isFavorite: isFavorite, action: onFavoriteToggle)
         }
     }

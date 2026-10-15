@@ -19,13 +19,13 @@ struct ChannelStickyBar: View {
                     scope = tab
                 } label: {
                     Text(tab.title)
-                        .font(.subheadline.weight(.semibold))
+                        .font(Typography.subheadline.weight(.semibold))
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, Spacing.eight)
                         .background(
                             scope == tab
-                            ? Color.accentColor.opacity(0.15)
-                            : Color.clear
+                            ? DesignColor.accentColor.opacity(OpacityToken.p0_15)
+                            : DesignColor.clear
                         )
                         .cornerRadius(CornerRadius.ten)
                 }
@@ -37,9 +37,9 @@ struct ChannelStickyBar: View {
             }
         }
         .padding(Spacing.eight)
-        .background(Color(UIColor.secondarySystemGroupedBackground))
+        .background(DesignColor.groupedSecondary)
         .clipShape(RoundedRectangle(cornerRadius: CornerRadius.fourteen))
-        .padding(.horizontal)
+        .padding(.horizontal, Spacing.system)
         .padding(.top, Spacing.four)
     }
 }

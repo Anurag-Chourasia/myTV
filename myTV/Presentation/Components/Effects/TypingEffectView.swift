@@ -1,3 +1,4 @@
+import DesignTokensKit
 //
 //  TypingEffectView.swift
 //  myTV
@@ -13,10 +14,10 @@ struct TypingEffectView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: DesignMetric.p12) {
             Text(viewModel.displayedText)
-                .font(.body)
-                .lineLimit(viewModel.isExpanded ? nil : (dynamicTypeSize.isAccessibilitySize ? 3 : 2))
+                .font(Typography.body)
+                .lineLimit(viewModel.isExpanded ? nil : (dynamicTypeSize.isAccessibilitySize ? TextLineLimit.p3 : TextLineLimit.p2))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .animation(.none, value: viewModel.displayedText)
 
@@ -30,9 +31,9 @@ struct TypingEffectView: View {
                 }
             } label: {
                 Text(viewModel.toggleButtonTitle)
-                    .font(.body.weight(.semibold))
+                    .font(Typography.body.weight(.semibold))
             }
         }
-        .padding()
+        .padding(.all, Spacing.system)
     }
 }

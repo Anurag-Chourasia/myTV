@@ -168,6 +168,7 @@ extension StreamListViewModel {
 
     func teardown() {
         isAttemptingPlayback = false
+        isPresentingPlayer = false
         isPreparingPlayback = false
         removePlayerObservers()
         player?.replaceCurrentItem(with: nil)
@@ -179,7 +180,7 @@ private extension StreamListViewModel {
 
     func attemptPlay() {
         guard currentStreamIndex < playbackQueue.count else {
-            isAttemptingPlayback = false
+            teardown()
             playbackError = Localizable.Stream.Player.Error.noWorkingStreams
             return
         }
@@ -204,6 +205,7 @@ private extension StreamListViewModel {
             guard let self else { return }
 
             Task { @MainActor in
+                guard self.isAttemptingPlayback, self.player?.currentItem === item else { return }
                 switch item.status {
 
                 case .readyToPlay:
@@ -233,6 +235,7 @@ private extension StreamListViewModel {
         ) { [weak self] _ in
             guard let self else { return }
             Task { @MainActor in
+                guard self.isAttemptingPlayback, self.player?.currentItem === item else { return }
                 self.handlePlaybackFailure(message: Localizable.Stream.Player.Error.cannotPlay)
             }
         }
