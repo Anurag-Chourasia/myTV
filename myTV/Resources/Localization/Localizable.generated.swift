@@ -43,20 +43,6 @@ enum Localizable {
                 comment: ""
             )
         }
-        enum Developer {
-            static let name = NSLocalizedString(
-                "about.developer.name",
-                comment: ""
-            )
-            static let role = NSLocalizedString(
-                "about.developer.role",
-                comment: ""
-            )
-            static let summary = NSLocalizedString(
-                "about.developer.summary",
-                comment: ""
-            )
-        }
         enum Disclaimer {
             static let text = NSLocalizedString(
                 "about.disclaimer.text",
@@ -78,50 +64,6 @@ enum Localizable {
             )
         }
         enum Social {
-            enum Cv {
-                static let url = NSLocalizedString(
-                    "about.social.cv.url",
-                    comment: ""
-                )
-            }
-            enum Email {
-                static let url = NSLocalizedString(
-                    "about.social.email.url",
-                    comment: ""
-                )
-            }
-            enum Github {
-                static let url = NSLocalizedString(
-                    "about.social.github.url",
-                    comment: ""
-                )
-            }
-            enum Linkedin {
-                static let url = NSLocalizedString(
-                    "about.social.linkedin.url",
-                    comment: ""
-                )
-            }
-            static let cv = NSLocalizedString(
-                "about.social.cv",
-                comment: ""
-            )
-            static let email = NSLocalizedString(
-                "about.social.email",
-                comment: ""
-            )
-            static let github = NSLocalizedString(
-                "about.social.github",
-                comment: ""
-            )
-            static let gmail = NSLocalizedString(
-                "about.social.gmail",
-                comment: ""
-            )
-            static let linkedin = NSLocalizedString(
-                "about.social.linkedin",
-                comment: ""
-            )
             static let title = NSLocalizedString(
                 "about.social.title",
                 comment: ""
@@ -148,12 +90,6 @@ enum Localizable {
                     comment: ""
                 )
             }
-        }
-        enum Developer {
-            static let firstName = NSLocalizedString(
-                "app.developer.firstName",
-                comment: ""
-            )
         }
         enum Grouping {
             static let category = NSLocalizedString(
