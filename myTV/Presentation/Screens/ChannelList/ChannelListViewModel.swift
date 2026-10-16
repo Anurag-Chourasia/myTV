@@ -100,7 +100,9 @@ final class ChannelListViewModel: ObservableObject {
     @Published var channelScope: ChannelScope = .all
     @Published var selectedCountries: Set<String> = []
     @Published var selectedCategories: Set<String> = []
-    @Published var favoriteChannelIDs: Set<String> = []
+    @Published private(set) var favoriteChannelIDs: Set<String> = [] {
+        didSet { favorites.save(favoriteChannelIDs) }
+    }
     @Published var showOfflineBanner = false
     @Published var showAlertDialog = false
     @Published var gridAlert: GridAlert?
@@ -134,6 +136,7 @@ final class ChannelListViewModel: ObservableObject {
     // MARK: - Dependencies
     private let fetchChannels: FetchChannelsUseCase
     private let reachability: ReachabilityService
+    private let favorites: FavoriteChannelStore
     private let haptics: HapticService
     private var cancellables = Set<AnyCancellable>()
 
@@ -141,11 +144,14 @@ final class ChannelListViewModel: ObservableObject {
     init(
         fetchChannels: DefaultFetchChannelsUseCase,
         reachability: ReachabilityService,
-        haptics: HapticService
+        haptics: HapticService,
+        favorites: FavoriteChannelStore? = nil
     ) {
         self.fetchChannels = fetchChannels
         self.reachability = reachability
         self.haptics = haptics
+        self.favorites = favorites ?? FavoriteChannelStore()
+        favoriteChannelIDs = self.favorites.load()
 
         grouping = Grouping(rawValue: storedGroupingRaw) ?? .name
         sectionSort = SortOrder(rawValue: storedSectionSortRaw) ?? .ascending

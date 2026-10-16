@@ -9,14 +9,14 @@ import SwiftUI
 
 @main
 struct myTVApp: App {
-    @AppStorage("appAppearance") private var appAppearance: AppAppearance = .system
+    @StateObject private var channels = AppDI.shared.makeChannelListViewModel()
 
     var body: some Scene {
         WindowGroup {
             ChannelListView(
-                viewModel: AppDI.shared.makeChannelListViewModel()
+                viewModel: channels
             )
-            .preferredColorScheme(appAppearance.colorScheme)
+            .appAppearance()
             .dynamicTypeSize(.xSmall ... .accessibility2)
         }
     }

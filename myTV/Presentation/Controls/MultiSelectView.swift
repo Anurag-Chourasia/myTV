@@ -57,6 +57,7 @@ struct MultiSelectView: View {
             }
         }
         .navigationTitle(viewModel.title)
+        .screenTools()
         .searchable(
             text: $viewModel.searchText,
             placement: .navigationBarDrawer(displayMode: .always),

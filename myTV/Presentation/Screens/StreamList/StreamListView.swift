@@ -33,6 +33,7 @@ struct StreamListView: View {
             streamBody
         }
         .navigationTitle(channelName)
+        .screenTools()
         .navigationBarTitleDisplayMode(.inline)
         .task {
             await viewModel.loadIfNeeded(channelId: channelId)
@@ -44,9 +45,19 @@ struct StreamListView: View {
             }
         ) {
             if let player = viewModel.player {
-                StreamPlayerView(player: player)
-                    .ignoresSafeArea()
-                    .onAppear { player.play() }
+                NavigationStack {
+                    StreamPlayerView(player: player)
+                        .ignoresSafeArea(edges: .bottom)
+                        .navigationTitle(channelName)
+                        .navigationBarTitleDisplayMode(.inline)
+                        .screenTools()
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarLeading) {
+                                Button("Done") { viewModel.dismissPlayer() }
+                            }
+                        }
+                        .onAppear { player.play() }
+                }
             }
         }
         .alert(
