@@ -14,3 +14,9 @@ FoundationKit trims existing category display input exactly as before. Localizat
 ## Shared catalog design
 
 CatalogTile and CatalogLayoutMenu come from UIComponentsKit 1.2.0; their metrics, colors and typography come from DesignTokensKit 1.2.0. Run `python3 Scripts/check_design_tokens.py` before submitting UI changes. CI rejects raw visual literals and implicit padding in application Swift sources. Numeric business data and conversion algorithms remain local. The scan is a source-pattern guard, not a Swift type checker.
+
+## Private developer profile module
+
+DeveloperProfileKit 1.0.0 owns the developer portrait, biography, social assets/links, expandable summary and app-information/disclaimer presentation. Apps supply their own name/version/build/disclaimer and navigation. The package uses the existing exact DesignTokensKit/UIComponentsKit versions. The app dependency record and Xcode lockfile verify the package commit.
+
+The repository is private. Local builds need an authorized GitHub account with read access; CI uses a dedicated read-only deploy key stored as DEVELOPERPROFILEKIT_DEPLOY_KEY. The existing trusted-workflow SSH configuration routes only this repository through that key and removes temporary credentials after the run. No private keys are committed.

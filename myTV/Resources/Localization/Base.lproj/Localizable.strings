@@ -26,7 +26,6 @@
 "app.search" = "Search";
 "app.apply" = "Apply";
 "app.normalize.regex" = "[^a-z0-9]";
-"app.developer.firstName" = "Anurag";
 /* =========================
    Errors
    ========================= */
@@ -131,11 +130,7 @@
 
 /* About – Developer */
 
-"about.developer.name" = "Anurag Chourasia";
-"about.developer.role" = "iOS Engineer";
 
-"about.developer.summary" =
-"Dynamic iOS Engineer with around 4 years of experience delivering high-performance, production-grade mobile applications for global brands such as Lloyds, Halifax, BOS, MBNA, and ITC Hotels.\n\nSpecialized in Swift, Objective-C, SwiftUI, and modular architectures (MVVM, MVVM-C, MVC).\n\nProven expertise in CI/CD pipelines, automated testing (unit, UI, snapshot), and Agile/Scrum collaboration.\n\nPassionate about building scalable, user-centric iOS applications.";
 
 /* App Info */
 "about.app.info.title" = "App Information";
@@ -149,14 +144,3 @@
 
 /* Social */
 "about.social.title" = "Let’s Connect";
-
-"about.social.github" = "GitHub";
-"about.social.linkedin" = "LinkedIn";
-"about.social.email" = "Email";
-"about.social.gmail" = "Gmail";
-"about.social.cv" = "CV";
-
-"about.social.github.url" = "https://github.com/Anurag-Chourasia";
-"about.social.linkedin.url" = "https://www.linkedin.com/in/anurag-chourasia-b66710178/";
-"about.social.email.url" = "mailto:anuragchourasiaios@gmail.com";
-"about.social.cv.url" = "https://drive.google.com/file/d/16lYgU9C3WyBlL1Jzf__tKiaXxnsNZ_jd/view";

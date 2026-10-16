@@ -13,6 +13,7 @@
 		8A5187FC767F6661D17F70CA /* LocalizationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4369C1F27BA5812F32EAA569 /* LocalizationKit */; };
 		0A8B23D262DECF5890969BEE /* DesignTokensKit in Frameworks */ = {isa = PBXBuildFile; productRef = C30463340B480FD3F0AA4EAC /* DesignTokensKit */; };
 		252265A75B52A0C960CB4B51 /* UIComponentsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1D2587FDA8AB45F9B7227334 /* UIComponentsKit */; };
+		A25000000000000000000003 /* DeveloperProfileKit in Frameworks */ = {isa = PBXBuildFile; productRef = A25000000000000000000002 /* DeveloperProfileKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A25000000000000000000003 /* DeveloperProfileKit in Frameworks */,
 				EEEC20DB6D728F17ECF71C28 /* CommonNetworking in Frameworks */,
 				1C26DD8EFB40C83F8A10E6F1 /* FoundationKit in Frameworks */,
 				8A5187FC767F6661D17F70CA /* LocalizationKit in Frameworks */,
@@ -96,6 +98,7 @@
 			);
 			name = myTV;
 			packageProductDependencies = (
+				A25000000000000000000002 /* DeveloperProfileKit */,
 				D9D4A9BB17E5690CE37C2044 /* CommonNetworking */,
 				BBA5F2ED3ED984AD2A2D1221 /* FoundationKit */,
 				4369C1F27BA5812F32EAA569 /* LocalizationKit */,
@@ -131,6 +134,7 @@
 			mainGroup = 34C031DA2F23888E0029B9CC;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				A25000000000000000000001 /* XCRemoteSwiftPackageReference "DeveloperProfileKit" */,
 				92828F164BE284EE6D7434F8 /* CommonNetworking */,
 				AFEF0A9C4B01264D395D40C1 /* FoundationKit */,
 				75FE587815F6BDF36A2BF064 /* LocalizationKit */,
@@ -200,6 +204,11 @@
 		75FE587815F6BDF36A2BF064 /* LocalizationKit */ = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/Anurag-Chourasia/LocalizationKit.git"; requirement = {kind = exactVersion; version = 0.1.1; }; };
 		FF1CD3F59CA7E3C48429248C /* DesignTokensKit */ = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/Anurag-Chourasia/DesignTokensKit.git"; requirement = {kind = exactVersion; version = 1.2.0; }; };
 		50ED332846C85C80EDC0293F /* UIComponentsKit */ = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/Anurag-Chourasia/UIComponentsKit.git"; requirement = {kind = exactVersion; version = 1.2.0; }; };
+		A25000000000000000000001 /* XCRemoteSwiftPackageReference "DeveloperProfileKit" */ = {
+            isa = XCRemoteSwiftPackageReference;
+            repositoryURL = "https://github.com/Anurag-Chourasia/DeveloperProfileKit.git";
+            requirement = { kind = exactVersion; version = 1.0.0; };
+        };
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -208,6 +217,11 @@
 		4369C1F27BA5812F32EAA569 /* LocalizationKit */ = {isa = XCSwiftPackageProductDependency; package = 75FE587815F6BDF36A2BF064; productName = LocalizationKit; };
 		C30463340B480FD3F0AA4EAC /* DesignTokensKit */ = {isa = XCSwiftPackageProductDependency; package = FF1CD3F59CA7E3C48429248C; productName = DesignTokensKit; };
 		1D2587FDA8AB45F9B7227334 /* UIComponentsKit */ = {isa = XCSwiftPackageProductDependency; package = 50ED332846C85C80EDC0293F; productName = UIComponentsKit; };
+		A25000000000000000000002 /* DeveloperProfileKit */ = {
+            isa = XCSwiftPackageProductDependency;
+            package = A25000000000000000000001 /* XCRemoteSwiftPackageReference "DeveloperProfileKit" */;
+            productName = DeveloperProfileKit;
+        };
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCBuildConfiguration section */

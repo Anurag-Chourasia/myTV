@@ -14,7 +14,6 @@ final class AboutViewModel: ObservableObject {
 
     // MARK: - Published UI State
     @Published var showOfflineBanner = false
-    @Published var showAlert = false
     @Published var gridAlert: GridAlert?
     @AppStorage("channelLayout")
     private var storedLayoutRaw = ChannelLayout.list.rawValue
@@ -36,31 +35,6 @@ final class AboutViewModel: ObservableObject {
     private let haptics: HapticService
     private var cancellables = Set<AnyCancellable>()
     
-    var socialLinks: [SocialLink] {
-        [
-            .init(
-                title: Localizable.About.Social.github,
-                icon: Localizable.About.Social.github,
-                url: URL(string: Localizable.About.Social.Github.url)!
-            ),
-            .init(
-                title: Localizable.About.Social.linkedin,
-                icon: Localizable.About.Social.linkedin,
-                url: URL(string: Localizable.About.Social.Linkedin.url)!
-            ),
-            .init(
-                title: Localizable.About.Social.email,
-                icon: Localizable.About.Social.gmail,
-                url: URL(string: Localizable.About.Social.Email.url)!
-            ),
-            .init(
-                title: Localizable.About.Social.cv,
-                icon: Localizable.About.Social.cv,
-                url: URL(string: Localizable.About.Social.Cv.url)!
-            )
-        ]
-    }
-
     var offlineBannerViewModel: OfflineBannerViewModel {
         .default
     }
@@ -87,18 +61,6 @@ final class AboutViewModel: ObservableObject {
 
     var appearanceMenuSectionTitle: String {
         Localizable.About.Menu.appearance
-    }
-
-    var developerImageName: String {
-        Localizable.App.Developer.firstName
-    }
-
-    var developerName: String {
-        Localizable.About.Developer.name
-    }
-
-    var developerRole: String {
-        Localizable.About.Developer.role
     }
 
     var appInfoTitle: String {
@@ -157,10 +119,6 @@ final class AboutViewModel: ObservableObject {
                 self?.showOfflineBanner = !isOnline
             }
             .store(in: &cancellables)
-    }
-
-    func handleInvalidLink() {
-        showAlert = true
     }
 
     func enforceListIfAccessibility(_ isAccessibilitySize: Bool) {
@@ -233,12 +191,4 @@ final class AboutViewModel: ObservableObject {
             return Localizable.Channel.Layout.Grid.Unavailable.ok
         }
     }
-}
-
-struct SocialLink: Identifiable {
-    let title: String
-    let icon: String
-    let url: URL
-
-    var id: String { title }
 }
