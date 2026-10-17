@@ -23,8 +23,9 @@ final class ChannelRepositoryImpl: ChannelRepository {
 
         async let channelsDTO = api.fetchChannels()
         async let logosDTO = api.fetchLogos()
+        async let streamChannelIDs = availableStreamChannelIDs()
 
-        let (channels, logos) = try await (channelsDTO, logosDTO)
+        let (channels, logos, availableIDs) = try await (channelsDTO, logosDTO, streamChannelIDs)
 
         let logoMap = buildLogoMap(logos)
 
@@ -37,8 +38,24 @@ final class ChannelRepositoryImpl: ChannelRepository {
                 country: dto.country,
                 categories: dto.categories,
                 isNSFW: dto.is_nsfw,
-                logoURL: logoMap[key]
+                logoURL: logoMap[key],
+                hasStreams: availableIDs.map { $0.contains(dto.id) }
             )
+        }
+    }
+
+    /// One directory request for the whole catalog, not a request per tile.
+    /// A failed lookup must never label every channel as unavailable.
+    private func availableStreamChannelIDs() async throws -> Set<String>? {
+        do {
+            let streams = try await api.fetchStreams()
+            try Task.checkCancellation()
+            return Set(streams.compactMap(\.channel))
+        } catch {
+            if Task.isCancelled || error is CancellationError || (error as? URLError)?.code == .cancelled {
+                throw CancellationError()
+            }
+            return nil
         }
     }
 

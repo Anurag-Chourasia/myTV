@@ -14,6 +14,8 @@ struct Channel: Identifiable, Equatable {
     let categories: [String]
     let isNSFW: Bool
     let logoURL: URL?
+    /// Nil means the directory availability could not be checked.
+    var hasStreams: Bool? = nil
 
     static func == (lhs: Channel, rhs: Channel) -> Bool {
         lhs.id == rhs.id

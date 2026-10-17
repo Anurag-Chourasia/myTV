@@ -21,11 +21,20 @@ struct ChannelGridView: View {
                     colors: SemanticColors(surface: DesignColor.groupedSecondary)) {
             ChannelLogo(url: channel.logoURL, height: logoSize.height, width: logoSize.width)
         } details: {
-            Text(channel.name)
-                .font(Typography.headline)
-                .foregroundColor(DesignColor.primary)
-                .multilineTextAlignment(.center)
-                .lineLimit(CatalogMetrics.gridTitleLines)
+            VStack(alignment: .center, spacing: Spacing.four) {
+                Text(channel.name)
+                    .font(Typography.headline)
+                    .foregroundColor(DesignColor.primary)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(CatalogMetrics.gridTitleLines)
+                if channel.hasStreams == false {
+                    Text("No streams available")
+                        .font(Typography.caption)
+                        .foregroundStyle(DesignColor.secondary)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
         } accessory: {
             FavoriteButton(isFavorite: isFavorite, action: onFavoriteToggle)
         }

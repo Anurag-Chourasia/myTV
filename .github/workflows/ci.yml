@@ -65,6 +65,9 @@ jobs:
       - name: Test developer runtime in Debug and Release
         run: python3 TestSupport/run-developer-tests.py
 
+      - name: Test channel stream availability
+        run: python3 TestSupport/run-channel-availability-tests.py
+
       - name: Test favourite persistence
         run: python3 TestSupport/run-favorites-tests.py
 

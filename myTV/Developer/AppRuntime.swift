@@ -40,8 +40,8 @@ final class DeveloperStubRepository: ChannelRepository {
         if scenario == "offline" { throw URLError(.notConnectedToInternet) }
         if scenario == "empty" { return [] }
         return [
-            Channel(id: "debug-news", name: "Demo News", country: "IN", categories: ["news"], isNSFW: false, logoURL: nil),
-            Channel(id: "debug-science", name: "Demo Science", country: "GB", categories: ["science"], isNSFW: false, logoURL: nil)
+            Channel(id: "debug-news", name: "Demo News", country: "IN", categories: ["news"], isNSFW: false, logoURL: nil, hasStreams: false),
+            Channel(id: "debug-science", name: "Demo Science", country: "GB", categories: ["science"], isNSFW: false, logoURL: nil, hasStreams: false)
         ]
     }
     func fetchStreams(channelId: String) async throws -> [Stream] {
