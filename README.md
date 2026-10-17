@@ -291,6 +291,26 @@ Content availability, legality, and usage rights are the responsibility of the r
   - Split modules into Swift Packages for scalability and reuse
   - Improve maintainability for long-term feature growth
 
+### Future Plans
+
+Proposed enhancements, not completed features. Extend existing implementations where applicable.
+
+| Enhance engineering skills | Enhance user experience |
+|---|---|
+| **Playback state machine:** explicit loading, playing, stalled, recovering, and failed states | Understand what is happening instead of watching an indefinite spinner. |
+| **Intelligent stream fallback:** last-success ordering, timeouts, bounded retries, and cancellation | Recover from broken streams with less manual intervention. |
+| **Stream-health tracking:** timestamped playback evidence, expiry, and unknown states | Identify recently working streams without misleading guarantees. |
+| **Playback-history persistence:** deduplication, retention limits, and reliable updates | Recently Watched and quick reopening of favorite channels. |
+| **Network recovery:** handle connection changes and app lifecycle transitions | Recover gracefully when switching between Wi-Fi and mobile data. |
+| **Program-guide ingestion:** parse feeds, match channel IDs, normalize time zones, and cache results | See what is playing now and what comes next. |
+| **Playback diagnostics and fault tests:** simulate stalls, failures, and late callbacks | Clearer errors and fewer playback failures. |
+| **Large-catalog optimization:** indexed filtering, efficient grouping, and measured rendering | Fast search and filtering across thousands of channels. |
+
+First priority: the playback state machine and intelligent fallback. A directory-listed
+stream is not proof of working playback; health indicators must use actual playback
+results. Preserve search, filters, layout, and scroll position when returning from a
+channel wherever that state currently resets.
+
 ---
 
 ## 👨‍💻 Author
