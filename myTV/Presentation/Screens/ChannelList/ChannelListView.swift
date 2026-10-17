@@ -290,6 +290,14 @@ private extension ChannelListView {
 
                     // MARK: Filtering
                     Menu {
+                        Button { viewModel.hideUnavailableStreams.toggle() } label: {
+                            menuLabel(
+                                title: "Hide channels without streams",
+                                isSelected: viewModel.hideUnavailableStreams
+                            )
+                        }
+                        .accessibilityIdentifier("hide-unavailable-streams")
+                        Divider()
 
                         NavigationLink {
                             MultiSelectView(
