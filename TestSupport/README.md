@@ -5,6 +5,9 @@ Run from repository root with Xcode 27.1 selected:
 - `python3 TestSupport/run-adapter-tests.py`: five offline comparisons of the actual adapter against the retained pre-migration URLSession implementation. Session-scoped URLProtocol, no live endpoints.
 - `bash TestSupport/check-actor-boundary.sh DERIVED_DATA`: strict iOS 16.6 compiler probe using actual DTOs and adapter under the app's MainActor/approachable-concurrency flags.
 - `python3 TestSupport/run-playback-tests.py`: three macOS tests of the actual playback view model with generated local audio. Covers queued failures after dismissal/replacement and current-item fallback/exhaustion. Display dependencies and services use test doubles; this does not validate device audio routing or the player UI.
+- `python3 TestSupport/run-developer-tests.py`: actual runtime policy and fixture repository in Debug and Release; verifies that Release ignores developer overrides.
+- `python3 TestSupport/run-channel-availability-tests.py`: actual repository with fake API responses; covers one catalog-wide lookup, missing streams, unknown availability on failure, and cancellation.
+- `python3 TestSupport/run-favorites-tests.py`: stable-ID persistence, removal, and corrupt preferences.
 - `python3 Scripts/verify_pins.py`: exact version and full SHA validation.
 
 MyTV has no app XCTest target. These are standalone adapter tests and compiler probes, not app UI tests. LegacyHTTPClient is validation-only and not part of the app target.
@@ -24,5 +27,19 @@ The repository is private. Local builds need an authorized GitHub account with r
 ## HTTP logging
 
 Verbose HTTP request/response logging is compiled only in Debug and disabled by default.
-To inspect full redacted bodies, set `HTTP_LOGGING=1` in Xcode's scheme → Run → Arguments → Environment Variables.
+Use the Debug Developer Settings toggle for redacted bodies. The stored toggle takes precedence over `HTTP_LOGGING=1`, which remains an environment fallback.
 Remove or disable that variable for normal testing; no HTTP body formatting or console output occurs when logging is off. Release always uses a nil logger, even if the variable is set.
+
+
+## Manual interaction coverage
+
+Debug starts with Developer Settings; shake reopens it above the current screen or
+sheet. Applying or dismissing it rebuilds the channel presentation. Fixture success
+contains two channels with no remote image/playback URLs; it does not validate
+AVPlayer startup. The full app Release build is a separate check from the runtime
+package's Release test configuration.
+
+Check list/grid subtitles and the hide-unavailable filter together: confirmed false
+availability is hidden, unknown availability remains visible, and Clear Filters
+resets the toggle. Check native logo sharing, profile/player close controls, and
+shake presentation on a device. These interactions are not covered by an app UI-test target.
