@@ -307,3 +307,26 @@ Content availability, legality, and usage rights are the responsibility of the r
 **Provided for educational and portfolio demonstration purposes only.**
 
 ---
+
+
+### Debug configuration and screen controls
+
+Debug builds start with Developer Settings. After opening MyTV, shake the device
+(or use the simulator's Shake command) to present settings above the current
+screen, including an open sheet. Applying settings rebuilds the channel screen
+with the selected dependencies. Release builds omit this page and its fixtures.
+
+Settings include live/local data, success/empty/offline scenarios, HTTP logging,
+haptics, logo preview, channel layout, appearance, and displayed version/build.
+Stub success provides two channels without remote logo or playback URLs; the
+stream list is intentionally empty. Version overrides affect only the profile.
+
+Screen options use hamburger menus. Filter selections have checkmarks and a
+separate destructive Clear action. Hold a channel logo to preview it, then use
+the native share button for Photos, Files, or supported installed apps. Preview,
+profile, and player sheets use cross icons to close.
+
+Validation: `python3 TestSupport/run-developer-tests.py` checks runtime policy in
+Debug and Release, including offline fixtures and ignored release overrides.
+On a device, check shake from the player/profile sheets, light/dark appearance,
+and image sharing destinations (which depend on installed apps).

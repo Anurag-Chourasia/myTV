@@ -62,6 +62,9 @@ jobs:
       - name: Test deterministic networking adapter
         run: python3 TestSupport/run-adapter-tests.py
 
+      - name: Test developer runtime in Debug and Release
+        run: python3 TestSupport/run-developer-tests.py
+
       - name: Test favourite persistence
         run: python3 TestSupport/run-favorites-tests.py
 

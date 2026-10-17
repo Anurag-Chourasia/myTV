@@ -50,10 +50,10 @@ struct StreamListView: View {
                         .ignoresSafeArea(edges: .bottom)
                         .navigationTitle(channelName)
                         .navigationBarTitleDisplayMode(.inline)
-                        .screenTools()
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
-                                Button("Done") { viewModel.dismissPlayer() }
+                                Button { viewModel.dismissPlayer() } label: { Image(systemName: "xmark") }
+                                    .accessibilityLabel("Close player")
                             }
                         }
                         .onAppear { player.play() }

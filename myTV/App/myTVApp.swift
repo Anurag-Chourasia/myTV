@@ -9,13 +9,10 @@ import SwiftUI
 
 @main
 struct myTVApp: App {
-    @StateObject private var channels = AppDI.shared.makeChannelListViewModel()
 
     var body: some Scene {
         WindowGroup {
-            ChannelListView(
-                viewModel: channels
-            )
+            TVLaunchView()
             .appAppearance()
             .dynamicTypeSize(.xSmall ... .accessibility2)
         }

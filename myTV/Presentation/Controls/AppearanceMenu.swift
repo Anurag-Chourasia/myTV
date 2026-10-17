@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DesignTokensKit
 
 enum AppAppearance: String, CaseIterable, Identifiable {
     case system
@@ -51,6 +52,8 @@ struct AppearanceMenu: View {
         } label: {
             Label(viewModel.menuTitle, systemImage: "circle.lefthalf.filled")
         }
+        .tint(DesignColor.primary)
+        .foregroundStyle(DesignColor.primary)
     }
 }
 
@@ -103,7 +106,8 @@ private struct ScreenTools: ViewModifier {
                         Button { developerPresented = true } label: {
                             Label("Know Your Developer", systemImage: "person.crop.circle")
                         }
-                    } label: { Label("App options", systemImage: "ellipsis.circle") }
+                    } label: { Label("App options", systemImage: "line.3.horizontal") }
+                    .tint(DesignColor.primary)
                     .accessibilityIdentifier("screen-tools")
                 }
             }
@@ -112,7 +116,8 @@ private struct ScreenTools: ViewModifier {
                     AboutView(viewModel: AppDI.shared.makeAboutViewModel())
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
-                                Button("Done") { developerPresented = false }
+                                Button { developerPresented = false } label: { Image(systemName: "xmark") }
+                                    .accessibilityLabel("Close developer profile")
                             }
                         }
                 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import DesignTokensKit
 import UIComponentsKit
 
 typealias ChannelLayout = CatalogLayout
@@ -39,5 +40,6 @@ struct LayoutSwitchMenu: View {
         CatalogLayoutMenu(selection: selectedLayout, isAccessibilitySize: isAccessibilitySize,
                           title: menuTitle, titleForLayout: titleForLayout,
                           onSelect: onSelectLayout, onGridUnavailable: onGridUnavailable)
+            .tint(DesignColor.primary)
     }
 }

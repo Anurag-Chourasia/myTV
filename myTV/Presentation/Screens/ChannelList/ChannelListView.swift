@@ -14,6 +14,7 @@ struct ChannelListView: View {
     @StateObject private var viewModel: ChannelListViewModel
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.scenePhase) private var scenePhase
+    @State private var developerPresented = false
     private let makeStreamListViewModel: () -> StreamListViewModel
     private let makeAboutViewModel: () -> AboutViewModel
 
@@ -63,6 +64,18 @@ struct ChannelListView: View {
             .navigationTitle(viewModel.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { menuBar }
+            .tint(DesignColor.primary)
+            .sheet(isPresented: $developerPresented) {
+                NavigationStack {
+                    AboutView(viewModel: makeAboutViewModel())
+                        .toolbar {
+                            ToolbarItem(placement: .navigationBarLeading) {
+                                Button { developerPresented = false } label: { Image(systemName: "xmark") }
+                                    .accessibilityLabel("Close developer profile")
+                            }
+                        }
+                }
+            }
             .alert(
                 viewModel.toolbarAlertTitle,
                 isPresented: $viewModel.showAlertDialog
@@ -368,11 +381,7 @@ private extension ChannelListView {
 
                 // MARK: - About
                 Section {
-                    NavigationLink {
-                        AboutView(
-                            viewModel: makeAboutViewModel()
-                        )
-                    } label: {
+                    Button { developerPresented = true } label: {
                         Label(
                             viewModel.aboutSectionTitle,
                             systemImage: "info.circle"
@@ -381,7 +390,7 @@ private extension ChannelListView {
                 }
 
             } label: {
-                Image(systemName: "line.3.horizontal.decrease.circle")
+                Image(systemName: "line.3.horizontal")
                     .accessibilityLabel(Text(VoiceOver.A11y.Menu.options))
                     .accessibilityHint(Text(VoiceOver.A11y.Menu.Options.hint))
             }

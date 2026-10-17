@@ -21,7 +21,9 @@ final class CommonNetworkingHTTPClient: HTTPClient {
 
     init(session: URLSession = .shared) {
         #if DEBUG
-        self.transport = CommonNetworking.HTTPClient(session: session, logger: ProcessInfo.processInfo.environment["HTTP_LOGGING"] == "1" ? .console : nil)
+        let logging = UserDefaults.standard.object(forKey: "developer.httpLogs") as? Bool
+            ?? (ProcessInfo.processInfo.environment["HTTP_LOGGING"] == "1")
+        self.transport = CommonNetworking.HTTPClient(session: session, logger: logging ? .console : nil)
         #else
         self.transport = CommonNetworking.HTTPClient(session: session)
         #endif

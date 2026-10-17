@@ -12,27 +12,21 @@ final class AppDI {
     private lazy var haptics: HapticService =
             HapticServiceImpl()
 
-    private lazy var httpClient: HTTPClient =
-        CommonNetworkingHTTPClient()
+    private lazy var reachability: ReachabilityService = ReachabilityServiceImpl()
 
-    private lazy var reachability: ReachabilityService =
-        ReachabilityServiceImpl()
-
-    private lazy var apiService: IPTVAPIService =
-        IPTVAPIServiceImpl(client: httpClient)
-
-    private lazy var channelCache: ChannelCache =
-        ChannelDiskCache()
-
-    private lazy var channelRepository: ChannelRepository =
-        ChannelRepositoryImpl(
-            api: apiService,
-            cache: channelCache
+    private func makeChannelRepository() -> ChannelRepository {
+        #if DEBUG
+        if let scenario = AppRuntime.stubScenario { return DeveloperStubRepository(scenario: scenario) }
+        #endif
+        return ChannelRepositoryImpl(
+            api: IPTVAPIServiceImpl(client: CommonNetworkingHTTPClient()),
+            cache: ChannelDiskCache()
         )
+    }
 
     func makeChannelListViewModel() -> ChannelListViewModel {
         let fetchChannels = DefaultFetchChannelsUseCase(
-            repository: channelRepository
+            repository: makeChannelRepository()
         )
         return ChannelListViewModel(
             fetchChannels: fetchChannels,
@@ -43,7 +37,7 @@ final class AppDI {
 
     func makeStreamListViewModel() -> StreamListViewModel {
         let fetchStreams = DefaultFetchStreamsForChannelUseCase(
-            repository: channelRepository
+            repository: makeChannelRepository()
         )
         return StreamListViewModel(
             fetchStreams: fetchStreams,
