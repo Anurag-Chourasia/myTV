@@ -34,8 +34,8 @@ struct AboutView: View {
 
                 DeveloperProfileView(
                     app: DeveloperAppInfo(name: viewModel.appName,
-                                          version: Bundle.main.appVersion,
-                                          build: Bundle.main.buildNumber,
+                                          version: AppRuntime.version,
+                                          build: AppRuntime.build,
                                           disclaimer: viewModel.disclaimerText),
                     layout: viewModel.layout == .grid ? .grid : .list,
                     labels: profileLabels
@@ -48,6 +48,7 @@ struct AboutView: View {
             }
         }
         .background(DesignColor.grouped)
+        .tint(DesignColor.primary)
         .alert(
             viewModel.gridAlertTitle,
             isPresented: Binding(
@@ -101,7 +102,7 @@ private extension AboutView {
                     AppearanceMenu()
                 }
             } label: {
-                Image(systemName: "line.3.horizontal.decrease.circle")
+                Image(systemName: "line.3.horizontal")
                     .accessibilityLabel(Text(VoiceOver.A11y.Menu.options))
                     .accessibilityHint(Text(VoiceOver.A11y.Menu.Options.hint))
             }

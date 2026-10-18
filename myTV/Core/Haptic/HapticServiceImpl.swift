@@ -10,14 +10,14 @@ import UIKit
 final class HapticServiceImpl: HapticService {
 
     func selection() {
-        guard !UIAccessibility.isReduceMotionEnabled else { return }
+        guard AppRuntime.hapticsEnabled, !UIAccessibility.isReduceMotionEnabled else { return }
         let generator = UISelectionFeedbackGenerator()
         generator.prepare()
         generator.selectionChanged()
     }
 
     func impact(_ style: ImpactStyle) {
-        guard !UIAccessibility.isReduceMotionEnabled else { return }
+        guard AppRuntime.hapticsEnabled, !UIAccessibility.isReduceMotionEnabled else { return }
 
         let generator = UIImpactFeedbackGenerator(
             style: style.uiKitStyle
@@ -27,7 +27,7 @@ final class HapticServiceImpl: HapticService {
     }
 
     func notification(_ type: NotificationType) {
-        guard !UIAccessibility.isReduceMotionEnabled else { return }
+        guard AppRuntime.hapticsEnabled, !UIAccessibility.isReduceMotionEnabled else { return }
 
         let generator = UINotificationFeedbackGenerator()
         generator.prepare()

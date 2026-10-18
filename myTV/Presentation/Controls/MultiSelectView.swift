@@ -40,6 +40,11 @@ struct MultiSelectView: View {
     var body: some View {
         List {
 
+            Section {
+                Button("Clear", role: .destructive) { viewModel.clear() }
+                    .disabled(viewModel.draftSelection.isEmpty)
+            }
+
             // MARK: - Selected Section (Top)
             if !viewModel.selectedOptions.isEmpty {
                 Section(viewModel.selectedSectionTitle) {
@@ -58,6 +63,7 @@ struct MultiSelectView: View {
         }
         .navigationTitle(viewModel.title)
         .screenTools()
+        .tint(DesignColor.primary)
         .searchable(
             text: $viewModel.searchText,
             placement: .navigationBarDrawer(displayMode: .always),
@@ -106,14 +112,14 @@ private extension MultiSelectView {
         if viewModel.allowsMultipleSelection {
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(DesignColor.accentColor)
+                    .foregroundColor(DesignColor.primary)
                     .accessibilityHidden(true)
             }
         } else {
             Image(systemName: isSelected
                   ? "largecircle.fill.circle"
                   : "circle")
-                .foregroundColor(isSelected ? DesignColor.accentColor : DesignColor.secondary)
+                .foregroundColor(isSelected ? DesignColor.primary : DesignColor.secondary)
                 .accessibilityHidden(true)
         }
     }

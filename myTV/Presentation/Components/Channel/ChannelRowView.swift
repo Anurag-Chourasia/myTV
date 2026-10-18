@@ -20,11 +20,20 @@ struct ChannelRowView: View {
         CatalogTile(layout: .list, metrics: .plainRow) {
             ChannelLogo(url: channel.logoURL)
         } details: {
-            Text(channel.name)
-                .font(Typography.headline)
-                .multilineTextAlignment(.leading)
-                .lineLimit(dynamicTypeSize.isAccessibilitySize ? CatalogMetrics.accessibleTitleLines : CatalogMetrics.listTitleLines)
-                .padding(.horizontal, Spacing.eight)
+            VStack(alignment: .leading, spacing: Spacing.four) {
+                Text(channel.name)
+                    .font(Typography.headline)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(dynamicTypeSize.isAccessibilitySize ? CatalogMetrics.accessibleTitleLines : CatalogMetrics.listTitleLines)
+                if channel.hasStreams == false {
+                    Text("No streams available")
+                        .font(Typography.caption)
+                        .foregroundStyle(DesignColor.secondary)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .padding(.horizontal, Spacing.eight)
         } accessory: {
             FavoriteButton(isFavorite: isFavorite, action: onFavoriteToggle)
         }

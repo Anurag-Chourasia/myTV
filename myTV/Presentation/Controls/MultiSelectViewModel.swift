@@ -90,6 +90,11 @@ final class MultiSelectViewModel: ObservableObject {
         haptics.selection()
     }
 
+    func clear() {
+        draftSelection.removeAll()
+        haptics.selection()
+    }
+
     func apply() -> Set<String> {
         originalSelection = draftSelection
         return draftSelection

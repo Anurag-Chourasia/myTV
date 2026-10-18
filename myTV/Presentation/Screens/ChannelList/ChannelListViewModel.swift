@@ -100,6 +100,7 @@ final class ChannelListViewModel: ObservableObject {
     @Published var channelScope: ChannelScope = .all
     @Published var selectedCountries: Set<String> = []
     @Published var selectedCategories: Set<String> = []
+    @Published var hideUnavailableStreams = false
     @Published private(set) var favoriteChannelIDs: Set<String> = [] {
         didSet { favorites.save(favoriteChannelIDs) }
     }
@@ -423,6 +424,7 @@ final class ChannelListViewModel: ObservableObject {
         channelSort = .ascending
         selectedCountries.removeAll()
         selectedCategories.removeAll()
+        hideUnavailableStreams = false
         haptics.notification(.warning)
     }
 
@@ -543,10 +545,11 @@ private extension ChannelListViewModel {
             $selectedCategories
         )
 
-        let extras = Publishers.CombineLatest3(
+        let extras = Publishers.CombineLatest4(
             $grouping,
             $favoriteChannelIDs,
-            $channelScope
+            $channelScope,
+            $hideUnavailableStreams
         )
 
         let sorting = Publishers.CombineLatest(
@@ -564,6 +567,7 @@ private extension ChannelListViewModel {
                     grouping: extras.0,
                     favorites: extras.1,
                     scope: extras.2,
+                    hideUnavailableStreams: extras.3,
                     sectionSort: sorting.0,
                     channelSort: sorting.1
                 )
@@ -579,11 +583,13 @@ private extension ChannelListViewModel {
         grouping: Grouping,
         favorites: Set<String>,
         scope: ChannelScope,
+        hideUnavailableStreams: Bool,
         sectionSort: SortOrder,
         channelSort: SortOrder
     ) -> [(String, [Channel])] {
 
         let filtered = channels.filter {
+            (!hideUnavailableStreams || $0.hasStreams != false) &&
             (scope == .all || favorites.contains($0.id)) &&
             (search.isEmpty || $0.name.localizedCaseInsensitiveContains(search)) &&
             (countries.isEmpty || countries.contains($0.country)) &&
