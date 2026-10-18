@@ -100,7 +100,7 @@ Run commands from this repository root.
 
 - **Deployment target:** iOS 16.6; Swift 5 language mode with MainActor default isolation and configured approachable-concurrency settings.
 - **Toolchain:** recent local validation used Xcode 27.1; [CI](.github/workflows/ci.yml) explicitly pins Xcode 27.0. Use the documented environment for the check being run.
-- **Dependencies:** Swift Package Manager with exact versions and SHAs in [Scripts/dependencies.json](Scripts/dependencies.json). Private package access is required locally; configure an authorized GitHub account before resolving.
+- **Dependencies:** Swift Package Manager with exact versions and SHAs in [Scripts/dependencies.json](Scripts/dependencies.json). All six shared package repositories are private. Access is required locally; configure an authorized GitHub account before resolving.
 
 ```sh
 xcodebuild -version

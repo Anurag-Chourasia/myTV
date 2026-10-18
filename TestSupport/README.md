@@ -43,3 +43,24 @@ Check list/grid subtitles and the hide-unavailable filter together: confirmed fa
 availability is hidden, unknown availability remains visible, and Clear Filters
 resets the toggle. Check native logo sharing, profile/player close controls, and
 shake presentation on a device. These interactions are not covered by an app UI-test target.
+
+
+## Private package access in CI
+
+All six shared package repositories are private. The trusted CI workflow supplies
+repository-specific read-only deploy keys through these Actions secrets:
+
+- `COMMONNETWORKING_DEPLOY_KEY`
+- `DESIGNTOKENSKIT_DEPLOY_KEY`
+- `DEVELOPERPROFILEKIT_DEPLOY_KEY`
+- `FOUNDATIONKIT_DEPLOY_KEY`
+- `LOCALIZATIONKIT_DEPLOY_KEY`
+- `UICOMPONENTSKIT_DEPLOY_KEY`
+
+`Scripts/configure-private-dependencies.sh` writes temporary restricted-permission
+key files and isolated Git/SSH configuration. Each HTTPS package URL is rewritten
+to its own SSH host alias. Host keys are verified against the checked-in known-hosts
+file, interactive authentication is disabled, and missing secrets fail immediately.
+The workflow removes temporary credentials in its always-run cleanup step. New keys
+for CommonNetworking, DesignTokensKit, and UIComponentsKit are unique per consuming
+app and grant no push access. Local Xcode builds still require an authorized account.
