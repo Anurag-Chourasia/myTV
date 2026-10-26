@@ -65,6 +65,7 @@ jobs:
           COMMONNETWORKING_DEPLOY_KEY: ${{ secrets.COMMONNETWORKING_DEPLOY_KEY }}
           DESIGNTOKENSKIT_DEPLOY_KEY: ${{ secrets.DESIGNTOKENSKIT_DEPLOY_KEY }}
           UICOMPONENTSKIT_DEPLOY_KEY: ${{ secrets.UICOMPONENTSKIT_DEPLOY_KEY }}
+          SNAPSHOTTESTKIT_DEPLOY_KEY: ${{ secrets.SNAPSHOTTESTKIT_DEPLOY_KEY }}
         run: bash Scripts/configure-private-dependencies.sh
 
       - name: Verify and resolve exact package pins

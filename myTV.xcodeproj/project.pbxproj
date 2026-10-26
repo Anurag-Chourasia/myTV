@@ -13,7 +13,7 @@
 		34D53F962F29029C0094915C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 34D53F952F29029C0094915C /* README.md */; };
 		8A5187FC767F6661D17F70CA /* LocalizationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4369C1F27BA5812F32EAA569 /* LocalizationKit */; };
 		A25000000000000000000003 /* DeveloperProfileKit in Frameworks */ = {isa = PBXBuildFile; productRef = A25000000000000000000002 /* DeveloperProfileKit */; };
-		AF591FCD7F3E450094A8B49E /* SnapshotTestingKit in Frameworks */ = {isa = PBXBuildFile; productRef = A35000000000000000000002 /* SnapshotTestingKit */; };
+		AF591FCD7F3E450094A8B49E /* SnapshotTestKit in Frameworks */ = {isa = PBXBuildFile; productRef = A35000000000000000000002 /* SnapshotTestKit */; };
 		EEEC20DB6D728F17ECF71C28 /* CommonNetworking in Frameworks */ = {isa = PBXBuildFile; productRef = D9D4A9BB17E5690CE37C2044 /* CommonNetworking */; };
 /* End PBXBuildFile section */
 
@@ -91,7 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF591FCD7F3E450094A8B49E /* SnapshotTestingKit in Frameworks */,
+				AF591FCD7F3E450094A8B49E /* SnapshotTestKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,7 +155,7 @@
 			);
 			name = myTVSnapshotTests;
 			packageProductDependencies = (
-				A35000000000000000000002 /* SnapshotTestingKit */,
+				A35000000000000000000002 /* SnapshotTestKit */,
 			);
 			productName = myTVSnapshotTests;
 			productReference = 82807C5A58ED01BABADC6C66 /* myTVSnapshotTests.xctest */;
@@ -236,7 +236,7 @@
 			mainGroup = 34C031DA2F23888E0029B9CC;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				A35000000000000000000001 /* XCRemoteSwiftPackageReference "SnapshotTestingKit" */,
+				A35000000000000000000001 /* XCRemoteSwiftPackageReference "SnapshotTestKit" */,
 				A25000000000000000000001 /* XCRemoteSwiftPackageReference "DeveloperProfileKit" */,
 				92828F164BE284EE6D7434F8 /* XCRemoteSwiftPackageReference "CommonNetworking" */,
 				AFEF0A9C4B01264D395D40C1 /* XCRemoteSwiftPackageReference "FoundationKit" */,
@@ -700,9 +700,9 @@
 				version = 1.0.0;
 			};
 		};
-		A35000000000000000000001 /* XCRemoteSwiftPackageReference "SnapshotTestingKit" */ = {
+		A35000000000000000000001 /* XCRemoteSwiftPackageReference "SnapshotTestKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Anurag-Chourasia/SnapshotTestingKit.git";
+			repositoryURL = "https://github.com/Anurag-Chourasia/SnapshotTestKit.git";
 			requirement = {
 				kind = exactVersion;
 				version = 1.0.2;
@@ -742,10 +742,10 @@
 			package = A25000000000000000000001 /* XCRemoteSwiftPackageReference "DeveloperProfileKit" */;
 			productName = DeveloperProfileKit;
 		};
-		A35000000000000000000002 /* SnapshotTestingKit */ = {
+		A35000000000000000000002 /* SnapshotTestKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A35000000000000000000001 /* XCRemoteSwiftPackageReference "SnapshotTestingKit" */;
-			productName = SnapshotTestingKit;
+			package = A35000000000000000000001 /* XCRemoteSwiftPackageReference "SnapshotTestKit" */;
+			productName = SnapshotTestKit;
 		};
 		BBA5F2ED3ED984AD2A2D1221 /* FoundationKit */ = {
 			isa = XCSwiftPackageProductDependency;

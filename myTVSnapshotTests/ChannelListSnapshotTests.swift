@@ -1,6 +1,6 @@
 import XCTest
 import SwiftUI
-import SnapshotTestingKit
+import SnapshotTestKit
 @testable import myTV
 
 @MainActor
