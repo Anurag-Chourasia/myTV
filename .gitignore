@@ -1,6 +1,7 @@
 build/
 DerivedData/
 *.xcuserstate
+*.xcbkptlist
 project.xcworkspace/xcuserdata/
 xcuserdata/
 .DS_Store
