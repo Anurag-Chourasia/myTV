@@ -200,3 +200,7 @@ channel wherever that state currently resets.
 [Anurag Chourasia](https://github.com/Anurag-Chourasia) · [LinkedIn](https://www.linkedin.com/in/anurag-chourasia-b66710178/)
 
 Metadata comes from the iptv-org directory; AVPlayer plays provider-hosted stream URLs. MyTV does not host or redistribute the media. Listing a channel does not establish rights, geographic availability, or stream uptime. The repository is provided for educational and portfolio demonstration purposes.
+
+## SwiftLint
+
+Run `bash Scripts/lint.sh` with the version pinned in `.swiftlint-version`. CI enforces the shared rule set before build/test. See [SwiftLint policy](Docs/SwiftLint.md) for installation, rules, generated-code exclusions, and the existing-violation baseline.
