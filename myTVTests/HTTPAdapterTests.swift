@@ -25,7 +25,11 @@ private final class FixtureProtocol: URLProtocol {
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
 
     override func startLoading() {
-        let path = request.url!.path
+        guard let url = request.url else {
+            client?.urlProtocol(self, didFailWithError: URLError(.badURL))
+            return
+        }
+        let path = url.path
         if path == "/hold" {
             (Self.property(forKey: "started", in: request) as? XCTestExpectation)?.fulfill()
             return
@@ -53,8 +57,9 @@ private final class FixtureProtocol: URLProtocol {
             client?.urlProtocol(self, didFailWithError: URLError(.unsupportedURL))
             return
         }
-        let response = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: nil, headerFields: nil)!
-        client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        if let response = HTTPURLResponse(url: url, statusCode: status, httpVersion: nil, headerFields: nil) {
+            client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+        }
         client?.urlProtocol(self, didLoad: data)
         client?.urlProtocolDidFinishLoading(self)
     }
@@ -67,7 +72,9 @@ private final class FixtureProtocol: URLProtocol {
 final class HTTPAdapterTests: XCTestCase {
     struct Model: Decodable { let name: String }
 
-    func url(_ path: String) -> URL { URL(string: "https://fixture.invalid/" + path)! }
+    func url(_ path: String) -> URL {
+        URL(string: "https://fixture.invalid/" + path) ?? URL(fileURLWithPath: "/")
+    }
 
     func session() -> URLSession {
         let c = URLSessionConfiguration.ephemeral

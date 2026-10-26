@@ -5,7 +5,7 @@ import XCTest
 final class DTOMapperTests: XCTestCase {
 
     func testChannelDTODecodingAndMappingToEntity() throws {
-        let json = """
+        let json = Data("""
         {
             "id": "france24.fr",
             "name": "France 24",
@@ -20,7 +20,7 @@ final class DTOMapperTests: XCTestCase {
             "replaced_by": null,
             "website": "https://www.france24.com"
         }
-        """.data(using: .utf8)!
+        """.utf8)
 
         let dto = try JSONDecoder().decode(ChannelDTO.self, from: json)
         XCTAssertEqual(dto.id, "france24.fr")
@@ -49,7 +49,7 @@ final class DTOMapperTests: XCTestCase {
     }
 
     func testStreamDTODecodingAndMappingToEntity() throws {
-        let json = """
+        let json = Data("""
         {
             "channel": "euronews.en",
             "feed": "primary",
@@ -59,7 +59,7 @@ final class DTOMapperTests: XCTestCase {
             "user_agent": "Mozilla/5.0",
             "quality": "1080p"
         }
-        """.data(using: .utf8)!
+        """.utf8)
 
         let dto = try JSONDecoder().decode(StreamDTO.self, from: json)
         XCTAssertEqual(dto.channel, "euronews.en")

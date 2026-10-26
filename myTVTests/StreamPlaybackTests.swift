@@ -33,7 +33,8 @@ final class StreamPlaybackTests: XCTestCase {
 
     private func stream(_ id: String) -> myTV.Stream {
         let bundle = Bundle(for: Self.self)
-        let audioURL = bundle.url(forResource: "silence", withExtension: "wav") ?? URL(string: "https://fixture.invalid/\(id).m3u8")!
+        let fallbackURL = URL(fileURLWithPath: "/dev/null")
+        let audioURL = bundle.url(forResource: "silence", withExtension: "wav") ?? URL(string: "https://fixture.invalid/\(id).m3u8") ?? fallbackURL
         return myTV.Stream(
             id: id,
             title: id,
