@@ -178,21 +178,60 @@ A useful handover demonstration is: trace a channel through the filter pipeline,
 
 Proposed enhancements, not completed features. Extend existing implementations where applicable.
 
+First priority: the playback state machine and intelligent fallback. A directory-listed
+stream is not proof of working playback; health indicators must use actual playback
+results. Preserve search, filters, layout, and scroll position when returning from a
+channel wherever that state currently resets.
+
+### Playback & stream reliability
+
 | Enhance engineering skills | Enhance user experience |
 |---|---|
 | **Playback state machine:** explicit loading, playing, stalled, recovering, and failed states | Understand what is happening instead of watching an indefinite spinner. |
 | **Intelligent stream fallback:** last-success ordering, timeouts, bounded retries, and cancellation | Recover from broken streams with less manual intervention. |
 | **Stream-health tracking:** timestamped playback evidence, expiry, and unknown states | Identify recently working streams without misleading guarantees. |
+| **Playback diagnostics and fault tests:** simulate stalls, failures, and late callbacks | Clearer errors and fewer playback failures. |
+| **Picture-in-Picture (PiP):** `AVPictureInPictureController` lifecycle integration | Watch and listen to streams while navigating channels or using other apps. |
+| **Now Playing & Remote Commands:** `MPNowPlayingInfoCenter` and `MPRemoteCommandCenter` integration | Control playback and view current channel info from the lock screen and Control Center. |
+| **AirPlay 2 & external displays:** AVPlayer AirPlay routing and aspect-ratio handling | Stream channels to Apple TV and external screens seamlessly. |
+| **Audio track & closed caption selection:** parse and switch `AVMediaSelectionGroup` tracks | Select preferred audio language and enable subtitles/CC on compatible broadcasts. |
+| **HLS quality selector & cellular data saver:** access log metrics (`AVPlayerItemAccessLog`) and bitrate capping (`preferredPeakBitRate`) | View stream bitrate/resolution and cap bandwidth on cellular connections. |
+| **Player volume & brightness gestures:** direct interactive touch gestures on the video canvas | Adjust volume and brightness with intuitive vertical edge swipes. |
+| **Multi-view / split playback:** concurrent `AVPlayer` instances with coordinated audio focus | Watch 2 to 4 live streams simultaneously (e.g., news or sports). |
+
+### Catalog, EPG & discovery
+
+| Enhance engineering skills | Enhance user experience |
+|---|---|
+| **Program-guide ingestion:** parse feeds, match channel IDs, normalize time zones, and cache results | See what is playing now and what comes next. |
+| **Large-catalog optimization:** indexed filtering, efficient grouping, and measured rendering | Fast search and filtering across thousands of channels. |
+| **Custom M3U / Xtream Codes ingestion:** robust parser for external playlist URLs and local files | Import personal playlists and custom IPTV sources beyond the default directory. |
+| **Offline catalog disk caching:** wire `ChannelDiskCache` into the active repository pipeline | Browse saved channels and categories even without an internet connection. |
+| **Channel reordering & customization:** drag-to-reorder favorites, custom categorization, and channel hiding | Personalize channel order and hide unused categories or countries. |
+| **Fuzzy & phonetic search:** error-tolerant string matching across international channel names | Find channels easily despite typos, missing diacritics, or naming variations. |
+| **Navigation state preservation:** retain active search, filters, layout mode, and scroll position | Return from playback directly to the exact browsing spot without reset. |
+
+### System integration & platform expansion
+
+| Enhance engineering skills | Enhance user experience |
+|---|---|
+| **Home & Lock Screen Widgets:** WidgetKit integration with deep-linking | Quick 1-tap launch into top favorite channels directly from the home screen. |
+| **Spotlight Search & Siri Shortcuts:** `CoreSpotlight` indexing and App Intents | Search channels from iOS Spotlight or play via voice commands. |
+| **Live Activities & Dynamic Island:** ActivityKit integration displaying live stream status | Monitor active stream duration and channel metadata from the Dynamic Island. |
+| **tvOS (Apple TV) companion app:** shared-core package consumption with SwiftUI Focus Engine | Browse and watch channels on Apple TV with a dedicated living-room interface. |
+| **iPadOS & macOS optimizations:** `NavigationSplitView` sidebar, Stage Manager, and keyboard shortcuts | Comfortable, native viewing experience on iPad and Mac. |
+
+### Architecture, persistence & concurrency
+
+| Enhance engineering skills | Enhance user experience |
+|---|---|
+| **Swift 6 complete concurrency:** `SWIFT_STRICT_CONCURRENCY=complete`, verified `Sendable` types, and strict actor boundaries | High-performance, data-race-free architecture. |
+| **SwiftData / structured persistence:** unified schema for favorites, history, EPG, and stream metrics | Reliable multi-session persistence replacing UserDefaults/AppStorage limits. |
 | **Playback-history persistence:** deduplication, retention limits, and reliable updates | Recently Watched and quick reopening of favorite channels. |
 | **Network recovery:** handle connection changes and app lifecycle transitions | Recover gracefully when switching between Wi-Fi and mobile data. |
-| **Program-guide ingestion:** parse feeds, match channel IDs, normalize time zones, and cache results | See what is playing now and what comes next. |
-| **Playback diagnostics and fault tests:** simulate stalls, failures, and late callbacks | Clearer errors and fewer playback failures. |
-| **Large-catalog optimization:** indexed filtering, efficient grouping, and measured rendering | Fast search and filtering across thousands of channels. |
-
-First priority: the playback state machine and intelligent fallback. A directory-listed
-stream is not proof of working playback; health indicators must use actual playback
-results. Preserve search, filters, layout, and scroll position when returning from a
-channel wherever that state currently resets.
+| **Background EPG refresh (`BGAppRefreshTask`):** scheduled background tasks for overnight sync | Up-to-date program guide ready immediately upon app launch. |
+| **Dependency injection isolation:** eliminate direct `AppDI.shared` access across views | Testable, modular UI components with explicit mock injection. |
+| **Comprehensive localization migration:** migrate hardcoded strings to generated tables | Full multilingual interface and VoiceOver accessibility. |
 
 
 ## Author and content boundary
