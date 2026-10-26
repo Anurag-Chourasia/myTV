@@ -1,0 +1,782 @@
+[
+  {
+    "text": "        let path = request.url!.path",
+    "violation": {
+      "location": {
+        "character": 31,
+        "file": "TestSupport/AdapterTests.swift",
+        "line": 9
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        let response = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: nil, headerFields: nil)!",
+    "violation": {
+      "location": {
+        "character": 56,
+        "file": "TestSupport/AdapterTests.swift",
+        "line": 30
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        let response = HTTPURLResponse(url: request.url!, statusCode: status, httpVersion: nil, headerFields: nil)!",
+    "violation": {
+      "location": {
+        "character": 115,
+        "file": "TestSupport/AdapterTests.swift",
+        "line": 30
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "    func url(_ path: String) -> URL { URL(string: \"https://fixture.invalid/\" + path)! }",
+    "violation": {
+      "location": {
+        "character": 85,
+        "file": "TestSupport/AdapterTests.swift",
+        "line": 42
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "                do { let _: Model = try await client.get(url(path)); XCTFail(\"Expected decoding failure\") }",
+    "violation": {
+      "location": {
+        "character": 107,
+        "file": "TestSupport/AdapterTests.swift",
+        "line": 74
+      },
+      "reason": "Else and catch should be on the same line, one space after the previous declaration",
+      "ruleDescription": "Else and catch should be on the same line, one space after the previous declaration",
+      "ruleName": "Statement Position",
+      "ruleIdentifier": "statement_position",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "                        if typed { let _: Model = try await client.get(url(path)) }",
+    "violation": {
+      "location": {
+        "character": 83,
+        "file": "TestSupport/AdapterTests.swift",
+        "line": 87
+      },
+      "reason": "Else and catch should be on the same line, one space after the previous declaration",
+      "ruleDescription": "Else and catch should be on the same line, one space after the previous declaration",
+      "ruleName": "Statement Position",
+      "ruleIdentifier": "statement_position",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "                    if typed { let _: Model = try await client.get(target) }",
+    "violation": {
+      "location": {
+        "character": 76,
+        "file": "TestSupport/AdapterTests.swift",
+        "line": 108
+      },
+      "reason": "Else and catch should be on the same line, one space after the previous declaration",
+      "ruleDescription": "Else and catch should be on the same line, one space after the previous declaration",
+      "ruleName": "Statement Position",
+      "ruleIdentifier": "statement_position",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "                do { try await task.value; XCTFail(\"Expected cancellation\") }",
+    "violation": {
+      "location": {
+        "character": 77,
+        "file": "TestSupport/AdapterTests.swift",
+        "line": 112
+      },
+      "reason": "Else and catch should be on the same line, one space after the previous declaration",
+      "ruleDescription": "Else and catch should be on the same line, one space after the previous declaration",
+      "ruleName": "Statement Position",
+      "ruleIdentifier": "statement_position",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "                catch let error as URLError { XCTAssertEqual(error.code, .cancelled) }",
+    "violation": {
+      "location": {
+        "character": 86,
+        "file": "TestSupport/AdapterTests.swift",
+        "line": 113
+      },
+      "reason": "Else and catch should be on the same line, one space after the previous declaration",
+      "ruleDescription": "Else and catch should be on the same line, one space after the previous declaration",
+      "ruleName": "Statement Position",
+      "ruleIdentifier": "statement_position",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "TestSupport/LegacyHTTPClient.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        Playback.Stream(id: id, title: id, url: Bundle.module.url(forResource: \"silence\", withExtension: \"wav\")!.absoluteString, quality: nil)",
+    "violation": {
+      "location": {
+        "character": 112,
+        "file": "TestSupport/PlaybackTests/PlaybackTests.swift",
+        "line": 26
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        NotificationCenter.default.post(name: .AVPlayerItemFailedToPlayToEndTime, object: model.player!.currentItem!)",
+    "violation": {
+      "location": {
+        "character": 103,
+        "file": "TestSupport/PlaybackTests/PlaybackTests.swift",
+        "line": 33
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        NotificationCenter.default.post(name: .AVPlayerItemFailedToPlayToEndTime, object: model.player!.currentItem!)",
+    "violation": {
+      "location": {
+        "character": 116,
+        "file": "TestSupport/PlaybackTests/PlaybackTests.swift",
+        "line": 33
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        NotificationCenter.default.post(name: .AVPlayerItemFailedToPlayToEndTime, object: model.player!.currentItem!)",
+    "violation": {
+      "location": {
+        "character": 103,
+        "file": "TestSupport/PlaybackTests/PlaybackTests.swift",
+        "line": 46
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        NotificationCenter.default.post(name: .AVPlayerItemFailedToPlayToEndTime, object: model.player!.currentItem!)",
+    "violation": {
+      "location": {
+        "character": 116,
+        "file": "TestSupport/PlaybackTests/PlaybackTests.swift",
+        "line": 46
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        NotificationCenter.default.post(name: .AVPlayerItemFailedToPlayToEndTime, object: initial!.currentItem!)",
+    "violation": {
+      "location": {
+        "character": 98,
+        "file": "TestSupport/PlaybackTests/PlaybackTests.swift",
+        "line": 58
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        NotificationCenter.default.post(name: .AVPlayerItemFailedToPlayToEndTime, object: initial!.currentItem!)",
+    "violation": {
+      "location": {
+        "character": 111,
+        "file": "TestSupport/PlaybackTests/PlaybackTests.swift",
+        "line": 58
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        NotificationCenter.default.post(name: .AVPlayerItemFailedToPlayToEndTime, object: model.player!.currentItem!)",
+    "violation": {
+      "location": {
+        "character": 103,
+        "file": "TestSupport/PlaybackTests/PlaybackTests.swift",
+        "line": 62
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        NotificationCenter.default.post(name: .AVPlayerItemFailedToPlayToEndTime, object: model.player!.currentItem!)",
+    "violation": {
+      "location": {
+        "character": 116,
+        "file": "TestSupport/PlaybackTests/PlaybackTests.swift",
+        "line": 62
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "    ",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/App/AppDI.swift",
+        "line": 55
+      },
+      "reason": "Lines should not have trailing whitespace",
+      "ruleDescription": "Lines should not have trailing whitespace",
+      "ruleName": "Trailing Whitespace",
+      "ruleIdentifier": "trailing_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Core/Haptic/HapticService.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Core/ImageCaching/CachedAsyncImage.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Core/ImageCaching/DefaultImageCache.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Core/ImageCaching/ImageLoader.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        ).first!",
+    "violation": {
+      "location": {
+        "character": 16,
+        "file": "myTV/Data/Cache/ChannelDiskCache.swift",
+        "line": 18
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Data/Mappers/Stream+Mapper.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        self.id = dto.url              ",
+    "violation": {
+      "location": {
+        "character": 26,
+        "file": "myTV/Data/Mappers/Stream+Mapper.swift",
+        "line": 11
+      },
+      "reason": "Lines should not have trailing whitespace",
+      "ruleDescription": "Lines should not have trailing whitespace",
+      "ruleName": "Trailing Whitespace",
+      "ruleIdentifier": "trailing_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Data/Network/Client/HTTPClient.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Data/Network/DTO/ChannelDTO.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        try await client.get(URL(string: IPTVEndpoint.channels)!)",
+    "violation": {
+      "location": {
+        "character": 64,
+        "file": "myTV/Data/Network/Services/IPTVAPIService.swift",
+        "line": 27
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        try await client.get(URL(string: IPTVEndpoint.streams)!)",
+    "violation": {
+      "location": {
+        "character": 63,
+        "file": "myTV/Data/Network/Services/IPTVAPIService.swift",
+        "line": 31
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        try await client.get(URL(string: IPTVEndpoint.logos)!)",
+    "violation": {
+      "location": {
+        "character": 61,
+        "file": "myTV/Data/Network/Services/IPTVAPIService.swift",
+        "line": 35
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        let data = try await client.getRaw(URL(string: IPTVEndpoint.category(id))!)",
+    "violation": {
+      "location": {
+        "character": 82,
+        "file": "myTV/Data/Network/Services/IPTVAPIService.swift",
+        "line": 39
+      },
+      "reason": "Force unwrapping should be avoided",
+      "ruleDescription": "Force unwrapping should be avoided",
+      "ruleName": "Force Unwrapping",
+      "ruleIdentifier": "force_unwrapping",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Data/Repositories/ChannelRepositoryImpl.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Data/UseCases/DefaultFetchStreamsForChannelUseCase.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Domain/Entities/Category.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Domain/Entities/Stream.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Components/Channel/ChannelGridView.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Components/Channel/ChannelRowView.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Components/Channel/ChannelSectionHeader.swift",
+        "line": 9
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Components/Channel/FavoriteButton.swift",
+        "line": 9
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "    ",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Components/Channel/FavoriteButton.swift",
+        "line": 15
+      },
+      "reason": "Lines should not have trailing whitespace",
+      "ruleDescription": "Lines should not have trailing whitespace",
+      "ruleName": "Trailing Whitespace",
+      "ruleIdentifier": "trailing_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "            ",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Components/State/LoadingView.swift",
+        "line": 30
+      },
+      "reason": "Lines should not have trailing whitespace",
+      "ruleDescription": "Lines should not have trailing whitespace",
+      "ruleName": "Trailing Whitespace",
+      "ruleIdentifier": "trailing_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Screens/AboutView/AboutView.swift",
+        "line": 11
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "    ",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Screens/AboutView/AboutViewModel.swift",
+        "line": 21
+      },
+      "reason": "Lines should not have trailing whitespace",
+      "ruleDescription": "Lines should not have trailing whitespace",
+      "ruleName": "Trailing Whitespace",
+      "ruleIdentifier": "trailing_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "    ",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Screens/AboutView/AboutViewModel.swift",
+        "line": 37
+      },
+      "reason": "Lines should not have trailing whitespace",
+      "ruleDescription": "Lines should not have trailing whitespace",
+      "ruleName": "Trailing Whitespace",
+      "ruleIdentifier": "trailing_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Screens/ChannelList/ChannelListView.swift",
+        "line": 9
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "       ",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Screens/ChannelList/ChannelListView.swift",
+        "line": 406
+      },
+      "reason": "Lines should not have trailing whitespace",
+      "ruleDescription": "Lines should not have trailing whitespace",
+      "ruleName": "Trailing Whitespace",
+      "ruleIdentifier": "trailing_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "    ",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Screens/ChannelList/ChannelListViewModel.swift",
+        "line": 23
+      },
+      "reason": "Lines should not have trailing whitespace",
+      "ruleDescription": "Lines should not have trailing whitespace",
+      "ruleName": "Trailing Whitespace",
+      "ruleIdentifier": "trailing_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Screens/StreamList/StreamListView.swift",
+        "line": 9
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Screens/StreamPlayerView/StreamPlayerView.swift",
+        "line": 8
+      },
+      "reason": "Limit vertical whitespace to a single empty line; currently 2",
+      "ruleDescription": "Limit vertical whitespace to a single empty line",
+      "ruleName": "Vertical Whitespace",
+      "ruleIdentifier": "vertical_whitespace",
+      "severity": "error"
+    }
+  },
+  {
+    "text": "        ",
+    "violation": {
+      "location": {
+        "character": 1,
+        "file": "myTV/Presentation/Screens/StreamPlayerView/StreamPlayerView.swift",
+        "line": 26
+      },
+      "reason": "Lines should not have trailing whitespace",
+      "ruleDescription": "Lines should not have trailing whitespace",
+      "ruleName": "Trailing Whitespace",
+      "ruleIdentifier": "trailing_whitespace",
+      "severity": "error"
+    }
+  }
+]
