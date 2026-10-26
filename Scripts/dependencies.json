@@ -22,5 +22,9 @@
   "developerprofilekit": {
     "version": "1.0.0",
     "revision": "d418170af85d96999955b97dd4707be5288702a9"
+  },
+  "snapshottestingkit": {
+    "version": "1.0.2",
+    "revision": "945287afb68fc8eec170043c933c999edbd788ff"
   }
 }
