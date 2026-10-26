@@ -1,5 +1,5 @@
 {
-  "originHash" : "612010ef872635a4a13df469ad06f85f058007bbc3d0b7acdaccc20ceac82b6b",
+  "originHash" : "2bf1abc25019c881e757314c5a864f017d64f43220aee1e74fd52ad5fa636c63",
   "pins" : [
     {
       "identity" : "commonnetworking",
@@ -44,6 +44,15 @@
       "state" : {
         "revision" : "fdb91f3512131496c62a3468781a3ebcdd455841",
         "version" : "0.1.1"
+      }
+    },
+    {
+      "identity" : "snapshottestkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Anurag-Chourasia/SnapshotTestKit.git",
+      "state" : {
+        "revision" : "121e979186c23a34001effd812bd01fdf1d66ff7",
+        "version" : "1.0.2"
       }
     },
     {
