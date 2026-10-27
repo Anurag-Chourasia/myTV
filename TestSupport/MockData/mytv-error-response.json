@@ -1,0 +1,7 @@
+{
+  "status": "error",
+  "code": 500,
+  "error": "InternalServerError",
+  "message": "Directory endpoint temporarily unavailable. Please retry later.",
+  "timestamp": "2026-10-26T23:55:00Z"
+}
