@@ -1,0 +1,6 @@
+{
+  "status": "error",
+  "code": 500,
+  "error": "LoadTVFailed",
+  "message": "Unable to load TV channels directory."
+}
