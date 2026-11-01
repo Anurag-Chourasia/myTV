@@ -49,4 +49,73 @@ final class ChannelDiskCacheTests: XCTestCase {
         cache.clear()
         XCTAssertNil(cache.load(), "Cache load should return nil after clear")
     }
+
+    func testChannelRepositorySavesToDiskCacheOnSuccessfulFetch() async throws {
+        let cache = ChannelDiskCache()
+        cache.clear()
+        defer { cache.clear() }
+
+        let api = MockCacheAPIService()
+        let repo = ChannelRepositoryImpl(api: api, cache: cache)
+
+        let channels = try await repo.fetchChannels()
+        XCTAssertEqual(channels.count, 2)
+
+        let cached = cache.load()
+        XCTAssertNotNil(cached, "Cache must be populated after successful network fetch")
+        XCTAssertEqual(cached?.count, 2)
+        XCTAssertEqual(cached?[0].id, "mock-1")
+    }
+
+    func testChannelRepositoryUsesDiskCacheWhenNetworkFails() async throws {
+        let cache = ChannelDiskCache()
+        cache.clear()
+        defer { cache.clear() }
+
+        let dummyChannels = [
+            ChannelDTO(
+                id: "offline-1",
+                name: "Offline Channel",
+                alt_names: [],
+                network: nil,
+                owners: [],
+                country: "US",
+                categories: ["offline"],
+                is_nsfw: false,
+                launched: nil,
+                closed: nil,
+                replaced_by: nil,
+                website: nil
+            )
+        ]
+        cache.save(dummyChannels)
+
+        let failingApi = MockCacheAPIService(shouldFail: true)
+        let repo = ChannelRepositoryImpl(api: failingApi, cache: cache)
+
+        let channels = try await repo.fetchChannels()
+        XCTAssertEqual(channels.count, 1, "Must return cached channels when offline")
+        XCTAssertEqual(channels[0].id, "offline-1")
+        XCTAssertEqual(channels[0].name, "Offline Channel")
+    }
+}
+
+private final class MockCacheAPIService: IPTVAPIService {
+    let shouldFail: Bool
+
+    init(shouldFail: Bool = false) {
+        self.shouldFail = shouldFail
+    }
+
+    func fetchChannels() async throws -> [ChannelDTO] {
+        if shouldFail { throw URLError(.notConnectedToInternet) }
+        return [
+            ChannelDTO(id: "mock-1", name: "Mock 1", alt_names: [], network: nil, owners: [], country: "IN", categories: [], is_nsfw: false, launched: nil, closed: nil, replaced_by: nil, website: nil),
+            ChannelDTO(id: "mock-2", name: "Mock 2", alt_names: [], network: nil, owners: [], country: "IN", categories: [], is_nsfw: false, launched: nil, closed: nil, replaced_by: nil, website: nil)
+        ]
+    }
+
+    func fetchLogos() async throws -> [LogoDTO] { [] }
+    func fetchCategoryPlaylist(_ id: String) async throws -> [M3UChannel] { [] }
+    func fetchStreams() async throws -> [StreamDTO] { [] }
 }
