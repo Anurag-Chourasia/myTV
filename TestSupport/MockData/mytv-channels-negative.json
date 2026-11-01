@@ -1,0 +1,11 @@
+[
+  {
+    "unexpected_field": 12345,
+    "broken_id": null
+  },
+  {
+    "id": 99999,
+    "name": null,
+    "country": false
+  }
+]

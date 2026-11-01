@@ -1,0 +1,447 @@
+========== HTTP REQUEST ==========
+Request ID: 3E2B4B07-3A0F-4551-9DE0-EE766F122341
+Method: GET
+URL: https://iptv-org.github.io/api/channels.json
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP RESPONSE =========
+Request ID: 3E2B4B07-3A0F-4551-9DE0-EE766F122341
+Method: GET
+URL: https://iptv-org.github.io/api/channels.json
+Final URL: https://iptv-org.github.io/api/channels.json
+Status: 200
+Duration: 1402.15 ms
+Headers:
+  Connection: close
+  Content-Length: 7957932
+  Server: GitHub.com
+  Content-Type: application/json; charset=utf-8
+  Last-Modified: Tue, 27 Oct 2026 00:17:09 GMT
+  Access-Control-Allow-Origin: *
+  Strict-Transport-Security: max-age=31556952
+  ETag: "6adfed85-796dac"
+  expires: Tue, 27 Oct 2026 00:50:25 GMT
+  Cache-Control: max-age=600
+  x-proxy-cache: HIT
+  X-GitHub-Request-Id: 9D14:3D93CB:229A0:29DC6:6ADFF3D1
+  x-github-edge-region: centralindia
+  Accept-Ranges: bytes
+  Date: Tue, 27 Oct 2026 01:31:40 GMT
+  Via: 1.1 varnish
+  Age: 52
+  X-Served-By: cache-bom-vanm7210094-BOM
+  X-Cache: HIT
+  X-Cache-Hits: 2
+  X-Timer: S1793064701.802426,VS0,VE0
+  Vary: Accept-Encoding
+  X-Fastly-Request-ID: a74b30a426c34ae1519554e68415d2474239df9c
+Response Body:
+[{"id":"002RadioTV.do","name":"002 Radio TV","alt_names":[],"network":null,"owners":[],"country":"DO","categories":["general"],"is_nsfw":false,"launched":null,"closed":null,"replaced_by":null,"website":"https://www.002radio.com/"},{"id":"00sReplay.us","name":"00s Replay","alt_names":[],"network":"Pluto TV","owners":["Pluto Inc.","Paramount Skydance Corporation"],"country":"US","categories":["movies"],"is_nsfw":false,"launched":null,"closed":null,"replaced_by":null,"website":"https://pluto.tv/live-tv/00s-replay/details"},{"id":"0TV.dk","name":"0-TV","alt_names":[],"network":null,"owners":[],"country":"DK","categories":["general"],"is_nsfw":false,"launched":null,"closed":null,"replaced_by":null,"website":"https://0-tv.dk/"},{"id":"10.au","name":"10","alt_names":[],"network":null,"owners":[],"country":"AU","categories":["news"],"is_nsfw":false,"launched":null,"closed":null,"replaced_by":null,"website":"http://10play.com.au/"},{"id":"1000xHoraTV.uy","name":"1000xHora TV","alt_names":[],"network":null,"owners":["Omar Toledo"],"country":"UY","categories":["auto"],"is_nsfw":false,"launched":null,"closed":"2026-06-19","replaced_by":null,"website":"https://www.1000xhoratv.com/"},{"id":"1001Noites.br","name":"1001 Noites","alt_names":[],"network":null,"owners":[],"country":"BR","categories":["shop"],"is_nsfw":false,"launched":null,"closed":null,"replaced_by":null,"website":"https://1001noites.com.br/"},{"id":"100AutoMotoTV.bg","name":"100% Auto Moto TV","alt_names":["100% Ауто Мото ТВ"],"network":null,"owners":[],"country":"BG","categories":["auto"],"is_nsfw":false,"launched":null,"closed":null,"replaced_by":null,"website":"http://100automoto.tv/"},{"id":"100NEWS.ua","name":"100% NEWS","alt_names":[],"network":null,"owners":[],"country":"UA","categories":["news","business"],"is_nsfw":false,"launched":null,"closed":null,"replaced_by":null,"website":"https://www.100news.tv/"},{"id":"100NLTV.nl","name":"100% NL TV","alt_names":[],"network":null,"owners":["Radiocorp B.V."],"count...
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: 9B0C4D57-6A39-4329-AA76-AA76A1856B84
+Method: GET
+URL: https://iptv-org.github.io/api/streams.json
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP RESPONSE =========
+Request ID: 9B0C4D57-6A39-4329-AA76-AA76A1856B84
+Method: GET
+URL: https://iptv-org.github.io/api/streams.json
+Final URL: https://iptv-org.github.io/api/streams.json
+Status: 200
+Duration: 411.97 ms
+Headers:
+  Connection: close
+  Content-Length: 3756344
+  Server: GitHub.com
+  Content-Type: application/json; charset=utf-8
+  x-origin-cache: HIT
+  Last-Modified: Tue, 27 Oct 2026 00:17:09 GMT
+  Access-Control-Allow-Origin: *
+  Strict-Transport-Security: max-age=31556952
+  ETag: "6adfed85-395138"
+  expires: Tue, 27 Oct 2026 00:40:02 GMT
+  Cache-Control: max-age=600
+  x-proxy-cache: REVALIDATED
+  X-GitHub-Request-Id: A846:36EF62:234BD:2A8BF:6ADFF3D1
+  x-github-edge-region: centralindia
+  Accept-Ranges: bytes
+  Age: 0
+  Date: Tue, 27 Oct 2026 01:31:41 GMT
+  Via: 1.1 varnish
+  X-Served-By: cache-bom-vanm7210090-BOM
+  X-Cache: HIT
+  X-Cache-Hits: 0
+  X-Timer: S1793064702.734025,VS0,VE216
+  Vary: Accept-Encoding
+  X-Fastly-Request-ID: 554544b50833cf6809b61244a1c663d461ebd9e9
+Response Body:
+[{"channel":null,"feed":null,"title":"TV Publica","url":"http://playcom.trapemn.tv:1935/transcoderip/tvpublica.stream/playlist.m3u8","quality":"1080p","labels":[],"user_agent":null,"referrer":null},{"channel":null,"feed":null,"title":"Race Central TV","url":"https://nrpus.bozztv.com/36bay2/gusa-racecentral/index.m3u8","quality":"720p","labels":["Not 24/7"],"user_agent":null,"referrer":null},{"channel":null,"feed":null,"title":"Travel & Food TV","url":"https://nrpus.bozztv.com/36bay2/gusa-moviemagictv/index.m3u8","quality":"720p","labels":[],"user_agent":null,"referrer":null},{"channel":null,"feed":null,"title":"8 Out of 10 Cats","url":"https://amg00627-amg00627c37-samsung-au-4294.playouts.now.amagi.tv/playlist/amg00627-banijayfast-8outof10cats-samsungau/playlist.m3u8","quality":"1080p","labels":["Geo-blocked"],"user_agent":null,"referrer":null},{"channel":null,"feed":null,"title":"Action Hollywood Movies","url":"https://amg01076-lightningintern-actionhollywood-samsungau-rs69y.amagi.tv/playlist/amg01076-lightningintern-actionhollywood-samsungau/playlist.m3u8","quality":"1080p","labels":[],"user_agent":null,"referrer":null},{"channel":null,"feed":null,"title":"Bondi Vet","url":"https://wtfn-bondivet-1-au.samsung.wurl.tv/playlist.m3u8","quality":"720p","labels":[],"user_agent":null,"referrer":null},{"channel":null,"feed":null,"title":"Breaking News by LeadStory","url":"https://amg02703-leadstory-leadstory-samsungau-rr75f.amagi.tv/playlist/amg02703-leadstory-leadstory-samsungau/playlist.m3u8","quality":"1080p","labels":[],"user_agent":null,"referrer":null},{"channel":null,"feed":null,"title":"Come Dine With Me","url":"https://amg00654-itv-amg00654c2-samsung-au-925.playouts.now.amagi.tv/itv-cdwmug/playlist.m3u8","quality":"1080p","labels":[],"user_agent":null,"referrer":null},{"channel":null,"feed":null,"title":"Escape to the Country","url":"https://amg00145-amg00145c11-samsung-au-6579.playouts.now.amagi.tv/playlist.m3u8","quality":"1080p","labels":[],"user_agent":null,"...
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: 3A52396C-0B2F-4A72-8705-C2C5EEAAC6F7
+Method: GET
+URL: https://iptv-org.github.io/api/logos.json
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP RESPONSE =========
+Request ID: 3A52396C-0B2F-4A72-8705-C2C5EEAAC6F7
+Method: GET
+URL: https://iptv-org.github.io/api/logos.json
+Final URL: https://iptv-org.github.io/api/logos.json
+Status: 200
+Duration: 390.92 ms
+Headers:
+  Connection: close
+  Content-Length: 5759862
+  Server: GitHub.com
+  Content-Type: application/json; charset=utf-8
+  x-origin-cache: HIT
+  Last-Modified: Tue, 27 Oct 2026 00:17:09 GMT
+  Access-Control-Allow-Origin: *
+  Strict-Transport-Security: max-age=31556952
+  ETag: "6adfed85-57e376"
+  expires: Tue, 27 Oct 2026 00:54:04 GMT
+  Cache-Control: max-age=600
+  x-proxy-cache: MISS
+  X-GitHub-Request-Id: 78BC:3F4278:22D36:2A102:6ADFF3D4
+  x-github-edge-region: centralindia
+  Accept-Ranges: bytes
+  Age: 0
+  Date: Tue, 27 Oct 2026 01:31:44 GMT
+  Via: 1.1 varnish
+  X-Served-By: cache-bom-vanm7210087-BOM
+  X-Cache: HIT
+  X-Cache-Hits: 0
+  X-Timer: S1793064704.995598,VS0,VE204
+  Vary: Accept-Encoding
+  X-Fastly-Request-ID: 3c6a7643dc3cfedc5722a95f17239facc985b3d0
+Response Body:
+[{"channel":"002RadioTV.do","feed":null,"in_use":true,"tags":[],"width":334,"height":210,"format":"PNG","url":"https://i.imgur.com/7oNe8xj.png"},{"channel":"00sReplay.us","feed":null,"in_use":true,"tags":[],"width":576,"height":288,"format":"PNG","url":"https://images.pluto.tv/channels/62ba60f059624e000781c436/colorLogoPNG.png"},{"channel":"00sReplay.us","feed":null,"in_use":true,"tags":[],"width":576,"height":288,"format":"SVG","url":"https://images.pluto.tv/channels/62ba60f059624e000781c436/colorLogoSVG.svg"},{"channel":"0TV.dk","feed":null,"in_use":true,"tags":[],"width":64,"height":64,"format":"PNG","url":"https://i.imgur.com/aR5q6mA.png"},{"channel":"10.au","feed":null,"in_use":true,"tags":[],"width":512,"height":512,"format":"PNG","url":"https://static.wikia.nocookie.net/logopedia/images/0/06/Network_10_2018.svg/revision/latest/scale-to-width-down/512"},{"channel":"1000xHoraTV.uy","feed":null,"in_use":true,"tags":[],"width":512,"height":66,"format":"PNG","url":"https://i.imgur.com/wP3bbYr.png"},{"channel":"1001Noites.br","feed":null,"in_use":true,"tags":[],"width":106,"height":113,"format":"PNG","url":"https://i.imgur.com/dWA9y2J.png"},{"channel":"100AutoMotoTV.bg","feed":null,"in_use":true,"tags":[],"width":198,"height":39,"format":"PNG","url":"https://i.imgur.com/SZtJfOG.png"},{"channel":"100NEWS.ua","feed":null,"in_use":true,"tags":[],"width":159,"height":200,"format":"PNG","url":"https://i.imgur.com/bSXKdK5.png"},{"channel":"100NLTV.nl","feed":null,"in_use":true,"tags":[],"width":960,"height":283,"format":"PNG","url":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/100p-nl-tv-logo.png/960px-100p-nl-tv-logo.png"},{"channel":"101tvAntequera.es","feed":null,"in_use":true,"tags":[],"width":80,"height":100,"format":"PNG","url":"https://i.imgur.com/GzI3RC4.png"},{"channel":"101tvAxarquia.es","feed":null,"in_use":true,"tags":[],"width":80,"height":100,"format":"PNG","url":"https://i.imgur.com/GzI3RC4.png"},{"channel":"101tvCadiz.es","feed":null,"in_use"...
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: EA470843-479A-40E2-BE03-561B2D1227A1
+Method: GET
+URL: https://iptv-org.github.io/api/categories.json
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP RESPONSE =========
+Request ID: EA470843-479A-40E2-BE03-561B2D1227A1
+Method: GET
+URL: https://iptv-org.github.io/api/categories.json
+Final URL: https://iptv-org.github.io/api/categories.json
+Status: 200
+Duration: 389.63 ms
+Headers:
+  Connection: close
+  Content-Length: 2773
+  Server: GitHub.com
+  Content-Type: application/json; charset=utf-8
+  x-origin-cache: HIT
+  Last-Modified: Tue, 27 Oct 2026 00:17:09 GMT
+  Access-Control-Allow-Origin: *
+  Strict-Transport-Security: max-age=31556952
+  ETag: "6adfed85-ad5"
+  expires: Tue, 27 Oct 2026 00:54:04 GMT
+  Cache-Control: max-age=600
+  x-proxy-cache: MISS
+  X-GitHub-Request-Id: 5596:1C87C4:23D63:2B1CB:6ADFF3D4
+  x-github-edge-region: centralindia
+  Accept-Ranges: bytes
+  Age: 0
+  Date: Tue, 27 Oct 2026 01:31:45 GMT
+  Via: 1.1 varnish
+  X-Served-By: cache-bom-vanm7210056-BOM
+  X-Cache: HIT
+  X-Cache-Hits: 0
+  X-Timer: S1793064705.959763,VS0,VE201
+  Vary: Accept-Encoding
+  X-Fastly-Request-ID: 4581bdc9df13355180be49f8d51e3ad194ff6664
+Response Body:
+[{"id":"auto","name":"Auto","description":"Programming related to cars, motorcycles, and other automobiles"},{"id":"animation","name":"Animation","description":"Programming is mostly 2D or 3D animation"},{"id":"business","name":"Business","description":"Programming related to business"},{"id":"classic","name":"Classic","description":"Programming is mostly from earlier decades"},{"id":"comedy","name":"Comedy","description":"Programming is mostly comedy"},{"id":"cooking","name":"Cooking","description":"Programs related to cooking or food in general"},{"id":"culture","name":"Culture","description":"Programming is mostly about art and culture"},{"id":"documentary","name":"Documentary","description":"Programming that depicts a person or real-world event"},{"id":"education","name":"Education","description":"Programming is intended to be educational"},{"id":"entertainment","name":"Entertainment","description":"Channels with a variety of entertainment programs"},{"id":"family","name":"Family","description":"Programming that is be suitable for all members of a family"},{"id":"general","name":"General","description":"Provides a variety of different programming"},{"id":"interactive","name":"Interactive","description":"Programming that allows viewers to actively engage with the content"},{"id":"kids","name":"Kids","description":"Programming targeted to children"},{"id":"legislative","name":"Legislative","description":"Programming specific to the operation of government"},{"id":"lifestyle","name":"Lifestyle","description":"Programs related to health, fitness, leisure, fashion, decor, etc."},{"id":"movies","name":"Movies","description":"Channels that only show movies"},{"id":"music","name":"Music","description":"Programming is music or music related"},{"id":"news","name":"News","description":"Programming is mostly news"},{"id":"outdoor","name":"Outdoor","description":"Programming related to outdoor activities like fishing, hunting, etc."},{"id":"public","name":"Public","descripti...
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: 666849B6-AE70-4D9F-AC0D-3AE134E4A7D1
+Method: GET
+URL: https://iptv-org.github.io/api/channels.json?country=XX
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP RESPONSE =========
+Request ID: 666849B6-AE70-4D9F-AC0D-3AE134E4A7D1
+Method: GET
+URL: https://iptv-org.github.io/api/channels.json?country=XX
+Final URL: https://iptv-org.github.io/api/channels.json?country=XX
+Status: 200
+Duration: 18.00 ms
+Headers:
+  Content-Type: application/json
+Response Body:
+[]
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: 542255F3-B476-4C13-855D-D83F51372120
+Method: GET
+URL: https://iptv-org.github.io/api/streams.json?channel=unknown-id
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP RESPONSE =========
+Request ID: 542255F3-B476-4C13-855D-D83F51372120
+Method: GET
+URL: https://iptv-org.github.io/api/streams.json?channel=unknown-id
+Final URL: https://iptv-org.github.io/api/streams.json?channel=unknown-id
+Status: 200
+Duration: 18.00 ms
+Headers:
+  Content-Type: application/json
+Response Body:
+[]
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: D09F311F-5F81-4B03-8AFA-AB5DAF33512D
+Method: GET
+URL: https://iptv-org.github.io/api/logos.json?channel=unknown-id
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP RESPONSE =========
+Request ID: D09F311F-5F81-4B03-8AFA-AB5DAF33512D
+Method: GET
+URL: https://iptv-org.github.io/api/logos.json?channel=unknown-id
+Final URL: https://iptv-org.github.io/api/logos.json?channel=unknown-id
+Status: 200
+Duration: 18.00 ms
+Headers:
+  Content-Type: application/json
+Response Body:
+[]
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: BBBF9100-BD70-469D-85F3-BF731A150EEB
+Method: GET
+URL: https://iptv-org.github.io/api/categories.json?id=none
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP RESPONSE =========
+Request ID: BBBF9100-BD70-469D-85F3-BF731A150EEB
+Method: GET
+URL: https://iptv-org.github.io/api/categories.json?id=none
+Final URL: https://iptv-org.github.io/api/categories.json?id=none
+Status: 200
+Duration: 18.00 ms
+Headers:
+  Content-Type: application/json
+Response Body:
+[]
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: 207F95A9-C5E6-444C-8AA2-85CB4F693B32
+Method: GET
+URL: https://iptv-org.github.io/api/channels.json?corrupt=1
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP RESPONSE =========
+Request ID: 207F95A9-C5E6-444C-8AA2-85CB4F693B32
+Method: GET
+URL: https://iptv-org.github.io/api/channels.json?corrupt=1
+Final URL: https://iptv-org.github.io/api/channels.json?corrupt=1
+Status: 200
+Duration: 40.00 ms
+Headers:
+  Content-Type: application/json
+Response Body:
+[
+  {
+    "unexpected_field": 12345,
+    "broken_id": null
+  },
+  {
+    "id": 99999,
+    "name": null,
+    "country": false
+  }
+]
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: C5395202-EFF3-492C-8FDD-FB9B8F17C823
+Method: GET
+URL: https://iptv-org.github.io/api/streams.json?corrupt=1
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP RESPONSE =========
+Request ID: C5395202-EFF3-492C-8FDD-FB9B8F17C823
+Method: GET
+URL: https://iptv-org.github.io/api/streams.json?corrupt=1
+Final URL: https://iptv-org.github.io/api/streams.json?corrupt=1
+Status: 200
+Duration: 40.00 ms
+Headers:
+  Content-Type: application/json
+Response Body:
+[
+  {
+    "broken_channel": null,
+    "missing_url": true
+  },
+  {
+    "url": "not-a-valid-url-format",
+    "quality": 1080
+  }
+]
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: 9182A84B-F49F-45B1-96C0-0CE84C0F5DE2
+Method: GET
+URL: https://iptv-org.github.io/api/logos.json?corrupt=1
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP RESPONSE =========
+Request ID: 9182A84B-F49F-45B1-96C0-0CE84C0F5DE2
+Method: GET
+URL: https://iptv-org.github.io/api/logos.json?corrupt=1
+Final URL: https://iptv-org.github.io/api/logos.json?corrupt=1
+Status: 200
+Duration: 40.00 ms
+Headers:
+  Content-Type: application/json
+Response Body:
+[
+  {
+    "broken_logo": true,
+    "width": "invalid-dimension",
+    "height": null
+  }
+]
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: F40950A9-9DE7-46F4-B123-837DBDA7C989
+Method: GET
+URL: https://iptv-org.github.io/api/categories.json?corrupt=1
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP RESPONSE =========
+Request ID: F40950A9-9DE7-46F4-B123-837DBDA7C989
+Method: GET
+URL: https://iptv-org.github.io/api/categories.json?corrupt=1
+Final URL: https://iptv-org.github.io/api/categories.json?corrupt=1
+Status: 200
+Duration: 40.00 ms
+Headers:
+  Content-Type: application/json
+Response Body:
+[
+  {
+    "bad_category_id": 0,
+    "name": false
+  }
+]
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: 2CFEDDBE-38D6-4134-AAEB-A91AACD8E2DA
+Method: GET
+URL: https://iptv-org.github.io/api/error-endpoint
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP ERROR ============
+Request ID: 2CFEDDBE-38D6-4134-AAEB-A91AACD8E2DA
+Method: GET
+URL: https://iptv-org.github.io/api/error-endpoint
+Duration: 40.00 ms
+Error: HTTP 500
+Response Body:
+{
+  "status": "error",
+  "code": 500,
+  "error": "InternalServerError",
+  "message": "Directory endpoint temporarily unavailable. Please retry later.",
+  "timestamp": "2026-10-26T23:55:00Z"
+}
+==================================
+
+========== HTTP REQUEST ==========
+Request ID: 2EE028BC-FC2A-457A-A89A-5A25017CC315
+Method: GET
+URL: https://iptv-org.github.io/api/channels.json
+Headers:
+  User-Agent: myTV/1.0 (iOS; Darwin)
+Request Body:
+<no request body>
+=================================
+
+========== HTTP ERROR ============
+Request ID: 2EE028BC-FC2A-457A-A89A-5A25017CC315
+Method: GET
+URL: https://iptv-org.github.io/api/channels.json
+Duration: 8.00 ms
+Error: Transport error: URLError(-1009, 'offline')
+Response Body:
+{
+  "domain": "NSURLErrorDomain",
+  "code": -1009,
+  "description": "The Internet connection appears to be offline."
+}
+==================================
+

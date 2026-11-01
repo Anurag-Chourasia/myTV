@@ -1,0 +1,5 @@
+{
+  "domain": "NSURLErrorDomain",
+  "code": -1009,
+  "description": "The Internet connection appears to be offline."
+}
