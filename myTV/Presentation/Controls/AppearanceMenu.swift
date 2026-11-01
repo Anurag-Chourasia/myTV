@@ -52,7 +52,7 @@ struct AppearanceMenu: View {
         } label: {
             Label(viewModel.menuTitle, systemImage: "circle.lefthalf.filled")
         }
-        .tint(DesignColor.primary)
+        .tint(Color("BrandAction"))
         .foregroundStyle(DesignColor.primary)
     }
 }
@@ -107,7 +107,7 @@ private struct ScreenTools: ViewModifier {
                             Label("Know Your Developer", systemImage: "person.crop.circle")
                         }
                     } label: { Label("App options", systemImage: "line.3.horizontal") }
-                    .tint(DesignColor.primary)
+                    .tint(Color("BrandAction"))
                     .accessibilityIdentifier("screen-tools")
                 }
             }

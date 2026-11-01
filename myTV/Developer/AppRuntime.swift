@@ -1,6 +1,16 @@
 import Foundation
 
 enum AppRuntime {
+    /// New-feature rollout is off by default. Debug can opt in from launch settings;
+    /// Release ignores developer preferences and uses only the bundled rollout flag.
+    static var authenticationEnabled: Bool {
+        #if DEBUG
+        return UserDefaults.standard.bool(forKey: "developer.authentication")
+        #else
+        return Bundle.main.object(forInfoDictionaryKey: "AUTHKIT_ENABLED") as? Bool ?? false
+        #endif
+    }
+
     static var hapticsEnabled: Bool { flag("haptics") }
     static var logoPreviewEnabled: Bool { flag("logoPreview") }
     static var version: String { override("version", fallback: Bundle.main.appVersion) }

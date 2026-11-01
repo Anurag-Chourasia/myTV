@@ -40,6 +40,6 @@ struct LayoutSwitchMenu: View {
         CatalogLayoutMenu(selection: selectedLayout, isAccessibilitySize: isAccessibilitySize,
                           title: menuTitle, titleForLayout: titleForLayout,
                           onSelect: onSelectLayout, onGridUnavailable: onGridUnavailable)
-            .tint(DesignColor.primary)
+            .tint(Color("BrandAction"))
     }
 }

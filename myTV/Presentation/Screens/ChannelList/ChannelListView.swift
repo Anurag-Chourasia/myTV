@@ -59,12 +59,12 @@ struct ChannelListView: View {
                         )
                     }
             }
-            .background(DesignColor.grouped)
+            .background(Color("BrandBackground"))
             .searchable(text: $viewModel.searchText)
             .navigationTitle(viewModel.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { menuBar }
-            .tint(DesignColor.primary)
+            .tint(Color("BrandAction"))
             .sheet(isPresented: $developerPresented) {
                 NavigationStack {
                     AboutView(viewModel: makeAboutViewModel())
@@ -190,7 +190,7 @@ private extension ChannelListView {
             LazyVStack(alignment: .leading) {
                 ForEach(viewModel.groupedResult, id: \.0) { section, channels in
                     ChannelSectionHeader(title: viewModel.sectionTitle(for: section))
-                    LazyVGrid(columns: [.init(.adaptive(minimum: gridMinWidth), spacing: DesignMetric.p10)]) {
+                    LazyVGrid(columns: [.init(.adaptive(minimum: gridMinWidth), spacing: LayoutPreset.compactMedia.itemSpacing)]) {
                         ForEach(channels) { channel in
                             NavigationLink {
                                 StreamListView(
@@ -212,7 +212,7 @@ private extension ChannelListView {
                     }
                 }
             }
-            .padding(.all, Spacing.system)
+            .padding(.all, LayoutPreset.compactMedia.screenInset)
         }
     }
 }

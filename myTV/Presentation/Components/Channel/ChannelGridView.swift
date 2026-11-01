@@ -17,8 +17,8 @@ struct ChannelGridView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        CatalogTile(layout: .grid, metrics: .compactGrid(accessibility: dynamicTypeSize.isAccessibilitySize),
-                    colors: SemanticColors(surface: DesignColor.groupedSecondary)) {
+        CatalogTile(layout: .grid, metrics: themedMetrics,
+                    colors: SemanticColors(surface: Color("BrandSurface"), border: Color("BrandBorder"))) {
             ChannelLogo(url: channel.logoURL, height: logoSize.height, width: logoSize.width)
         } details: {
             VStack(alignment: .center, spacing: Spacing.four) {
@@ -38,6 +38,13 @@ struct ChannelGridView: View {
         } accessory: {
             FavoriteButton(isFavorite: isFavorite, action: onFavoriteToggle)
         }
+    }
+
+    private var themedMetrics: CatalogTileMetrics {
+        var metrics = CatalogTileMetrics.compactGrid(accessibility: dynamicTypeSize.isAccessibilitySize)
+        metrics.surface.cornerRadius = LayoutPreset.compactMedia.cardRadius
+        metrics.surface.borderWidth = LayoutPreset.compactMedia.borderWidth
+        return metrics
     }
 
     private var logoSize: CGSize {

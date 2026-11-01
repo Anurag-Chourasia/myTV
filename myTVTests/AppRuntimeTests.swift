@@ -6,7 +6,7 @@ final class AppRuntimeTests: XCTestCase {
 
     func testSettingsPolicyAndFixtures() async throws {
         let defaults = UserDefaults.standard
-        let keys = ["source", "scenario", "haptics", "logoPreview", "version", "build"]
+        let keys = ["authentication", "source", "scenario", "haptics", "logoPreview", "version", "build"]
         let originals = keys.map { defaults.object(forKey: "developer." + $0) }
         defer {
             for (key, value) in zip(keys, originals) {
@@ -17,6 +17,15 @@ final class AppRuntimeTests: XCTestCase {
                 }
             }
         }
+
+        defaults.removeObject(forKey: "developer.authentication")
+        XCTAssertFalse(AppRuntime.authenticationEnabled)
+        defaults.set(true, forKey: "developer.authentication")
+        #if DEBUG
+        XCTAssertTrue(AppRuntime.authenticationEnabled)
+        #else
+        XCTAssertFalse(AppRuntime.authenticationEnabled)
+        #endif
 
         defaults.set("stub", forKey: "developer.source")
         defaults.set("success", forKey: "developer.scenario")

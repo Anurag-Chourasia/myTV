@@ -21,6 +21,10 @@ for path in source.rglob('*.swift'):
         if line.lstrip().startswith('//'): continue
         # Mutable model state is not a design dimension. Hex parsing is a data conversion utility.
         if '@Published var scrollOffset:' in line: continue
+        # Host-owned, catalog-backed semantic brand colors are design inputs,
+        # not inline RGB literals. Unknown/missing asset names still fail.
+        line = re.sub(r'Color\("(Brand[A-Za-z]+)"\)',
+            lambda match: 'BrandAsset' if any(source.rglob(match.group(1) + '.colorset')) else match.group(0), line)
         for rule, pattern in patterns.items():
             if re.search(pattern, line): failures.append(f'{path.relative_to(root)}:{number}: {rule}: {line.strip()}')
 if failures:

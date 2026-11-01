@@ -48,7 +48,7 @@ struct AboutView: View {
             }
         }
         .background(DesignColor.grouped)
-        .tint(DesignColor.primary)
+        .tint(Color("BrandAction"))
         .alert(
             viewModel.gridAlertTitle,
             isPresented: Binding(
