@@ -6,6 +6,8 @@ Built by [Anurag Chourasia](https://github.com/Anurag-Chourasia), iOS Engineer. 
 
 The repository is a portfolio and engineering reference. It distinguishes implemented behavior, tested contracts, and planned reliability work rather than claiming production readiness from architecture labels alone.
 
+[First showcase journey and acceptance criteria](Docs/ProductBrief.md)
+
 ## Engineering highlights
 
 | Engineering decision | Why it matters | Implementation evidence |
