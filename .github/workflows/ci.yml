@@ -107,6 +107,14 @@ jobs:
       - name: Check actual DTO actor boundary
         run: bash TestSupport/check-actor-boundary.sh "$RUNNER_TEMP/AppDerived"
 
+      - name: Build app Release for iOS Simulator
+        run: >-
+          xcodebuild -project myTV.xcodeproj -scheme myTV -configuration Release
+          -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath "$RUNNER_TEMP/AppDerived"
+          -onlyUsePackageVersionsFromResolvedFile -disableAutomaticPackageResolution
+          -scmProvider system SDKROOT=iphonesimulator CODE_SIGNING_ALLOWED=NO build
+
       - name: Remove dependency credentials
         if: always()
         run: rm -rf "$RUNNER_TEMP/shared-kit-credentials"
