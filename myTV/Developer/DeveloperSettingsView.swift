@@ -1,7 +1,9 @@
 import SwiftUI
 import DesignTokensKit
+import AuthKitUI
 
 struct TVLaunchView: View {
+    @State private var authenticationEnabled = AppRuntime.authenticationEnabled
     #if DEBUG
     @State private var showingLaunchSettings = true
     @State private var configurationID = UUID()
@@ -13,19 +15,31 @@ struct TVLaunchView: View {
             if showingLaunchSettings {
                 NavigationStack {
                     DeveloperSettingsView(buttonTitle: "Open MyTV") {
+                        authenticationEnabled = AppRuntime.authenticationEnabled
                         showingLaunchSettings = false
                     }
                 }
             } else {
-                ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel()).id(configurationID)
+                appContent.id(configurationID)
             }
         }
         .background(DebugSettingsPresenter(isLaunchSettingsVisible: showingLaunchSettings) {
+            authenticationEnabled = AppRuntime.authenticationEnabled
             configurationID = UUID()
         })
         #else
-        ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel())
+        appContent
         #endif
+    }
+
+    @ViewBuilder private var appContent: some View {
+        if authenticationEnabled {
+            AppAuthGate(brand: .myTV) { _, _ in
+                ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel())
+            }
+        } else {
+            ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel())
+        }
     }
 }
 
@@ -106,6 +120,7 @@ struct DeveloperSettingsView: View {
     @AppStorage("developer.source") private var source = "live"
     @AppStorage("developer.scenario") private var scenario = "success"
     @AppStorage("developer.httpLogs") private var logs = ProcessInfo.processInfo.environment["HTTP_LOGGING"] == "1"
+    @AppStorage("developer.authentication") private var authentication = false
     @AppStorage("developer.haptics") private var haptics = true
     @AppStorage("developer.logoPreview") private var preview = true
     @AppStorage("developer.version") private var version = ""
@@ -134,6 +149,10 @@ struct DeveloperSettingsView: View {
                 Text("Stub mode uses local channels and makes no directory or playback requests. Favorites remain on this device.")
             }
             Section("Feature flags") {
+                Toggle("Authentication · AuthKit", isOn: $authentication)
+                    .accessibilityIdentifier("developer-authentication")
+                Text("New feature, off by default. When enabled, Open MyTV shows sign-in before the channel catalog. Apply settings to activate changes; disabling it keeps any saved session for later.")
+
                 Toggle("Haptic feedback", isOn: $haptics)
                 Toggle("Logo preview and sharing", isOn: $preview)
             }
@@ -160,7 +179,7 @@ struct DeveloperSettingsView: View {
             Section {
                 Button("Reset developer settings", role: .destructive) {
                     source = "live"; scenario = "success"; logs = false
-                    haptics = true; preview = true; version = ""; build = ""
+                    authentication = false; haptics = true; preview = true; version = ""; build = ""
                 }
             }
         }

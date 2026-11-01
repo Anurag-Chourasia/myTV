@@ -1,12 +1,26 @@
 import XCTest
+import UIKit
 @testable import myTV
 
 @MainActor
 final class AppRuntimeTests: XCTestCase {
 
+    func testBrandColorsStayOpaqueInBothAppearances() throws {
+        let names = ["BrandBackground", "BrandSurface", "BrandAction",
+                     "AuthBackground", "AuthForeground", "AuthAction", "AuthOnAction"]
+        for style in [UIUserInterfaceStyle.light, .dark] {
+            let traits = UITraitCollection(userInterfaceStyle: style)
+            for name in names {
+                let color = try XCTUnwrap(UIColor(named: name, in: .main, compatibleWith: traits))
+                XCTAssertEqual(color.resolvedColor(with: traits).cgColor.alpha, 1, accuracy: 0.001,
+                               "\(name) must remain opaque")
+            }
+        }
+    }
+
     func testSettingsPolicyAndFixtures() async throws {
         let defaults = UserDefaults.standard
-        let keys = ["source", "scenario", "haptics", "logoPreview", "version", "build"]
+        let keys = ["authentication", "source", "scenario", "haptics", "logoPreview", "version", "build"]
         let originals = keys.map { defaults.object(forKey: "developer." + $0) }
         defer {
             for (key, value) in zip(keys, originals) {
@@ -17,6 +31,15 @@ final class AppRuntimeTests: XCTestCase {
                 }
             }
         }
+
+        defaults.removeObject(forKey: "developer.authentication")
+        XCTAssertFalse(AppRuntime.authenticationEnabled)
+        defaults.set(true, forKey: "developer.authentication")
+        #if DEBUG
+        XCTAssertTrue(AppRuntime.authenticationEnabled)
+        #else
+        XCTAssertFalse(AppRuntime.authenticationEnabled)
+        #endif
 
         defaults.set("stub", forKey: "developer.source")
         defaults.set("success", forKey: "developer.scenario")
