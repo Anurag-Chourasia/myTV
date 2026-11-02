@@ -1,4 +1,5 @@
 import XCTest
+import Combine
 @testable import myTV
 
 private typealias Stream = myTV.Stream
@@ -18,12 +19,17 @@ final class StreamListViewModelTests: XCTestCase {
         func clearCache() {}
     }
 
+    private final class MockReachability: ReachabilityService {
+        let isOnline = true
+        var isOnlinePublisher: AnyPublisher<Bool, Never> { Empty().eraseToAnyPublisher() }
+    }
+
     private func makeViewModel() -> StreamListViewModel {
         let repo = MockStreamRepository()
         let useCase = DefaultFetchStreamsForChannelUseCase(repository: repo)
         return StreamListViewModel(
             fetchStreams: useCase,
-            reachability: ReachabilityServiceImpl(),
+            reachability: MockReachability(),
             haptics: AppDI.shared.getHaptics()
         )
     }

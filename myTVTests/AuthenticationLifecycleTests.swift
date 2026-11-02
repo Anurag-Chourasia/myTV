@@ -13,6 +13,8 @@ final class AuthenticationLifecycleTests: XCTestCase {
         var shouldFailPasswordReset = false
         var shouldFailUpdatePassword = false
         var shouldFailCallback = false
+        var shouldFailDeleteAccount = false
+        var deleteAccountCallCount = 0
         var callbackHandledURLs: [URL] = []
         var updatedPasswords: [String] = []
         var resetRequestedEmails: [String] = []
@@ -41,6 +43,13 @@ final class AuthenticationLifecycleTests: XCTestCase {
         }
 
         func signOut() async throws {
+            signedInUser = nil
+            eventsSubject.send(AuthSessionEvent(user: nil, isPasswordRecovery: false))
+        }
+
+        func deleteAccount() async throws {
+            if shouldFailDeleteAccount { throw URLError(.cannotRemoveFile) }
+            deleteAccountCallCount += 1
             signedInUser = nil
             eventsSubject.send(AuthSessionEvent(user: nil, isPasswordRecovery: false))
         }
@@ -168,5 +177,58 @@ final class AuthenticationLifecycleTests: XCTestCase {
         let replayedURL = try XCTUnwrap(URL(string: "mytv-auth://auth/callback#type=recovery&access_token=expired"))
         await session.handleCallback(replayedURL)
         XCTAssertNotNil(session.errorMessage, "Replayed or expired callback URL must set an error message")
+    }
+
+    func testDeleteAccountLifecycleSuccess() async throws {
+        let backend = MockLifecycleBackend()
+        let authService = AuthService(backend: backend)
+        let session = SessionManager(authService: authService)
+
+        await session.signIn(email: "deleteme@mytv.test", password: "Password123!")
+        guard case .authenticated = session.state else {
+            XCTFail("User should be authenticated before deletion")
+            return
+        }
+
+        await session.deleteAccount()
+
+        XCTAssertEqual(backend.deleteAccountCallCount, 1)
+        XCTAssertEqual(session.state, .unauthenticated)
+        XCTAssertEqual(session.notice, "Your account and associated cloud data have been deleted.")
+        XCTAssertNil(session.errorMessage)
+
+        let currentUser = try await authService.currentUser()
+        XCTAssertNil(currentUser)
+    }
+
+    func testDeleteAccountFailureIsRecoverable() async throws {
+        let backend = MockLifecycleBackend()
+        let authService = AuthService(backend: backend)
+        let session = SessionManager(authService: authService)
+
+        await session.signIn(email: "recoverable@mytv.test", password: "Password123!")
+        guard case .authenticated = session.state else {
+            XCTFail("User should be authenticated before deletion")
+            return
+        }
+
+        // Trigger failure
+        backend.shouldFailDeleteAccount = true
+        await session.deleteAccount()
+
+        XCTAssertNotNil(session.errorMessage)
+        guard case .authenticated = session.state else {
+            XCTFail("State must remain authenticated on failure to allow retry")
+            return
+        }
+
+        // Clear failure and retry
+        backend.shouldFailDeleteAccount = false
+        await session.deleteAccount()
+
+        XCTAssertNil(session.errorMessage)
+        XCTAssertEqual(session.state, .unauthenticated)
+        XCTAssertEqual(session.notice, "Your account and associated cloud data have been deleted.")
+        XCTAssertEqual(backend.deleteAccountCallCount, 1)
     }
 }
