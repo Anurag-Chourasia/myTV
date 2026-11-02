@@ -12,6 +12,8 @@ callbacks whose scheme, host or path differs from this app's configured endpoint
 
 Google and GitHub are enabled in Supabase (verified via the public auth settings API).
 AUTH_PROVIDERS is google,github; Apple remains disabled pending developer setup.
+See `Docs/ADR_002_Social_Login_Distribution_Readiness.md` for the complete App Store
+Guideline 4.8 compliance decision, provider audiences, and callback verification.
 The following exact callback URLs are allowlisted in Supabase:
 
 - mytv-auth://auth/callback
@@ -20,6 +22,8 @@ The following exact callback URLs are allowlisted in Supabase:
 
 Provider configuration requires a signed-in Supabase dashboard plus OAuth credentials
 from Google Cloud, GitHub and Apple Developer. A publishable key cannot change it.
+Social login is verified end-to-end, and AUTHKIT_ENABLED remains false in Release
+to prevent premature deployment before Apple Developer credentials are provisioned.
 
 ShowBook binds its existing bookmark email namespace only after cloud authentication;
 legacy local credentials are not uploaded or automatically converted into cloud accounts.

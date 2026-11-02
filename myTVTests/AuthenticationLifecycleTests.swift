@@ -1,6 +1,7 @@
 import XCTest
 import Combine
 @testable import AuthKit
+@testable import AuthKitUI
 @testable import myTV
 
 @MainActor
@@ -14,6 +15,7 @@ final class AuthenticationLifecycleTests: XCTestCase {
         var shouldFailUpdatePassword = false
         var shouldFailCallback = false
         var shouldFailDeleteAccount = false
+        var failingProvider: AuthProvider?
         var deleteAccountCallCount = 0
         var callbackHandledURLs: [URL] = []
         var updatedPasswords: [String] = []
@@ -76,6 +78,13 @@ final class AuthenticationLifecycleTests: XCTestCase {
         }
 
         func signIn(provider: AuthProvider, redirectTo: URL) async throws -> AuthUser {
+            if let fail = failingProvider, fail == provider {
+                throw NSError(
+                    domain: "AuthKit",
+                    code: 400,
+                    userInfo: [NSLocalizedDescriptionKey: "Unsupported provider: provider is not enabled"]
+                )
+            }
             let user = AuthUser(id: UUID(), email: "oauth-\(provider.rawValue)@example.com")
             signedInUser = user
             eventsSubject.send(AuthSessionEvent(user: user, isPasswordRecovery: false))
@@ -230,5 +239,49 @@ final class AuthenticationLifecycleTests: XCTestCase {
         XCTAssertEqual(session.state, .unauthenticated)
         XCTAssertEqual(session.notice, "Your account and associated cloud data have been deleted.")
         XCTAssertEqual(backend.deleteAccountCallCount, 1)
+    }
+
+    func testSocialLoginConfigurationAndCallbackValidation() throws {
+        let config = try XCTUnwrap(AppAuthConfiguration.fromBundle())
+        XCTAssertEqual(config.projectURL.absoluteString, "https://ulszjssbmmfnheemfwiy.supabase.co")
+        XCTAssertEqual(config.callbackURL.absoluteString, "mytv-auth://auth/callback")
+        XCTAssertEqual(config.providers, [.google, .github])
+
+        // Verify exact callback routing
+        XCTAssertTrue(config.accepts(URL(string: "mytv-auth://auth/callback")!))
+        XCTAssertTrue(config.accepts(URL(string: "mytv-auth://auth/callback?code=fixture-code")!))
+        XCTAssertTrue(config.accepts(URL(string: "mytv-auth://auth/callback#access_token=fixture-token")!))
+
+        // Verify unauthorized schemes, hosts, or paths are rejected
+        XCTAssertFalse(config.accepts(URL(string: "unauthorized-scheme://auth/callback")!))
+        XCTAssertFalse(config.accepts(URL(string: "mytv-auth://attacker.com/callback")!))
+        XCTAssertFalse(config.accepts(URL(string: "mytv-auth://auth/unexpected-path")!))
+    }
+
+    func testSocialLoginWithApplePrivacyPreservingOptionAndDisabledHandling() async throws {
+        let backend = MockLifecycleBackend()
+        let authService = AuthService(backend: backend)
+        let session = SessionManager(authService: authService)
+        let redirectURL = try XCTUnwrap(URL(string: "mytv-auth://auth/callback"))
+
+        // 1. Successful OAuth with Apple (privacy-preserving option)
+        await session.signIn(provider: .apple, redirectTo: redirectURL)
+        guard case .authenticated(let appleUser) = session.state else {
+            XCTFail("Expected .authenticated after Apple sign-in")
+            return
+        }
+        XCTAssertEqual(appleUser.email, "oauth-apple@example.com")
+        XCTAssertNil(session.errorMessage)
+
+        await session.signOut()
+        XCTAssertEqual(session.state, .unauthenticated)
+
+        // 2. Disabled provider on backend (e.g. Apple disabled in Supabase pending developer credentials)
+        backend.failingProvider = .apple
+        await session.signIn(provider: .apple, redirectTo: redirectURL)
+
+        XCTAssertEqual(session.state, .unauthenticated)
+        XCTAssertEqual(session.errorMessage, "Unsupported provider: provider is not enabled")
+        XCTAssertFalse(session.isLoading)
     }
 }
