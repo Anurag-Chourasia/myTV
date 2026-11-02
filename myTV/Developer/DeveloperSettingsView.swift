@@ -126,13 +126,60 @@ struct DeveloperSettingsView: View {
     @AppStorage("developer.version") private var version = ""
     @AppStorage("developer.build") private var build = ""
     @AppStorage("channelLayout") private var layout = "list"
+    @State private var cacheSummary = ""
+
+    private let diskCache = ChannelDiskCache()
 
     var body: some View {
         Form {
             Section {
-                Text("Configure MyTV, then continue. Shake the device from any screen to return to these settings.")
+                Text("Configure MyTV runtime, cache, and feature flags. Shake device from any screen to reopen.")
                 Button(buttonTitle, action: onContinue)
                     .accessibilityIdentifier("developer-open-app")
+            }
+            Section("Quick presets") {
+                Button {
+                    source = "stub"
+                    scenario = "success"
+                    onContinue()
+                } label: {
+                    Label("Showcase (Populated)", systemImage: "sparkles")
+                }
+                .accessibilityIdentifier("developer-preset-showcase")
+
+                Button {
+                    source = "stub"
+                    scenario = "empty"
+                    onContinue()
+                } label: {
+                    Label("Empty State (Zero Results)", systemImage: "tray")
+                }
+                .accessibilityIdentifier("developer-preset-empty")
+
+                Button {
+                    source = "stub"
+                    scenario = "offline"
+                    onContinue()
+                } label: {
+                    Label("Offline Resilience", systemImage: "wifi.slash")
+                }
+                .accessibilityIdentifier("developer-preset-offline")
+
+                Button {
+                    source = "live"
+                    onContinue()
+                } label: {
+                    Label("Live Directory", systemImage: "globe")
+                }
+                .accessibilityIdentifier("developer-preset-live")
+            }
+            Section("Cache & offline storage") {
+                LabeledContent("Disk cache", value: cacheSummary.isEmpty ? "Checking..." : cacheSummary)
+                Button("Purge channel cache", role: .destructive) {
+                    diskCache.clear()
+                    refreshCacheSummary()
+                }
+                .accessibilityIdentifier("developer-purge-cache")
             }
             Section("Environment") {
                 Picker("Data source", selection: $source) {
@@ -187,6 +234,18 @@ struct DeveloperSettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .tint(DesignColor.primary)
         .toggleStyle(SwitchToggleStyle(tint: DesignColor.green))
+        .onAppear {
+            refreshCacheSummary()
+        }
+    }
+
+    private func refreshCacheSummary() {
+        let count = diskCache.entryCount
+        if count == 0 {
+            cacheSummary = "0 channels (0 KB)"
+        } else {
+            cacheSummary = "\(count) channels (\(diskCache.formattedFileSize))"
+        }
     }
 }
 #endif
