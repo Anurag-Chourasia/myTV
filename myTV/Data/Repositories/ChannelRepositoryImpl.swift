@@ -20,16 +20,33 @@ final class ChannelRepositoryImpl: ChannelRepository {
 
     // MARK: - Channels (cached)
     func fetchChannels() async throws -> [Channel] {
+        do {
+            async let channelsDTO = api.fetchChannels()
+            async let logosDTO = api.fetchLogos()
+            async let streamChannelIDs = availableStreamChannelIDs()
 
-        async let channelsDTO = api.fetchChannels()
-        async let logosDTO = api.fetchLogos()
-        async let streamChannelIDs = availableStreamChannelIDs()
+            let (channels, logos, availableIDs) = try await (channelsDTO, logosDTO, streamChannelIDs)
 
-        let (channels, logos, availableIDs) = try await (channelsDTO, logosDTO, streamChannelIDs)
+            // Cache successfully fetched catalog to disk
+            cache.save(channels)
 
-        let logoMap = buildLogoMap(logos)
+            let logoMap = buildLogoMap(logos)
 
-        return channels.map { dto in
+            return mapChannels(channels, logoMap: logoMap, availableIDs: availableIDs)
+        } catch {
+            if Task.isCancelled || error is CancellationError || (error as? URLError)?.code == .cancelled {
+                throw CancellationError()
+            }
+            // Truthful offline catalog fallback: load cached channels from disk
+            if let cached = cache.load(), !cached.isEmpty {
+                return mapChannels(cached, logoMap: [:], availableIDs: nil)
+            }
+            throw error
+        }
+    }
+
+    private func mapChannels(_ channels: [ChannelDTO], logoMap: [String: URL], availableIDs: Set<String>?) -> [Channel] {
+        channels.map { dto in
             let key = normalize(dto.id)
 
             return Channel(
