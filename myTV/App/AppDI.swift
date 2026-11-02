@@ -24,14 +24,15 @@ final class AppDI {
         )
     }
 
-    func makeChannelListViewModel() -> ChannelListViewModel {
+    func makeChannelListViewModel(favorites: FavoriteChannelStore? = nil) -> ChannelListViewModel {
         let fetchChannels = DefaultFetchChannelsUseCase(
             repository: makeChannelRepository()
         )
         return ChannelListViewModel(
             fetchChannels: fetchChannels,
             reachability: reachability,
-            haptics: haptics
+            haptics: haptics,
+            favorites: favorites
         )
     }
 
