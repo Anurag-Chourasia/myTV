@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import AVKit
+import UIKit
 
 @MainActor
 final class StreamListViewModel: ObservableObject {
@@ -33,27 +34,41 @@ final class StreamListViewModel: ObservableObject {
     private let fetchStreams: FetchStreamsForChannelUseCase
     private let reachability: ReachabilityService
     private let haptics: HapticService
+    private let notificationCenter: NotificationCenter
+
     // MARK: - Internal
     private var cancellables = Set<AnyCancellable>()
     private var lastChannelId: String?
+    private var loadStreamsTask: Task<Void, Never>?
 
     private var playbackQueue: [Stream] = []
     private var currentStreamIndex = 0
     private var isAttemptingPlayback = false
+    private var sessionID = UUID()
 
     private var playerFailureObserver: NSObjectProtocol?
     private var statusObserver: NSKeyValueObservation?
+    private var audioInterruptionObserver: NSObjectProtocol?
+    private var audioRouteChangeObserver: NSObjectProtocol?
+    private var backgroundObserver: NSObjectProtocol?
 
     // MARK: - Init
     init(
         fetchStreams: DefaultFetchStreamsForChannelUseCase,
         reachability: ReachabilityService,
-        haptics: HapticService
+        haptics: HapticService,
+        notificationCenter: NotificationCenter = .default
     ) {
         self.fetchStreams = fetchStreams
         self.reachability = reachability
         self.haptics = haptics
+        self.notificationCenter = notificationCenter
         observeReachability()
+        observeSystemAudioAndLifecycle()
+    }
+
+    deinit {
+        // Observers removal in teardown
     }
 }
 
@@ -79,7 +94,82 @@ private extension StreamListViewModel {
             }
             .store(in: &cancellables)
     }
+
+    func observeSystemAudioAndLifecycle() {
+        #if canImport(UIKit) && !os(macOS)
+        // 1. Audio session interruptions (phone calls, FaceTime, Siri)
+        audioInterruptionObserver = notificationCenter.addObserver(
+            forName: AVAudioSession.interruptionNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            self?.handleAudioInterruption(notification)
+        }
+
+        // 2. Audio route changes (unplugging headphones, disconnecting Bluetooth)
+        audioRouteChangeObserver = notificationCenter.addObserver(
+            forName: AVAudioSession.routeChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            self?.handleAudioRouteChange(notification)
+        }
+
+        // 3. App moving to background (pause if PiP is not active to prevent zombie threads)
+        backgroundObserver = notificationCenter.addObserver(
+            forName: UIApplication.didEnterBackgroundNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.handleDidEnterBackground()
+        }
+        #endif
+    }
+
+    #if canImport(UIKit) && !os(macOS)
+    func handleAudioInterruption(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
+              let interruptionType = AVAudioSession.InterruptionType(rawValue: typeValue) else { return }
+
+        switch interruptionType {
+        case .began:
+            player?.pause()
+        case .ended:
+            if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
+                let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
+                if options.contains(.shouldResume), isPresentingPlayer {
+                    player?.play()
+                }
+            }
+        @unknown default:
+            break
+        }
+    }
+
+    func handleAudioRouteChange(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let reasonValue = userInfo[AVAudioSessionRouteChangeReasonKey] as? UInt,
+              let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else { return }
+
+        switch reason {
+        case .oldDeviceUnavailable:
+            // Standard iOS guideline: pause playback when headphones are disconnected
+            player?.pause()
+        default:
+            break
+        }
+    }
+
+    func handleDidEnterBackground() {
+        // In full-screen modal player, if backgrounded, pause player
+        if isPresentingPlayer {
+            player?.pause()
+        }
+    }
+    #endif
 }
+
 extension StreamListViewModel {
     var offlineBannerViewModel: OfflineBannerViewModel {
         .default
@@ -106,16 +196,31 @@ extension StreamListViewModel {
     }
 
     func loadStreams(channelId: String) async {
+        loadStreamsTask?.cancel()
         lastChannelId = channelId
         state = .loading
 
-        do {
+        let task = Task { [fetchStreams] () throws -> [Stream] in
+            try Task.checkCancellation()
             let result = try await fetchStreams.execute(channelId: channelId)
-            streams = result
-            state = result.isEmpty ? .empty : .loaded
-        } catch {
-            state = .error(error.localizedDescription)
+            try Task.checkCancellation()
+            return result
         }
+        loadStreamsTask = Task { [weak self] in
+            do {
+                let result = try await task.value
+                guard !Task.isCancelled, let self else { return }
+                self.streams = result
+                self.state = result.isEmpty ? .empty : .loaded
+            } catch is CancellationError {
+                // Task was explicitly cancelled due to rapid switching or new request; do not overwrite state
+            } catch {
+                guard !Task.isCancelled, let self else { return }
+                self.streams = []
+                self.state = .error(error.localizedDescription)
+            }
+        }
+        await loadStreamsTask?.value
     }
 
     func loadIfNeeded(channelId: String) async {
@@ -159,14 +264,16 @@ extension StreamListViewModel {
 
         teardown()
 
+        sessionID = UUID()
         playbackQueue = allStreams
         currentStreamIndex = startIndex
         isAttemptingPlayback = true
         isPreparingPlayback = true
-        attemptPlay()
+        attemptPlay(for: sessionID)
     }
 
     func teardown() {
+        sessionID = UUID() // invalidate any pending callbacks
         isAttemptingPlayback = false
         isPresentingPlayer = false
         isPreparingPlayback = false
@@ -176,21 +283,26 @@ extension StreamListViewModel {
         player = nil
     }
 }
+
 private extension StreamListViewModel {
 
-    func attemptPlay() {
+    func attemptPlay(for targetSession: UUID) {
+        guard isAttemptingPlayback, targetSession == sessionID else { return }
+
         guard currentStreamIndex < playbackQueue.count else {
             teardown()
             playbackError = Localizable.Stream.Player.Error.noWorkingStreams
             return
         }
 
-        play(stream: playbackQueue[currentStreamIndex])
+        play(stream: playbackQueue[currentStreamIndex], for: targetSession)
     }
 
-    func play(stream: Stream) {
+    func play(stream: Stream, for targetSession: UUID) {
+        guard isAttemptingPlayback, targetSession == sessionID else { return }
+
         guard let url = URL(string: stream.url) else {
-            handlePlaybackFailure(message: Localizable.Stream.Player.Error.invalidURL)
+            handlePlaybackFailure(message: Localizable.Stream.Player.Error.invalidURL, for: targetSession)
             return
         }
 
@@ -205,9 +317,11 @@ private extension StreamListViewModel {
             guard let self else { return }
 
             Task { @MainActor in
-                guard self.isAttemptingPlayback, self.player?.currentItem === item else { return }
-                switch item.status {
+                guard self.isAttemptingPlayback,
+                      self.sessionID == targetSession,
+                      self.player?.currentItem === item else { return }
 
+                switch item.status {
                 case .readyToPlay:
                     self.isPreparingPlayback = false
                     self.isPresentingPlayer = true
@@ -216,7 +330,8 @@ private extension StreamListViewModel {
                 case .failed:
                     self.handlePlaybackFailure(
                         message: item.error?.localizedDescription
-                            ?? Localizable.Stream.Player.Error.cannotPlay
+                            ?? Localizable.Stream.Player.Error.cannotPlay,
+                        for: targetSession
                     )
 
                 case .unknown:
@@ -228,25 +343,28 @@ private extension StreamListViewModel {
             }
         }
 
-        playerFailureObserver = NotificationCenter.default.addObserver(
+        playerFailureObserver = notificationCenter.addObserver(
             forName: .AVPlayerItemFailedToPlayToEndTime,
             object: item,
             queue: nil
         ) { [weak self] _ in
             guard let self else { return }
             Task { @MainActor in
-                guard self.isAttemptingPlayback, self.player?.currentItem === item else { return }
-                self.handlePlaybackFailure(message: Localizable.Stream.Player.Error.cannotPlay)
+                guard self.isAttemptingPlayback,
+                      self.sessionID == targetSession,
+                      self.player?.currentItem === item else { return }
+                self.handlePlaybackFailure(message: Localizable.Stream.Player.Error.cannotPlay, for: targetSession)
             }
         }
     }
 
-    func handlePlaybackFailure(message: String) {
+    func handlePlaybackFailure(message: String, for targetSession: UUID) {
+        guard isAttemptingPlayback, targetSession == sessionID else { return }
         removePlayerObservers()
         currentStreamIndex += 1
 
         if currentStreamIndex < playbackQueue.count {
-            attemptPlay()
+            attemptPlay(for: targetSession)
         } else {
             isPreparingPlayback = false
             teardown()
@@ -257,7 +375,7 @@ private extension StreamListViewModel {
 
     func removePlayerObservers() {
         if let observer = playerFailureObserver {
-            NotificationCenter.default.removeObserver(observer)
+            notificationCenter.removeObserver(observer)
             playerFailureObserver = nil
         }
         statusObserver = nil
