@@ -40,6 +40,9 @@ final class ChannelDiskCacheTests: XCTestCase {
 
         cache.save(dummyChannels)
 
+        XCTAssertEqual(cache.entryCount, 2)
+        XCTAssertGreaterThan(cache.fileSizeBytes, 0)
+
         let loaded = cache.load()
         XCTAssertNotNil(loaded, "Cache load should return saved channels")
         XCTAssertEqual(loaded?.count, 2)
@@ -48,6 +51,8 @@ final class ChannelDiskCacheTests: XCTestCase {
 
         cache.clear()
         XCTAssertNil(cache.load(), "Cache load should return nil after clear")
+        XCTAssertEqual(cache.entryCount, 0)
+        XCTAssertEqual(cache.formattedFileSize, "0 KB")
     }
 
     func testChannelRepositorySavesToDiskCacheOnSuccessfulFetch() async throws {
