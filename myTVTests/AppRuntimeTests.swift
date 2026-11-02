@@ -63,6 +63,19 @@ final class AppRuntimeTests: XCTestCase {
         let streams = try await success.fetchStreams(channelId: channels[0].id)
         XCTAssertTrue(streams.isEmpty)
 
+        let showcase = DeveloperStubRepository(scenario: "showcase")
+        let showcaseChannels = try await showcase.fetchChannels()
+        XCTAssertEqual(showcaseChannels.count, 8)
+        XCTAssertTrue(showcaseChannels.allSatisfy { $0.hasStreams == true })
+
+        let showcaseStreams = try await showcase.fetchStreams(channelId: showcaseChannels[0].id)
+        XCTAssertEqual(showcaseStreams.count, 2)
+        XCTAssertTrue(showcaseStreams[0].url.hasPrefix("https://"))
+
+        defaults.set("showcase", forKey: "developer.scenario")
+        XCTAssertEqual(AppRuntime.stubScenario, "showcase")
+        XCTAssertTrue(AppRuntime.isShowcaseMode)
+
         let empty = try await DeveloperStubRepository(scenario: "empty").fetchChannels()
         XCTAssertTrue(empty.isEmpty)
 

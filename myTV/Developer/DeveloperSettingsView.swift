@@ -5,7 +5,8 @@ import AuthKitUI
 struct TVLaunchView: View {
     @State private var authenticationEnabled = AppRuntime.authenticationEnabled
     #if DEBUG
-    @State private var showingLaunchSettings = true
+    @State private var showingLaunchSettings = !AppRuntime.isShowcaseLaunch
+    @State private var showingSettingsSheet = false
     @State private var configurationID = UUID()
     #endif
 
@@ -20,7 +21,24 @@ struct TVLaunchView: View {
                     }
                 }
             } else {
-                appContent.id(configurationID)
+                appContent
+                    .id(configurationID)
+                    .safeAreaInset(edge: .top) {
+                        if AppRuntime.isShowcaseMode {
+                            ShowcaseBadgeView {
+                                showingSettingsSheet = true
+                            }
+                        }
+                    }
+                    .sheet(isPresented: $showingSettingsSheet) {
+                        NavigationStack {
+                            DeveloperSettingsView(buttonTitle: "Close") {
+                                showingSettingsSheet = false
+                                authenticationEnabled = AppRuntime.authenticationEnabled
+                                configurationID = UUID()
+                            }
+                        }
+                    }
             }
         }
         .background(DebugSettingsPresenter(isLaunchSettingsVisible: showingLaunchSettings) {
@@ -42,6 +60,39 @@ struct TVLaunchView: View {
         }
     }
 }
+
+#if DEBUG
+struct ShowcaseBadgeView: View {
+    var onTap: () -> Void
+
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: DesignMetric.p4) {
+                Image(systemName: "sparkles")
+                    .font(Typography.caption2)
+                Text("SHOWCASE DEMO")
+                    .font(Typography.caption)
+                    .fontWeight(.bold)
+                Text("• Tap for Controls")
+                    .font(Typography.caption2)
+                    .opacity(OpacityToken.p0_5)
+            }
+            .padding(.horizontal, DesignMetric.p10)
+            .padding(.vertical, DesignMetric.p4)
+            .background(.ultraThinMaterial)
+            .foregroundColor(Color("BrandAction"))
+            .clipShape(Capsule())
+            .overlay(
+                Capsule()
+                    .stroke(Color("BrandAction").opacity(OpacityToken.p0_35), lineWidth: DesignMetric.p1)
+            )
+        }
+        .padding(.top, DesignMetric.p4)
+        .accessibilityIdentifier("showcase-demo-indicator")
+        .accessibilityLabel("Showcase demo mode. Tap to open developer settings.")
+    }
+}
+#endif
 
 #if DEBUG
 private extension Notification.Name {
@@ -140,7 +191,7 @@ struct DeveloperSettingsView: View {
             Section("Quick presets") {
                 Button {
                     source = "stub"
-                    scenario = "success"
+                    scenario = "showcase"
                     onContinue()
                 } label: {
                     Label("Showcase (Populated)", systemImage: "sparkles")

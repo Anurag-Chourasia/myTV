@@ -69,7 +69,7 @@ flowchart TD
 | Images | [ImageLoader](myTV/Core/ImageCaching/ImageLoader.swift) checks memory cache, validates HTTP/image data, then publishes success/failure; [ChannelLogo](myTV/Presentation/Components/Channel/ChannelLogo.swift) supplies preview/sharing |
 | Preferences | [FavoriteChannelStore](myTV/Data/Cache/FavoriteChannelStore.swift) persists stable IDs; AppStorage stores layout/grouping/sort/appearance preferences |
 | Environment services | Core contains reachability, haptics, display-name mapping, and image-cache abstractions |
-| Developer controls | [DeveloperSettingsView](myTV/Developer/DeveloperSettingsView.swift) owns Debug launch/shake presentation; [AppRuntime](myTV/Developer/AppRuntime.swift) defines flags, overrides, and fixture repository |
+| Developer & showcase controls | [DeveloperSettingsView](myTV/Developer/DeveloperSettingsView.swift) owns Debug launch/shake presentation; [AppRuntime](myTV/Developer/AppRuntime.swift) defines flags, overrides, and fixture repository; `myTV Showcase` scheme boots credential-free directly with rights-cleared sample streams |
 
 ### Catalog data flow
 
