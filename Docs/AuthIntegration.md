@@ -1,11 +1,12 @@
-# AuthKit integration — 31 October 2026
+# AuthKit integration — 2 November 2026
 
-AuthKit and AuthKitUI 0.2.3 are linked to the app target. AppAuthGate owns auth
+AuthKit and AuthKitUI 0.2.4 are linked to the app target. AppAuthGate owns auth
 observation at the app root; each bundle has a distinct Keychain session key and
 callback scheme. The client-public Supabase URL and publishable key are in Info.plist.
 No test account email/password or service-role key is included.
 
-Email/password login and signup are enabled. Account provides local-only sign-out.
+Email/password login and signup are enabled. Account provides local-only sign-out
+and GDPR/Apple App Store Guideline 5.1.1(v) compliant shared cloud account deletion.
 Password recovery routes before normal authenticated content. AuthGate rejects
 callbacks whose scheme, host or path differs from this app's configured endpoint.
 
@@ -32,7 +33,7 @@ sign-in/session/refresh/local-sign-out tests passed. Motivation Daily's Back-but
 UI journey passed. ShowBook account-scope/logout unit tests passed.
 
 The apps are installed on iPhone 11 / iOS 27.0 for manual testing. Host integration changes are tracked on the milestone completion branch.
-The app dependency record pins AuthKit 0.2.3.
+The app dependency record pins AuthKit 0.2.4.
 
 Google/GitHub browser sign-in and email recovery still require end-to-end simulator validation.
 

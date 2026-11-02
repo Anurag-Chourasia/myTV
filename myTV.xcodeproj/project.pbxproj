@@ -11,12 +11,12 @@
 		1C26DD8EFB40C83F8A10E6F1 /* FoundationKit in Frameworks */ = {isa = PBXBuildFile; productRef = BBA5F2ED3ED984AD2A2D1221 /* FoundationKit */; };
 		252265A75B52A0C960CB4B51 /* UIComponentsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1D2587FDA8AB45F9B7227334 /* UIComponentsKit */; };
 		34D53F962F29029C0094915C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 34D53F952F29029C0094915C /* README.md */; };
+		51530E8A8ADF4AC6AB62DC18 /* AuthKit in Frameworks */ = {isa = PBXBuildFile; productRef = F784959047B24304911B3FB7 /* AuthKit */; };
 		8A5187FC767F6661D17F70CA /* LocalizationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4369C1F27BA5812F32EAA569 /* LocalizationKit */; };
 		A25000000000000000000003 /* DeveloperProfileKit in Frameworks */ = {isa = PBXBuildFile; productRef = A25000000000000000000002 /* DeveloperProfileKit */; };
 		AF591FCD7F3E450094A8B49E /* SnapshotTestKit in Frameworks */ = {isa = PBXBuildFile; productRef = A35000000000000000000002 /* SnapshotTestKit */; };
+		CB0C4DD58EA2499B8EAF6566 /* AuthKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2B17C08795EB4DEDA8B8A4F1 /* AuthKitUI */; };
 		EEEC20DB6D728F17ECF71C28 /* CommonNetworking in Frameworks */ = {isa = PBXBuildFile; productRef = D9D4A9BB17E5690CE37C2044 /* CommonNetworking */; };
-		51530E8A8ADF4AC6AB62DC18 /* AuthKit in Frameworks */ = {isa = PBXBuildFile; productRef = F784959047B24304911B3FB7; };
-		CB0C4DD58EA2499B8EAF6566 /* AuthKitUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2B17C08795EB4DEDA8B8A4F1; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,8 +80,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				51530E8A8ADF4AC6AB62DC18,
-				CB0C4DD58EA2499B8EAF6566,
+				51530E8A8ADF4AC6AB62DC18 /* AuthKit in Frameworks */,
+				CB0C4DD58EA2499B8EAF6566 /* AuthKitUI in Frameworks */,
 				A25000000000000000000003 /* DeveloperProfileKit in Frameworks */,
 				EEEC20DB6D728F17ECF71C28 /* CommonNetworking in Frameworks */,
 				1C26DD8EFB40C83F8A10E6F1 /* FoundationKit in Frameworks */,
@@ -242,7 +242,7 @@
 			mainGroup = 34C031DA2F23888E0029B9CC;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				1F88B55BFD3049359741B46C /* AuthKit */,
+				1F88B55BFD3049359741B46C /* XCRemoteSwiftPackageReference "AuthKit" */,
 				A35000000000000000000001 /* XCRemoteSwiftPackageReference "SnapshotTestKit" */,
 				A25000000000000000000001 /* XCRemoteSwiftPackageReference "DeveloperProfileKit" */,
 				92828F164BE284EE6D7434F8 /* XCRemoteSwiftPackageReference "CommonNetworking" */,
@@ -482,6 +482,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = myTV/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "My TV";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save channel logos you choose to your photo library.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -531,6 +532,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = myTV/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "My TV";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Save channel logos you choose to your photo library.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -675,6 +677,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1F88B55BFD3049359741B46C /* XCRemoteSwiftPackageReference "AuthKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Anurag-Chourasia/AuthKit.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.2.4;
+			};
+		};
 		50ED332846C85C80EDC0293F /* XCRemoteSwiftPackageReference "UIComponentsKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Anurag-Chourasia/UIComponentsKit.git";
@@ -731,7 +741,6 @@
 				version = 1.3.0;
 			};
 		};
-		1F88B55BFD3049359741B46C /* AuthKit */ = {isa = XCRemoteSwiftPackageReference; repositoryURL = "https://github.com/Anurag-Chourasia/AuthKit.git"; requirement = {kind = exactVersion; version = 0.2.3; }; };
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -739,6 +748,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 50ED332846C85C80EDC0293F /* XCRemoteSwiftPackageReference "UIComponentsKit" */;
 			productName = UIComponentsKit;
+		};
+		2B17C08795EB4DEDA8B8A4F1 /* AuthKitUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1F88B55BFD3049359741B46C /* XCRemoteSwiftPackageReference "AuthKit" */;
+			productName = AuthKitUI;
 		};
 		4369C1F27BA5812F32EAA569 /* LocalizationKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -770,8 +784,11 @@
 			package = 92828F164BE284EE6D7434F8 /* XCRemoteSwiftPackageReference "CommonNetworking" */;
 			productName = CommonNetworking;
 		};
-		F784959047B24304911B3FB7 /* AuthKit */ = {isa = XCSwiftPackageProductDependency; package = 1F88B55BFD3049359741B46C; productName = AuthKit; };
-		2B17C08795EB4DEDA8B8A4F1 /* AuthKitUI */ = {isa = XCSwiftPackageProductDependency; package = 1F88B55BFD3049359741B46C; productName = AuthKitUI; };
+		F784959047B24304911B3FB7 /* AuthKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1F88B55BFD3049359741B46C /* XCRemoteSwiftPackageReference "AuthKit" */;
+			productName = AuthKit;
+		};
 /* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 34C031DB2F23888E0029B9CC /* Project object */;
