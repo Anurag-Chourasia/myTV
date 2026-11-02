@@ -96,6 +96,7 @@ private extension StreamListViewModel {
     }
 
     func observeSystemAudioAndLifecycle() {
+        #if canImport(UIKit) && !os(macOS)
         // 1. Audio session interruptions (phone calls, FaceTime, Siri)
         audioInterruptionObserver = notificationCenter.addObserver(
             forName: AVAudioSession.interruptionNotification,
@@ -122,8 +123,10 @@ private extension StreamListViewModel {
         ) { [weak self] _ in
             self?.handleDidEnterBackground()
         }
+        #endif
     }
 
+    #if canImport(UIKit) && !os(macOS)
     func handleAudioInterruption(_ notification: Notification) {
         guard let userInfo = notification.userInfo,
               let typeValue = userInfo[AVAudioSessionInterruptionTypeKey] as? UInt,
@@ -164,6 +167,7 @@ private extension StreamListViewModel {
             player?.pause()
         }
     }
+    #endif
 }
 
 extension StreamListViewModel {
