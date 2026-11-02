@@ -200,22 +200,22 @@ extension StreamListViewModel {
         lastChannelId = channelId
         state = .loading
 
-        let task = Task { () -> Result<[Stream], Error> in
-            do {
-                let result = try await fetchStreams.execute(channelId: channelId)
-                return .success(result)
-            } catch {
-                return .failure(error)
-            }
+        let task = Task { [fetchStreams] () throws -> [Stream] in
+            try Task.checkCancellation()
+            let result = try await fetchStreams.execute(channelId: channelId)
+            try Task.checkCancellation()
+            return result
         }
-        loadStreamsTask = Task {
-            let result = await task.value
-            guard !Task.isCancelled else { return }
-            switch result {
-            case .success(let streams):
-                self.streams = streams
-                self.state = streams.isEmpty ? .empty : .loaded
-            case .failure(let error):
+        loadStreamsTask = Task { [weak self] in
+            do {
+                let result = try await task.value
+                guard !Task.isCancelled, let self else { return }
+                self.streams = result
+                self.state = result.isEmpty ? .empty : .loaded
+            } catch is CancellationError {
+                // Task was explicitly cancelled due to rapid switching or new request; do not overwrite state
+            } catch {
+                guard !Task.isCancelled, let self else { return }
                 self.streams = []
                 self.state = .error(error.localizedDescription)
             }
