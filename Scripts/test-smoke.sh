@@ -23,7 +23,8 @@ xcrun xcodebuild test -project myTV.xcodeproj -scheme myTV \
     -onlyUsePackageVersionsFromResolvedFile \
     -disableAutomaticPackageResolution \
     -scmProvider system CODE_SIGNING_ALLOWED=NO \
-    -only-testing:myTVTests/CompleteJourneyTests
+    -only-testing:myTVTests/CompleteJourneyTests \
+    -only-testing:myTVTests/AccessibilityJourneyTests
 
 END_TIME=$(date +%s)
 ELAPSED=$((END_TIME - START_TIME))
