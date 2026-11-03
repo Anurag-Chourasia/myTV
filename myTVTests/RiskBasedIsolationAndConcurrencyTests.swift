@@ -75,11 +75,10 @@ final class RiskBasedIsolationAndConcurrencyTests: XCTestCase {
     // MARK: - Demonstrated Failure & Regression Contract
 
     func testStaleCachePurgePreventsZombiePlaybackUrls() throws {
-        let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-        try? FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
-        defer { try? FileManager.default.removeItem(at: tempDir) }
+        let cache = ChannelDiskCache()
+        cache.clear()
+        defer { cache.clear() }
 
-        let cache = ChannelDiskCache(fileManager: .default, directory: tempDir)
         let dummyChannels = [
             ChannelDTO(
                 id: "risk-channel-1",
