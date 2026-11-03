@@ -18,10 +18,10 @@ struct ChannelSectionHeader: View {
             Text(title)
                 .font(Typography.headline)
                 .fontWeight(.semibold)
-                .foregroundStyle(DesignColor.secondary)
+                .foregroundColor(\.secondary)
             Spacer()
         }
-        .padding(.horizontal, Spacing.system)
-        .background(DesignColor.clear)
+        .padding(.horizontal, \.sixteen)
+        .background(\.clear)
     }
 }

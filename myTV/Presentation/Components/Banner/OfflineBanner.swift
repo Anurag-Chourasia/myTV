@@ -13,12 +13,12 @@ struct OfflineBanner: View {
     let viewModel: OfflineBannerViewModel
 
     var body: some View {
-        IconMessageBanner(foreground: DesignColor.white) {
+        IconMessageBanner(foreground: ColorTheme.default.white) {
             Image(systemName: "wifi.slash")
         } message: {
             Text(viewModel.message)
         } background: {
-            DesignColor.red
+            ColorTheme.default.red
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(viewModel.message))

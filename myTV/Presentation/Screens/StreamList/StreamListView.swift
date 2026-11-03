@@ -26,7 +26,7 @@ struct StreamListView: View {
     }
 
     private var content: some View {
-        VStack(spacing: DesignMetric.p0) {
+        VStack(spacing: \.zero) {
             if viewModel.showOfflineBanner {
                 OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
             }
@@ -110,12 +110,12 @@ private extension StreamListView {
                     allStreams: viewModel.streams
                 )
             } label: {
-                VStack(alignment: .leading, spacing: DesignMetric.p4) {
+                VStack(alignment: .leading, spacing: \.four) {
                     Text(stream.title)
                     if let quality = stream.quality {
                         Text(quality)
                             .font(Typography.caption)
-                            .foregroundColor(DesignColor.secondary)
+                            .foregroundColor(\.secondary)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)

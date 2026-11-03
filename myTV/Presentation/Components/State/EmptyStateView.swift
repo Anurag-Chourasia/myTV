@@ -23,7 +23,7 @@ struct EmptyStateView: View {
         } detail: {
             Text(message)
         }
-        .padding(.all, Spacing.system)
+        .padding(.all, \.sixteen)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityElement(children: .combine)
     }

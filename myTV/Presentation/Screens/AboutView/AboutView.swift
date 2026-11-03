@@ -26,7 +26,7 @@ struct AboutView: View {
     // MARK: - Body
     var body: some View {
         Group {
-            VStack(spacing: DesignMetric.p0) {
+            VStack(spacing: \.zero) {
 
                 if viewModel.showOfflineBanner {
                     OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
@@ -47,7 +47,7 @@ struct AboutView: View {
                 menuBar
             }
         }
-        .background(DesignColor.grouped)
+        .background(\.grouped)
         .tint(Color("BrandAction"))
         .alert(
             viewModel.gridAlertTitle,

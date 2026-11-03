@@ -34,7 +34,7 @@ struct ChannelListView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: DesignMetric.p0) {
+            VStack(spacing: \.zero) {
                 if viewModel.showOfflineBanner {
                     OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
                 }
@@ -218,7 +218,7 @@ private extension ChannelListView {
 }
 
 private extension ChannelListView {
-    var gridMinWidth: CGFloat { dynamicTypeSize.isAccessibilitySize ? DesignMetric.p160 : DesignMetric.p110 }
+    var gridMinWidth: CGFloat { dynamicTypeSize.isAccessibilitySize ? DesignMetricTheme.default.p160 : DesignMetricTheme.default.p110 }
 }
 
 // MARK: - Toolbar

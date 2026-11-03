@@ -18,10 +18,10 @@ struct FavoriteButton: View {
             action()
         } label: {
             Image(systemName: isFavorite ? "heart.fill" : "heart")
-                .foregroundColor(isFavorite ? DesignColor.red : DesignColor.secondary)
+                .foregroundColor(isFavorite ? ColorTheme.default.red : ColorTheme.default.secondary)
         }
         .buttonStyle(.plain)
-        .frame(width: DesignMetric.p24, height: DesignMetric.p24)
+        .frame(width: \.p24, height: \.p24)
         .scaleEffect(isFavorite ? ScaleToken.p1_15 : ScaleToken.p1_0)
         .accessibilityLabel(
             Text(isFavorite ? VoiceOver.A11y.Favorite.remove : VoiceOver.A11y.Favorite.add)

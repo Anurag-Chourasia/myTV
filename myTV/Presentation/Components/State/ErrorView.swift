@@ -24,7 +24,7 @@ struct ErrorView: View {
         } actions: {
             Button(viewModel.retryTitle, action: retry)
         }
-        .padding(.all, Spacing.system)
+        .padding(.all, \.sixteen)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityElement(children: .combine)
     }

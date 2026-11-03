@@ -20,7 +20,7 @@ struct ChannelRowView: View {
         CatalogTile(layout: .list, metrics: .plainRow) {
             ChannelLogo(url: channel.logoURL)
         } details: {
-            VStack(alignment: .leading, spacing: Spacing.four) {
+            VStack(alignment: .leading, spacing: \.four) {
                 Text(channel.name)
                     .font(Typography.headline)
                     .multilineTextAlignment(.leading)
@@ -28,12 +28,12 @@ struct ChannelRowView: View {
                 if channel.hasStreams == false {
                     Text("No streams available")
                         .font(Typography.caption)
-                        .foregroundStyle(DesignColor.secondary)
+                        .foregroundColor(\.secondary)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
-            .padding(.horizontal, Spacing.eight)
+            .padding(.horizontal, \.eight)
         } accessory: {
             FavoriteButton(isFavorite: isFavorite, action: onFavoriteToggle)
         }

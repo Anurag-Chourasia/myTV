@@ -13,18 +13,18 @@ struct LoadingView: View {
 
     var body: some View {
         ZStack {
-            DesignColor.black.opacity(OpacityToken.p0_35)
+            ColorTheme.default.black.opacity(OpacityTheme.default.p0_35)
                 .ignoresSafeArea()
 
-            VStack(spacing: Spacing.twelve) {
+            VStack(spacing: \.twelve) {
                 ProgressView()
                 Text(viewModel.message)
                     .font(Typography.footnote)
-                    .foregroundColor(DesignColor.secondary)
+                    .foregroundColor(\.secondary)
             }
-            .padding(Spacing.twenty)
+            .padding(\.twenty)
             .background(.ultraThinMaterial)
-            .cornerRadius(CornerRadius.twelve)
+            .cornerRadius(\.twelve)
             .accessibilityElement(children: .combine)
             .accessibilityLabel(Text(viewModel.message))
             

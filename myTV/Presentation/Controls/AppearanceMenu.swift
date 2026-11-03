@@ -53,7 +53,7 @@ struct AppearanceMenu: View {
             Label(viewModel.menuTitle, systemImage: "circle.lefthalf.filled")
         }
         .tint(Color("BrandAction"))
-        .foregroundStyle(DesignColor.primary)
+        .foregroundColor(\.primary)
     }
 }
 

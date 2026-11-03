@@ -112,14 +112,14 @@ private extension MultiSelectView {
         if viewModel.allowsMultipleSelection {
             if isSelected {
                 Image(systemName: "checkmark.circle.fill")
-                    .foregroundColor(DesignColor.primary)
+                    .foregroundColor(\.primary)
                     .accessibilityHidden(true)
             }
         } else {
             Image(systemName: isSelected
                   ? "largecircle.fill.circle"
                   : "circle")
-                .foregroundColor(isSelected ? DesignColor.primary : DesignColor.secondary)
+                .foregroundColor(isSelected ? ColorTheme.default.primary : ColorTheme.default.secondary)
                 .accessibilityHidden(true)
         }
     }

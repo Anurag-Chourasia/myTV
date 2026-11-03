@@ -11,22 +11,22 @@ import DesignTokensKit
 struct ChannelLogo: View {
     let url: URL?
     @State private var previewPresented = false
-    var height: CGFloat = DesignMetric.p40
-    var width: CGFloat = DesignMetric.p40
+    var height: CGFloat = DesignMetricTheme.default.p40
+    var width: CGFloat = DesignMetricTheme.default.p40
 
     var body: some View {
         CachedAsyncImage(url: url) {
             ZStack {
-                DesignColor.grouped
+                ColorTheme.default.grouped
 
                 Image(systemName: "tv")
-                    .foregroundColor(DesignColor.secondary)
+                    .foregroundColor(\.secondary)
             }
         }
         .scaledToFit()
         .frame(width: width, height: height)
-        .background(DesignColor.grouped)
-        .cornerRadius(CornerRadius.six)
+        .background(\.grouped)
+        .cornerRadius(\.six)
         .contentShape(Rectangle())
         .highPriorityGesture(LongPressGesture().onEnded { _ in
             if AppRuntime.logoPreviewEnabled { previewPresented = true }
@@ -65,8 +65,8 @@ private struct ChannelLogoPreview: View {
                 } else { ProgressView("Loading logo…") }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding(Spacing.sixteen)
-            .background(DesignColor.grouped)
+            .padding(\.sixteen)
+            .background(\.grouped)
             .navigationTitle("Logo preview")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

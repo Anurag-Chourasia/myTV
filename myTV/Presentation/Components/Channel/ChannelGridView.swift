@@ -21,16 +21,16 @@ struct ChannelGridView: View {
                     colors: SemanticColors(surface: Color("BrandSurface"), border: Color("BrandBorder"))) {
             ChannelLogo(url: channel.logoURL, height: logoSize.height, width: logoSize.width)
         } details: {
-            VStack(alignment: .center, spacing: Spacing.four) {
+            VStack(alignment: .center, spacing: \.four) {
                 Text(channel.name)
                     .font(Typography.headline)
-                    .foregroundColor(DesignColor.primary)
+                    .foregroundColor(\.primary)
                     .multilineTextAlignment(.center)
                     .lineLimit(CatalogMetrics.gridTitleLines)
                 if channel.hasStreams == false {
                     Text("No streams available")
                         .font(Typography.caption)
-                        .foregroundStyle(DesignColor.secondary)
+                        .foregroundColor(\.secondary)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
                 }

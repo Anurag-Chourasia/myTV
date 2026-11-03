@@ -13,7 +13,7 @@ struct ChannelStickyBar: View {
     @Binding var scope: ChannelListViewModel.ChannelScope
 
     var body: some View {
-        HStack(spacing: Spacing.eight) {
+        HStack(spacing: \.eight) {
             ForEach(ChannelListViewModel.ChannelScope.allCases) { tab in
                 Button {
                     scope = tab
@@ -21,13 +21,13 @@ struct ChannelStickyBar: View {
                     Text(tab.title)
                         .font(Typography.subheadline.weight(.semibold))
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, Spacing.eight)
+                        .padding(.vertical, \.eight)
                         .background(
                             scope == tab
-                            ? DesignColor.accentColor.opacity(OpacityToken.p0_15)
-                            : DesignColor.clear
+                            ? ColorTheme.default.accentColor.opacity(OpacityTheme.default.p0_15)
+                            : ColorTheme.default.clear
                         )
-                        .cornerRadius(CornerRadius.ten)
+                        .cornerRadius(\.ten)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text(tab.title))
@@ -36,10 +36,10 @@ struct ChannelStickyBar: View {
                 )
             }
         }
-        .padding(Spacing.eight)
-        .background(DesignColor.groupedSecondary)
-        .clipShape(RoundedRectangle(cornerRadius: CornerRadius.fourteen))
-        .padding(.horizontal, Spacing.system)
-        .padding(.top, Spacing.four)
+        .padding(\.eight)
+        .background(\.groupedSecondary)
+        .clipShape(RoundedRectangle(cornerRadius: \.fourteen))
+        .padding(.horizontal, \.sixteen)
+        .padding(.top, \.four)
     }
 }

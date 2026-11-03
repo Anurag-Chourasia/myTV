@@ -73,7 +73,7 @@ struct ShowcaseBadgeView: View {
 
     var body: some View {
         Button(action: onTap) {
-            HStack(spacing: DesignMetric.p4) {
+            HStack(spacing: \.four) {
                 Image(systemName: "sparkles")
                     .font(Typography.caption2)
                 Text("SHOWCASE DEMO")
@@ -81,19 +81,19 @@ struct ShowcaseBadgeView: View {
                     .fontWeight(.bold)
                 Text("• Tap for Controls")
                     .font(Typography.caption2)
-                    .opacity(OpacityToken.p0_5)
+                    .opacity(\.p0_5)
             }
-            .padding(.horizontal, DesignMetric.p10)
-            .padding(.vertical, DesignMetric.p4)
+            .padding(.horizontal, \.ten)
+            .padding(.vertical, \.four)
             .background(.ultraThinMaterial)
             .foregroundColor(Color("BrandAction"))
             .clipShape(Capsule())
             .overlay(
                 Capsule()
-                    .stroke(Color("BrandAction").opacity(OpacityToken.p0_35), lineWidth: DesignMetric.p1)
+                    .stroke(Color("BrandAction").opacity(OpacityTheme.default.p0_35), lineWidth: DesignMetricTheme.default.p1)
             )
         }
-        .padding(.top, DesignMetric.p4)
+        .padding(.top, \.four)
         .accessibilityIdentifier("showcase-demo-indicator")
         .accessibilityLabel("Showcase demo mode. Tap to open developer settings.")
     }
@@ -293,7 +293,7 @@ struct DeveloperSettingsView: View {
 
                 Text("MyTV saves favorite channels locally on your device. Stream playback is direct and unauthenticated. No personal data is tracked or sold to third parties.")
                     .font(Typography.caption)
-                    .foregroundStyle(DesignColor.secondary)
+                    .foregroundColor(\.secondary)
             }
             Section {
                 Button("Reset developer settings", role: .destructive) {
@@ -304,8 +304,8 @@ struct DeveloperSettingsView: View {
         }
         .navigationTitle("Developer settings")
         .navigationBarTitleDisplayMode(.inline)
-        .tint(DesignColor.primary)
-        .toggleStyle(SwitchToggleStyle(tint: DesignColor.green))
+        .tint(\.primary)
+        .toggleStyle(SwitchToggleStyle(tint: ColorTheme.default.green))
         .onAppear {
             refreshCacheSummary()
         }
