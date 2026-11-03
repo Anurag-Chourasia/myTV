@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(AuthKit)
+import AuthKit
+#endif
 
 enum AppRuntime {
     /// New-feature rollout is off by default. Debug can opt in from launch settings;
@@ -10,6 +13,19 @@ enum AppRuntime {
         return Bundle.main.object(forInfoDictionaryKey: "AUTHKIT_ENABLED") as? Bool ?? false
         #endif
     }
+
+    #if canImport(AuthKit)
+    /// Current authentication environment (staging or production).
+    /// Release strictly uses production; Debug allows opt-in developer staging testing.
+    static var authEnvironment: AuthEnvironment {
+        #if DEBUG
+        let envString = UserDefaults.standard.string(forKey: "developer.authEnvironment") ?? "production"
+        return AuthEnvironment(rawValue: envString) ?? .production
+        #else
+        return .production
+        #endif
+    }
+    #endif
 
     static var hapticsEnabled: Bool { flag("haptics") }
     static var logoPreviewEnabled: Bool { flag("logoPreview") }
