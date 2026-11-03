@@ -1,8 +1,9 @@
-# AuthKit integration — 2 November 2026
+# AuthKit integration — 3 November 2026
 
-AuthKit and AuthKitUI 0.2.4 are linked to the app target. AppAuthGate owns auth
-observation at the app root; each bundle has a distinct Keychain session key and
-callback scheme. The client-public Supabase URL and publishable key are in Info.plist.
+AuthKit and AuthKitUI 0.2.5 are linked to the app target. AppAuthGate owns auth
+observation at the app root; each bundle and environment has a distinct Keychain
+session key (`.supabase.session` vs `.supabase.staging.session`) and callback scheme.
+The client-public Supabase URL and publishable key are in Info.plist.
 No test account email/password or service-role key is included.
 
 Email/password login and signup are enabled. Account provides local-only sign-out
@@ -14,6 +15,8 @@ Google and GitHub are enabled in Supabase (verified via the public auth settings
 AUTH_PROVIDERS is google,github; Apple remains disabled pending developer setup.
 See `Docs/ADR_002_Social_Login_Distribution_Readiness.md` for the complete App Store
 Guideline 4.8 compliance decision, provider audiences, and callback verification.
+See `Docs/ADR_003_Backend_Environments_and_Cross_User_Authorization.md` for staging/prod
+environment separation, Row-Level Security policies, and disaster recovery runbooks.
 The following exact callback URLs are allowlisted in Supabase:
 
 - mytv-auth://auth/callback
@@ -37,7 +40,7 @@ sign-in/session/refresh/local-sign-out tests passed. Motivation Daily's Back-but
 UI journey passed. ShowBook account-scope/logout unit tests passed.
 
 The apps are installed on iPhone 11 / iOS 27.0 for manual testing. Host integration changes are tracked on the milestone completion branch.
-The app dependency record pins AuthKit 0.2.4.
+The app dependency record pins AuthKit 0.2.5.
 
 Google/GitHub browser sign-in and email recovery still require end-to-end simulator validation.
 
