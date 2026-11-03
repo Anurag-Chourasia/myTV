@@ -80,12 +80,24 @@ final class RiskBasedIsolationAndConcurrencyTests: XCTestCase {
         defer { try? FileManager.default.removeItem(at: tempDir) }
 
         let cache = ChannelDiskCache(fileManager: .default, directory: tempDir)
-        let streamURL = try XCTUnwrap(URL(string: "https://example.com/stream1.m3u8"))
-        let sampleChannel = Channel(id: "1", name: "News Channel", logo: nil, streams: [
-            Stream(url: streamURL, quality: "1080p")
-        ])
+        let dummyChannels = [
+            ChannelDTO(
+                id: "risk-channel-1",
+                name: "Risk Channel",
+                alt_names: [],
+                network: nil,
+                owners: [],
+                country: "US",
+                categories: ["general"],
+                is_nsfw: false,
+                launched: nil,
+                closed: nil,
+                replaced_by: nil,
+                website: nil
+            )
+        ]
 
-        cache.save([sampleChannel])
+        cache.save(dummyChannels)
         XCTAssertEqual(cache.load()?.count, 1)
 
         // Evict/clear cache
