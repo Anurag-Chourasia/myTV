@@ -140,7 +140,7 @@
 /* Disclaimer */
 "about.disclaimer.title" = "Disclaimer";
 "about.disclaimer.text" =
-"My TV is a demo application built for educational purposes only.\n\nThis app does not host, stream, or redistribute any media content. All IPTV channel metadata is sourced from the open-source project iptv-org.\n\nContent availability, legality, and usage rights are the sole responsibility of the respective content providers.\n\nSource:\nhttps://github.com/iptv-org";
+"My TV is a demo application built for educational purposes only.\n\nThis app does not host, stream, or redistribute any media content. All IPTV channel metadata is sourced from the open-source project iptv-org.\n\nContent availability, legality, and usage rights are the sole responsibility of the respective content providers.\n\nSource:\nhttps://github.com/iptv-org\n\n[Privacy Policy](https://github.com/Anurag-Chourasia/myTV/blob/main/Docs/PrivacyInventory.md) • [Support](mailto:anuragchourasiaios@gmail.com)";
 
 /* Social */
 "about.social.title" = "Let’s Connect";
