@@ -274,6 +274,21 @@ struct DeveloperSettingsView: View {
                 Text("Changes only the version displayed in Know Your Developer.")
             }
             Section("Appearance") { AppearanceMenu() }
+            Section("Privacy & Support") {
+                Link(destination: URL(string: "https://github.com/Anurag-Chourasia/myTV/blob/main/Docs/PrivacyInventory.md")!) {
+                    Label("Privacy Policy", systemImage: "hand.raised")
+                }
+                .accessibilityIdentifier("developer-privacy-policy")
+
+                Link(destination: URL(string: "mailto:anuragchourasiaios@gmail.com")!) {
+                    Label("Developer Support", systemImage: "envelope")
+                }
+                .accessibilityIdentifier("developer-support")
+
+                Text("MyTV saves favorite channels locally on your device. Stream playback is direct and unauthenticated. No personal data is tracked or sold to third parties.")
+                    .font(Typography.caption)
+                    .foregroundStyle(DesignColor.secondary)
+            }
             Section {
                 Button("Reset developer settings", role: .destructive) {
                     source = "live"; scenario = "success"; logs = false
