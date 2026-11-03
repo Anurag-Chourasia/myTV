@@ -1,9 +1,13 @@
 import SwiftUI
 import DesignTokensKit
 import AuthKitUI
+import LocalizationKit
+
+extension LocalizationController: AuthLocalizing {}
 
 struct TVLaunchView: View {
     @State private var authenticationEnabled = AppRuntime.authenticationEnabled
+    private let localization = LocalizationController()
     #if DEBUG
     @State private var showingLaunchSettings = !AppRuntime.isShowcaseLaunch
     @State private var showingSettingsSheet = false
@@ -41,18 +45,20 @@ struct TVLaunchView: View {
                     }
             }
         }
+        .environment(\.layoutDirection, localization.isRightToLeft ? .rightToLeft : .leftToRight)
         .background(DebugSettingsPresenter(isLaunchSettingsVisible: showingLaunchSettings) {
             authenticationEnabled = AppRuntime.authenticationEnabled
             configurationID = UUID()
         })
         #else
         appContent
+            .environment(\.layoutDirection, localization.isRightToLeft ? .rightToLeft : .leftToRight)
         #endif
     }
 
     @ViewBuilder private var appContent: some View {
         if authenticationEnabled {
-            AppAuthGate(brand: .myTV) { _, _ in
+            AppAuthGate(brand: .myTV, localizer: localization) { _, _ in
                 ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel())
             }
         } else {
