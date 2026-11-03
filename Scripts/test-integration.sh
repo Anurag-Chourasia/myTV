@@ -24,6 +24,7 @@ xcrun xcodebuild test -project myTV.xcodeproj -scheme myTV \
     -only-testing:myTVTests/HTTPAdapterTests \
     -only-testing:myTVTests/ChannelAvailabilityTests \
     -only-testing:myTVTests/PlaybackLifecycleRaceTests \
+    -only-testing:myTVTests/RiskBasedIsolationAndConcurrencyTests \
     -only-testing:myTVTests/StreamPlaybackTests \
     -only-testing:myTVTests/AuthenticationLifecycleTests \
     -only-testing:myTVTests/BackendAuthorizationAndRLSTests
