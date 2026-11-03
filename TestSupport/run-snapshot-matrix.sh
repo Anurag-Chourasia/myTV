@@ -8,6 +8,12 @@ export DEVELOPER_DIR
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_DIR"
 
+# Prevent CI from recording snapshot baselines
+if [[ "${CI:-}" != "" && ( "${RECORD_SNAPSHOTS:-0}" == 1 || "${SNAPSHOT_RECORD:-0}" == 1 ) ]]; then
+    echo "CI cannot record snapshots" >&2; exit 1
+fi
+python3 Scripts/verify-snapshot-baselines.py
+
 echo "============================================================"
 echo "🚀 Running Concurrent Snapshot Testing Across All Simulators"
 echo "============================================================"
