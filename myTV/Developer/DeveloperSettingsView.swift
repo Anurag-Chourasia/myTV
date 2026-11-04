@@ -2,6 +2,7 @@ import SwiftUI
 import DesignTokensKit
 import AuthKitUI
 import LocalizationKit
+import UIComponentsKit
 
 extension LocalizationController: AuthLocalizing {}
 
@@ -94,7 +95,7 @@ struct ShowcaseBadgeView: View {
             )
         }
         .padding(.top, \.four)
-        .accessibilityIdentifier("showcase-demo-indicator")
+        .accessibilityIdentifier(.showcaseDemoIndicator)
         .accessibilityLabel(\.showcaseDemoA11y)
     }
 }
@@ -190,78 +191,84 @@ struct DeveloperSettingsView: View {
     var body: some View {
         Form {
             Section {
-                Text("Configure MyTV runtime, cache, and feature flags. Shake device from any screen to reopen.")
+                Text(\.developerSettingsSubtitleMyTV)
                 Button(buttonTitle, action: onContinue)
-                    .accessibilityIdentifier("developer-open-app")
+                    .accessibilityIdentifier(.developerOpenApp)
             }
-            Section("Quick presets") {
+            Section(header: Text(\.developerQuickPresets)) {
                 Button {
                     source = "stub"
                     scenario = "showcase"
                     onContinue()
                 } label: {
-                    Label("Showcase (Populated)", systemImage: "sparkles")
+                    Label(Text(\.developerPresetShowcase), \.sparkles)
                 }
-                .accessibilityIdentifier("developer-preset-showcase")
+                .accessibilityIdentifier(.developerPresetShowcase)
 
                 Button {
                     source = "stub"
                     scenario = "empty"
                     onContinue()
                 } label: {
-                    Label("Empty State (Zero Results)", systemImage: "tray")
+                    Label(Text(\.developerPresetEmpty), \.tray)
                 }
-                .accessibilityIdentifier("developer-preset-empty")
+                .accessibilityIdentifier(.developerPresetEmpty)
 
                 Button {
                     source = "stub"
                     scenario = "offline"
                     onContinue()
                 } label: {
-                    Label("Offline Resilience", systemImage: "wifi.slash")
+                    Label(Text(\.developerPresetOffline), \.wifiSlash)
                 }
-                .accessibilityIdentifier("developer-preset-offline")
+                .accessibilityIdentifier(.developerPresetOffline)
 
                 Button {
                     source = "live"
                     onContinue()
                 } label: {
-                    Label("Live Directory", systemImage: "globe")
+                    Label(Text(\.developerPresetLiveDirectory), \.globe)
                 }
-                .accessibilityIdentifier("developer-preset-live")
+                .accessibilityIdentifier(.developerPresetLive)
             }
-            Section("Cache & offline storage") {
-                LabeledContent("Disk cache", value: cacheSummary.isEmpty ? "Checking..." : cacheSummary)
-                Button("Purge channel cache", role: .destructive) {
+            Section(header: Text(\.developerCacheAndOffline)) {
+                LabeledContent(String(\.developerDiskCache), value: cacheSummary.isEmpty ? String(\.developerChecking) : cacheSummary)
+                Button(role: .destructive) {
                     diskCache.clear()
                     refreshCacheSummary()
+                } label: {
+                    Text(\.developerPurgeChannelCache)
                 }
-                .accessibilityIdentifier("developer-purge-cache")
+                .accessibilityIdentifier(.developerPurgeCache)
             }
-            Section("Environment") {
-                Picker("Data source", selection: $source) {
+            Section(header: Text(\.developerEnvironment)) {
+                Picker(String(\.developerDataSource), selection: $source) {
                     Text("Live · IPTV directory").tag("live")
                     Text("Stub · local fixtures").tag("stub")
                 }
                 if source == "stub" {
-                    Picker("Scenario", selection: $scenario) {
-                        Text("Success").tag("success")
-                        Text("Empty results").tag("empty")
-                        Text("Offline error").tag("offline")
+                    Picker(String(\.developerScenario), selection: $scenario) {
+                        Text(\.developerScenarioSuccess).tag("success")
+                        Text(\.developerScenarioEmpty).tag("empty")
+                        Text(\.developerScenarioOffline).tag("offline")
                     }
                 }
                 Text("Stub mode uses local channels and makes no directory or playback requests. Favorites remain on this device.")
             }
-            Section("Feature flags") {
-                Toggle("Authentication · AuthKit", isOn: $authentication)
-                    .accessibilityIdentifier("developer-authentication")
+            Section(header: Text(\.developerFeatureFlags)) {
+                Toggle(isOn: $authentication) {
+                    Text(\.developerAuthentication)
+                }
+                .accessibilityIdentifier(.developerAuthentication)
                 Text("New feature, off by default. When enabled, Open MyTV shows sign-in before the channel catalog. Apply settings to activate changes; disabling it keeps any saved session for later.")
 
                 Toggle("Haptic feedback", isOn: $haptics)
                 Toggle("Logo preview and sharing", isOn: $preview)
             }
-            Section("Debug logs") {
-                Toggle("HTTP logs in Xcode console", isOn: $logs)
+            Section(header: Text(\.developerDebugLogs)) {
+                Toggle(isOn: $logs) {
+                    Text(\.developerHttpLogs)
+                }
                 Text("Redacted directory requests and responses. Large responses can slow debugging. Release builds never enable these logs.")
             }
             Section("Layout") {
@@ -270,39 +277,42 @@ struct DeveloperSettingsView: View {
                     Text("Grid").tag("grid")
                 }
             }
-            Section("Version simulation") {
-                LabeledContent("Installed version", value: Bundle.main.appVersion)
-                LabeledContent("Installed build", value: Bundle.main.buildNumber)
-                TextField("Simulated version", text: $version)
+            Section(header: Text(\.developerVersionSimulation)) {
+                LabeledContent(String(\.developerInstalledVersion), value: Bundle.main.appVersion)
+                LabeledContent(String(\.developerInstalledBuild), value: Bundle.main.buildNumber)
+                TextField(String(\.developerSimulatedVersion), text: $version)
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
-                TextField("Simulated build", text: $build)
+                TextField(String(\.developerSimulatedBuild), text: $build)
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
                 Text("Changes only the version displayed in Know Your Developer.")
             }
             Section("Appearance") { AppearanceMenu() }
-            Section("Privacy & Support") {
+            Section(header: Text(\.developerPrivacySupport)) {
                 Link(destination: URL(string: "https://github.com/Anurag-Chourasia/myTV/blob/main/Docs/PrivacyInventory.md")!) {
-                    Label("Privacy Policy", systemImage: "hand.raised")
+                    Label(Text(\.developerPrivacyPolicy), \.handRaised)
                 }
-                .accessibilityIdentifier("developer-privacy-policy")
+                .accessibilityIdentifier(.developerPrivacyPolicy)
 
                 Link(destination: URL(string: "mailto:anuragchourasiaios@gmail.com")!) {
-                    Label("Developer Support", systemImage: "envelope")
+                    Label(Text(\.developerSupport), \.envelope)
                 }
-                .accessibilityIdentifier("developer-support")
+                .accessibilityIdentifier(.developerSupport)
 
                 Text("MyTV saves favorite channels locally on your device. Stream playback is direct and unauthenticated. No personal data is tracked or sold to third parties.")
                     .font(Typography.caption)
                     .foregroundColor(\.secondary)
             }
             Section {
-                Button("Reset developer settings", role: .destructive) {
+                Button(role: .destructive) {
                     source = "live"; scenario = "success"; logs = false
                     authentication = false; haptics = true; preview = true; version = ""; build = ""
+                } label: {
+                    Text(\.developerResetSettings)
                 }
             }
         }
-        .navigationTitle("Developer settings")
+        .navigationTitle(Text(\.developerSettingsTitle))
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarTitleDisplayMode(.inline)
         .tint(\.primary)
         .toggleStyle(SwitchToggleStyle(tint: ColorTheme.default.green))

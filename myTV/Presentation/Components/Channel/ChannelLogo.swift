@@ -61,9 +61,9 @@ private struct ChannelLogoPreview: View {
             Group {
                 if let image {
                     Image(uiImage: image).resizable().scaledToFit()
-                        .accessibilityLabel("Channel logo")
+                        .accessibilityLabel(\.channelLogo)
                 } else if case .failure = loader.state {
-                    Label("Logo unavailable", systemImage: "tv")
+                    Label("Logo unavailable", \.tv)
                 } else { ProgressView("Loading logo…") }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -73,11 +73,11 @@ private struct ChannelLogoPreview: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button { dismiss() } label: { Image(systemName: "xmark") }
+                    Button { dismiss() } label: { Image(\.close) }
                         .accessibilityLabel("Close logo preview")
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button { sharing = true } label: { Label("Share logo", systemImage: "square.and.arrow.up") }
+                    Button { sharing = true } label: { Label("Share logo", \.squareAndArrowUp) }
                         .disabled(image == nil)
                 }
             }
@@ -87,7 +87,7 @@ private struct ChannelLogoPreview: View {
             }
             .alert("Couldn’t share logo", isPresented: Binding(
                 get: { shareError != nil }, set: { if !$0 { shareError = nil } }
-            )) { Button("OK", role: .cancel) {} } message: { Text(shareError ?? "") }
+            )) { Button(\.ok, role: .cancel) {} } message: { Text(shareError ?? "") }
             .task { await loader.load() }
         }
     }

@@ -7,6 +7,8 @@
 
 import SwiftUI
 import DesignTokensKit
+import LocalizationKit
+import UIComponentsKit
 
 enum AppAppearance: String, CaseIterable, Identifiable {
     case system
@@ -43,14 +45,14 @@ struct AppearanceMenu: View {
                     haptics.selection()
                 } label: {
                     if appAppearance == appearance {
-                        Label(viewModel.title(for: appearance), systemImage: "checkmark")
+                        Label(viewModel.title(for: appearance), \.checkmark)
                     } else {
                         Text(viewModel.title(for: appearance))
                     }
                 }
             }
         } label: {
-            Label(viewModel.menuTitle, systemImage: "circle.lefthalf.filled")
+            Label(viewModel.menuTitle, \.circleLefthalfFilled)
         }
         .tint(Color("BrandAction"))
         .foregroundColor(\.primary)
@@ -104,11 +106,11 @@ private struct ScreenTools: ViewModifier {
                     Menu {
                         AppearanceMenu()
                         Button { developerPresented = true } label: {
-                            Label("Know Your Developer", systemImage: "person.crop.circle")
+                            Label(Text(\.knowYourDeveloper), \.personCropCircle)
                         }
-                    } label: { Label("App options", systemImage: "line.3.horizontal") }
+                    } label: { Label(Text(\.appOptions), \.line3Horizontal) }
                     .tint(Color("BrandAction"))
-                    .accessibilityIdentifier("screen-tools")
+                    .accessibilityIdentifier(.screenTools)
                 }
             }
             .sheet(isPresented: $developerPresented) {
@@ -116,8 +118,8 @@ private struct ScreenTools: ViewModifier {
                     AboutView(viewModel: AppDI.shared.makeAboutViewModel())
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
-                                Button { developerPresented = false } label: { Image(systemName: "xmark") }
-                                    .accessibilityLabel("Close developer profile")
+                                Button { developerPresented = false } label: { Image(\.close) }
+                                    .accessibilityLabel(\.developerCloseProfile)
                             }
                         }
                 }

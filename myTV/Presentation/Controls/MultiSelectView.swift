@@ -75,7 +75,7 @@ struct MultiSelectView: View {
                     committedSelection = viewModel.apply()
                     dismiss()
                 } label: {
-                    Image(systemName: "checkmark")
+                    Image(\.checkmark)
                 }
                 .disabled(!viewModel.canApply)
                 .accessibilityLabel(Text(viewModel.applyButtonTitle))

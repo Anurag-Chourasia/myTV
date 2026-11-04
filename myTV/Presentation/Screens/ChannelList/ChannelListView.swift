@@ -1,4 +1,6 @@
 import DesignTokensKit
+import LocalizationKit
+import UIComponentsKit
 //
 //  ChannelListView.swift
 //  myTV
@@ -70,8 +72,8 @@ struct ChannelListView: View {
                     AboutView(viewModel: makeAboutViewModel())
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
-                                Button { developerPresented = false } label: { Image(systemName: "xmark") }
-                                    .accessibilityLabel("Close developer profile")
+                                Button { developerPresented = false } label: { Image(\.close) }
+                                    .accessibilityLabel(\.developerCloseProfile)
                             }
                         }
                 }
@@ -129,7 +131,7 @@ private extension ChannelListView {
             EmptyStateView(
                 title: viewModel.channelEmptyTitle,
                 message: viewModel.channelEmptyMessage,
-                systemImage: "tv.slash"
+                symbol: \.tvSlash
             )
 
         case .loaded:
@@ -137,7 +139,7 @@ private extension ChannelListView {
                 EmptyStateView(
                     title: viewModel.noResultsTitle,
                     message: viewModel.noResultsMessage,
-                    systemImage: "magnifyingglass"
+                    symbol: \.magnifyingglass
                 )
             } else {
                 channelContent
@@ -246,7 +248,7 @@ private extension ChannelListView {
                     } label: {
                         Label(
                             viewModel.groupByMenuTitle,
-                            systemImage: "square.grid.2x2"
+                            \.squareGrid2x2
                         )
                     }
 
@@ -284,7 +286,7 @@ private extension ChannelListView {
                     } label: {
                         Label(
                             viewModel.sortingMenuTitle,
-                            systemImage: "arrow.up.arrow.down"
+                            \.arrowUpArrowDown
                         )
                     }
 
@@ -296,7 +298,7 @@ private extension ChannelListView {
                                 isSelected: viewModel.hideUnavailableStreams
                             )
                         }
-                        .accessibilityIdentifier("hide-unavailable-streams")
+                        .accessibilityIdentifier(.hideUnavailableStreams)
                         Divider()
 
                         NavigationLink {
@@ -310,7 +312,7 @@ private extension ChannelListView {
                         } label: {
                             menuLabel(
                                 title: viewModel.countriesFilterTitle,
-                                systemImage: "globe",
+                                symbol: \.globe,
                                 isSelected: viewModel.hasSelectedCountryFilters
                             )
                         }
@@ -326,7 +328,7 @@ private extension ChannelListView {
                         } label: {
                             menuLabel(
                                 title: viewModel.categoriesFilterTitle,
-                                systemImage: "tag",
+                                symbol: \.tag,
                                 isSelected: viewModel.hasSelectedCategoryFilters
                             )
                         }
@@ -334,7 +336,7 @@ private extension ChannelListView {
                     } label: {
                         Label(
                             viewModel.filterMenuTitle,
-                            systemImage: "line.3.horizontal.decrease.circle"
+                            \.line3HorizontalDecreaseCircle
                         )
                     }
                 }
@@ -392,13 +394,13 @@ private extension ChannelListView {
                     Button { developerPresented = true } label: {
                         Label(
                             viewModel.aboutSectionTitle,
-                            systemImage: "info.circle"
+                            \.infoCircle
                         )
                     }
                 }
 
             } label: {
-                Image(systemName: "line.3.horizontal")
+                Image(\.line3Horizontal)
                     .accessibilityLabel(Text(VoiceOver.A11y.Menu.options))
                     .accessibilityHint(Text(VoiceOver.A11y.Menu.Options.hint))
             }
@@ -410,7 +412,7 @@ private extension ChannelListView {
     @ViewBuilder
     func menuLabel(title: String, isSelected: Bool) -> some View {
         if isSelected {
-            Label(title, systemImage: "checkmark")
+            Label(title, \.checkmark)
         } else {
             Text(title)
         }
@@ -419,12 +421,12 @@ private extension ChannelListView {
     @ViewBuilder
     func menuLabel(
         title: String,
-        systemImage: String,
+        symbol: KeyPath<SymbolTheme, AppSymbol>,
         isSelected: Bool
     ) -> some View {
         Label(
             title,
-            systemImage: isSelected ? "checkmark" : systemImage
+            isSelected ? \.checkmark : symbol
         )
     }
 }

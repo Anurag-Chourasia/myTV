@@ -52,7 +52,7 @@ struct StreamListView: View {
                         .navigationBarTitleDisplayMode(.inline)
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
-                                Button { viewModel.dismissPlayer() } label: { Image(systemName: "xmark") }
+                                Button { viewModel.dismissPlayer() } label: { Image(\.close) }
                                     .accessibilityLabel("Close player")
                             }
                         }
@@ -94,7 +94,7 @@ private extension StreamListView {
             EmptyStateView(
                 title: viewModel.emptyStateTitle,
                 message: viewModel.emptyStateMessage,
-                systemImage: "antenna.radiowaves.left.and.right.slash"
+                symbol: \.antennaRadiowavesLeftAndRightSlash
             )
 
         case .loaded:

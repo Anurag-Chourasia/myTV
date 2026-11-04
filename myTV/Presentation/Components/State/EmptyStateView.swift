@@ -15,6 +15,18 @@ struct EmptyStateView: View {
     let message: String
     let systemImage: String
 
+    init(title: String, message: String, systemImage: String) {
+        self.title = title
+        self.message = message
+        self.systemImage = systemImage
+    }
+
+    init(title: String, message: String, symbol: KeyPath<SymbolTheme, AppSymbol>, theme: SymbolTheme = .default) {
+        self.title = title
+        self.message = message
+        self.systemImage = theme[keyPath: symbol].systemName
+    }
+
     var body: some View {
         StateMessage {
             Image(systemName: systemImage)
