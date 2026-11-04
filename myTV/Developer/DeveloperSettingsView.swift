@@ -74,12 +74,12 @@ struct ShowcaseBadgeView: View {
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: \.four) {
-                Image(systemName: "sparkles")
+                Image(\.sparkles)
                     .font(Typography.caption2)
-                Text("SHOWCASE DEMO")
+                Text(\.showcaseDemoTitle)
                     .font(Typography.caption)
                     .fontWeight(.bold)
-                Text("• Tap for Controls")
+                Text(\.showcaseDemoTapForControls)
                     .font(Typography.caption2)
                     .opacity(\.p0_5)
             }
@@ -95,7 +95,7 @@ struct ShowcaseBadgeView: View {
         }
         .padding(.top, \.four)
         .accessibilityIdentifier("showcase-demo-indicator")
-        .accessibilityLabel("Showcase demo mode. Tap to open developer settings.")
+        .accessibilityLabel(\.showcaseDemoA11y)
     }
 }
 #endif

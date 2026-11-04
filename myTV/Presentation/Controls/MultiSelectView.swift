@@ -111,14 +111,12 @@ private extension MultiSelectView {
     func selectionIndicator(isSelected: Bool) -> some View {
         if viewModel.allowsMultipleSelection {
             if isSelected {
-                Image(systemName: "checkmark.circle.fill")
+                Image(\.checkmarkCircleFill)
                     .foregroundColor(\.primary)
                     .accessibilityHidden(true)
             }
         } else {
-            Image(systemName: isSelected
-                  ? "largecircle.fill.circle"
-                  : "circle")
+            Image(isSelected ? \.largecircleFillCircle : \.circle)
                 .foregroundColor(isSelected ? \.primary : \.secondary)
                 .accessibilityHidden(true)
         }

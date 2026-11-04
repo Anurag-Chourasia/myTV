@@ -7,6 +7,7 @@
 
 import SwiftUI
 import DesignTokensKit
+import LocalizationKit
 
 struct ChannelLogo: View {
     let url: URL?
@@ -20,7 +21,7 @@ struct ChannelLogo: View {
                 Rectangle()
                     .fill(\.grouped)
 
-                Image(systemName: "tv")
+                Image(\.tv)
                     .foregroundColor(\.secondary)
             }
         }
@@ -32,7 +33,7 @@ struct ChannelLogo: View {
         .highPriorityGesture(LongPressGesture().onEnded { _ in
             if AppRuntime.logoPreviewEnabled { previewPresented = true }
         })
-        .accessibilityLabel("Channel logo")
+        .accessibilityLabel(\.channelLogo)
         .accessibilityActions {
             if AppRuntime.logoPreviewEnabled {
                 Button("Preview logo") { previewPresented = true }
