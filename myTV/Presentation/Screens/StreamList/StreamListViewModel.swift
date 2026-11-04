@@ -68,7 +68,19 @@ final class StreamListViewModel: ObservableObject {
     }
 
     deinit {
-        // Observers removal in teardown
+        if let observer = audioInterruptionObserver {
+            notificationCenter.removeObserver(observer)
+        }
+        if let observer = audioRouteChangeObserver {
+            notificationCenter.removeObserver(observer)
+        }
+        if let observer = backgroundObserver {
+            notificationCenter.removeObserver(observer)
+        }
+        if let observer = playerFailureObserver {
+            notificationCenter.removeObserver(observer)
+        }
+        loadStreamsTask?.cancel()
     }
 }
 
