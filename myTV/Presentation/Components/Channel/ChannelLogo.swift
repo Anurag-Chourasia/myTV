@@ -17,7 +17,8 @@ struct ChannelLogo: View {
     var body: some View {
         CachedAsyncImage(url: url) {
             ZStack {
-                ColorTheme.default.grouped
+                Rectangle()
+                    .fill(\.grouped)
 
                 Image(systemName: "tv")
                     .foregroundColor(\.secondary)

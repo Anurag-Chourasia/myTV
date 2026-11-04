@@ -23,9 +23,8 @@ struct ChannelStickyBar: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, \.eight)
                         .background(
-                            scope == tab
-                            ? ColorTheme.default.accentColor.opacity(OpacityTheme.default.p0_15)
-                            : ColorTheme.default.clear
+                            scope == tab ? \.accentColor : \.clear,
+                            opacity: scope == tab ? \.p0_15 : nil
                         )
                         .cornerRadius(\.ten)
                 }

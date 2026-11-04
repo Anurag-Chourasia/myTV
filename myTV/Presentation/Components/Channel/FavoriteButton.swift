@@ -18,7 +18,7 @@ struct FavoriteButton: View {
             action()
         } label: {
             Image(systemName: isFavorite ? "heart.fill" : "heart")
-                .foregroundColor(isFavorite ? ColorTheme.default.red : ColorTheme.default.secondary)
+                .foregroundColor(isFavorite ? \.red : \.secondary)
         }
         .buttonStyle(.plain)
         .frame(width: \.p24, height: \.p24)

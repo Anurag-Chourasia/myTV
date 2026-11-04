@@ -18,7 +18,7 @@ struct OfflineBanner: View {
         } message: {
             Text(viewModel.message)
         } background: {
-            ColorTheme.default.red
+            Rectangle().fill(\.red)
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text(viewModel.message))

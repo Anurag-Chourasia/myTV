@@ -119,7 +119,7 @@ private extension MultiSelectView {
             Image(systemName: isSelected
                   ? "largecircle.fill.circle"
                   : "circle")
-                .foregroundColor(isSelected ? ColorTheme.default.primary : ColorTheme.default.secondary)
+                .foregroundColor(isSelected ? \.primary : \.secondary)
                 .accessibilityHidden(true)
         }
     }

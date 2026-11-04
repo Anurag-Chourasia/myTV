@@ -13,7 +13,8 @@ struct LoadingView: View {
 
     var body: some View {
         ZStack {
-            ColorTheme.default.black.opacity(OpacityTheme.default.p0_35)
+            Rectangle()
+                .fill(\.black, opacity: \.p0_35)
                 .ignoresSafeArea()
 
             VStack(spacing: \.twelve) {
