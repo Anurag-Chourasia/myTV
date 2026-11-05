@@ -262,8 +262,8 @@ struct DeveloperSettingsView: View {
                 .accessibilityIdentifier(.developerAuthentication)
                 Text(String(\MyTVStrings.channelDeveloperAuthNote))
 
-                Toggle("Haptic feedback", isOn: $haptics)
-                Toggle("Logo preview and sharing", isOn: $preview)
+                Toggle(String(\MyTVStrings.channelDeveloperHaptics), isOn: $haptics)
+                Toggle(String(\MyTVStrings.channelDeveloperLogoPreview), isOn: $preview)
             }
             Section(header: Text(\.developerDebugLogs)) {
                 Toggle(isOn: $logs) {
