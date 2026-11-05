@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import LocalizationKit
 import DesignTokensKit
 import UIComponentsKit
 
@@ -26,7 +27,7 @@ struct ChannelRowView: View {
                     .multilineTextAlignment(.leading)
                     .lineLimit(dynamicTypeSize.isAccessibilitySize ? CatalogMetrics.accessibleTitleLines : CatalogMetrics.listTitleLines)
                 if channel.hasStreams == false {
-                    Text("No streams available")
+                    Text(String(\MyTVStrings.channelStreamsUnavailable))
                         .font(Typography.caption)
                         .foregroundColor(\.secondary)
                         .multilineTextAlignment(.leading)

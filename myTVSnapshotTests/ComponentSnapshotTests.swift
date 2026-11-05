@@ -1,5 +1,7 @@
 import XCTest
 import SwiftUI
+import UIComponentsKit
+import DesignTokensKit
 import SnapshotTestKit
 @testable import myTV
 
@@ -13,11 +15,14 @@ final class ComponentSnapshotTests: XCTestCase {
             throw XCTSkip("Skipping base iPhone 11 component test on \(SnapshotDevice.current?.rawValue ?? "unknown device")")
         }
 
-        let view = EmptyStateView(
+        let view = EmptyStateMessageView(
+            symbol: \.tvSlash,
             title: "No Channels",
-            message: "Try searching for a different channel or category.",
-            systemImage: "tv.slash"
+            message: "Try searching for a different channel or category."
         )
+        .padding(.all, \.sixteen)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .accessibilityElement(children: .combine)
 
         SnapshotAssert.assertVariants(
             of: view,
@@ -53,9 +58,7 @@ final class ComponentSnapshotTests: XCTestCase {
             throw XCTSkip("Skipping base iPhone 11 component test on \(SnapshotDevice.current?.rawValue ?? "unknown device")")
         }
 
-        let view = LoadingView(
-            viewModel: LoadingViewModel(message: "Connecting to stream...")
-        )
+        let view = LoadingOverlayView(message: "Connecting to stream...")
 
         SnapshotAssert.assertVariants(
             of: view,
@@ -278,7 +281,7 @@ final class ComponentSnapshotTests: XCTestCase {
             throw XCTSkip("Skipping base iPhone 11 component test on \(SnapshotDevice.current?.rawValue ?? "unknown device")")
         }
 
-        let view = AppearanceMenu()
+        let view = AppearanceMenu(title: "Appearance", systemTitle: "System", lightTitle: "Light", darkTitle: "Dark")
             .padding()
 
         SnapshotAssert.assertVariants(

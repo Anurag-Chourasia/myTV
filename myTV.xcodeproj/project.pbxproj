@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DA752D2C34EA542331C8A72F /* LocalizationAndRTLJourneyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818F519300EDD7B6C4BCBE41 /* LocalizationAndRTLJourneyTests.swift */; };
 		0A8B23D262DECF5890969BEE /* DesignTokensKit in Frameworks */ = {isa = PBXBuildFile; productRef = C30463340B480FD3F0AA4EAC /* DesignTokensKit */; };
 		1C26DD8EFB40C83F8A10E6F1 /* FoundationKit in Frameworks */ = {isa = PBXBuildFile; productRef = BBA5F2ED3ED984AD2A2D1221 /* FoundationKit */; };
 		252265A75B52A0C960CB4B51 /* UIComponentsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1D2587FDA8AB45F9B7227334 /* UIComponentsKit */; };
@@ -38,7 +37,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		818F519300EDD7B6C4BCBE41 /* LocalizationAndRTLJourneyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationAndRTLJourneyTests.swift; sourceTree = "<group>"; };
 		34C031E32F23888E0029B9CC /* myTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = myTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34D53F952F29029C0094915C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		82807C5A58ED01BABADC6C66 /* myTVSnapshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = myTVSnapshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -238,6 +236,8 @@
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				ar,
+				fr,
 				en,
 				Base,
 			);
@@ -684,7 +684,7 @@
 			repositoryURL = "https://github.com/Anurag-Chourasia/AuthKit.git";
 			requirement = {
 				kind = exactVersion;
-				version = 0.2.7;
+				version = 0.3.0;
 			};
 		};
 		50ED332846C85C80EDC0293F /* XCRemoteSwiftPackageReference "UIComponentsKit" */ = {
@@ -692,7 +692,7 @@
 			repositoryURL = "https://github.com/Anurag-Chourasia/UIComponentsKit.git";
 			requirement = {
 				kind = exactVersion;
-				version = 1.5.1;
+				version = 1.6.0;
 			};
 		};
 		75FE587815F6BDF36A2BF064 /* XCRemoteSwiftPackageReference "LocalizationKit" */ = {
@@ -700,7 +700,7 @@
 			repositoryURL = "https://github.com/Anurag-Chourasia/LocalizationKit.git";
 			requirement = {
 				kind = exactVersion;
-				version = 0.5.7;
+				version = 0.6.3;
 			};
 		};
 		92828F164BE284EE6D7434F8 /* XCRemoteSwiftPackageReference "CommonNetworking" */ = {
@@ -708,7 +708,7 @@
 			repositoryURL = "https://github.com/Anurag-Chourasia/CommonNetworking.git";
 			requirement = {
 				kind = exactVersion;
-				version = 1.1.0;
+				version = 2.0.0;
 			};
 		};
 		A25000000000000000000001 /* XCRemoteSwiftPackageReference "DeveloperProfileKit" */ = {
@@ -732,7 +732,7 @@
 			repositoryURL = "https://github.com/Anurag-Chourasia/FoundationKit.git";
 			requirement = {
 				kind = exactVersion;
-				version = 0.1.1;
+				version = 0.2.0;
 			};
 		};
 		FF1CD3F59CA7E3C48429248C /* XCRemoteSwiftPackageReference "DesignTokensKit" */ = {
@@ -740,7 +740,7 @@
 			repositoryURL = "https://github.com/Anurag-Chourasia/DesignTokensKit.git";
 			requirement = {
 				kind = exactVersion;
-				version = 1.18.3;
+				version = 1.19.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -784,7 +784,7 @@
 		D9D4A9BB17E5690CE37C2044 /* CommonNetworking */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 92828F164BE284EE6D7434F8 /* XCRemoteSwiftPackageReference "CommonNetworking" */;
-			productName = CommonNetworking;
+			productName = CommonNetworkingKit;
 		};
 		F784959047B24304911B3FB7 /* AuthKit */ = {
 			isa = XCSwiftPackageProductDependency;

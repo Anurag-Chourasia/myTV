@@ -1,3 +1,4 @@
+import LocalizationKit
 //
 //  ChannelStickyBar.swift
 //  myTV
@@ -31,7 +32,7 @@ struct ChannelStickyBar: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text(tab.title))
                 .accessibilityValue(
-                    scope == tab ? Text(VoiceOver.A11y.selected) : Text("")
+                    scope == tab ? Text(String(\MyTVStrings.a11ySelected)) : Text("")
                 )
             }
         }

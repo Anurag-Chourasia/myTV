@@ -1,3 +1,4 @@
+import LocalizationKit
 import DesignTokensKit
 import DeveloperProfileKit
 import UIComponentsKit
@@ -99,12 +100,12 @@ private extension AboutView {
                 }
 
                 Section(viewModel.appearanceMenuSectionTitle) {
-                    AppearanceMenu()
+                    AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { AppDI.shared.getHaptics().selection() })
                 }
             } label: {
-                Image(systemName: "line.3.horizontal")
-                    .accessibilityLabel(Text(VoiceOver.A11y.Menu.options))
-                    .accessibilityHint(Text(VoiceOver.A11y.Menu.Options.hint))
+                Image(\.line3Horizontal)
+                    .accessibilityLabel(Text(String(\MyTVStrings.a11yMenuOptions)))
+                    .accessibilityHint(Text(String(\MyTVStrings.a11yMenuOptionsHint)))
             }
         }
     }
@@ -117,9 +118,9 @@ private extension AboutView {
         labels.version = viewModel.appVersionPrefix
         labels.disclaimer = viewModel.disclaimerTitle
         labels.social = viewModel.socialTitle
-        labels.readMore = Localizable.App.readMore
-        labels.showLess = Localizable.App.showLess
-        labels.linkHint = VoiceOver.A11y.Openlink.hint
+        labels.readMore = String(\MyTVStrings.readMore)
+        labels.showLess = String(\MyTVStrings.showLess)
+        labels.linkHint = String(\MyTVStrings.a11yOpenLinkHint)
         labels.errorTitle = viewModel.invalidLinkAlertTitle
         labels.errorMessage = viewModel.invalidLinkAlertMessage
         labels.okay = viewModel.invalidLinkAlertOk

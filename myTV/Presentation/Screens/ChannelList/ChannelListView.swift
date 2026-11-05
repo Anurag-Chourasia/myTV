@@ -128,19 +128,17 @@ private extension ChannelListView {
             }
 
         case .empty:
-            EmptyStateView(
-                title: viewModel.channelEmptyTitle,
-                message: viewModel.channelEmptyMessage,
-                symbol: \.tvSlash
-            )
+            EmptyStateMessageView(symbol: \.tvSlash, title: viewModel.channelEmptyTitle, message: viewModel.channelEmptyMessage)
+                .padding(.all, \.sixteen)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityElement(children: .combine)
 
         case .loaded:
             if viewModel.isFilteredEmpty {
-                EmptyStateView(
-                    title: viewModel.noResultsTitle,
-                    message: viewModel.noResultsMessage,
-                    symbol: \.magnifyingglass
-                )
+                EmptyStateMessageView(symbol: \.magnifyingglass, title: viewModel.noResultsTitle, message: viewModel.noResultsMessage)
+                .padding(.all, \.sixteen)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityElement(children: .combine)
             } else {
                 channelContent
             }
@@ -180,7 +178,7 @@ private extension ChannelListView {
                                 }
                             )
                         }
-                        .accessibilityHint(Text(VoiceOver.A11y.Channel.Open.hint))
+                        .accessibilityHint(Text(String(\MyTVStrings.a11yChannelOpenHint)))
                     }
                 }
             }
@@ -209,7 +207,7 @@ private extension ChannelListView {
                                     }
                                 )
                             }
-                            .accessibilityHint(Text(VoiceOver.A11y.Channel.Open.hint))
+                            .accessibilityHint(Text(String(\MyTVStrings.a11yChannelOpenHint)))
                         }
                     }
                 }
@@ -294,7 +292,7 @@ private extension ChannelListView {
                     Menu {
                         Button { viewModel.hideUnavailableStreams.toggle() } label: {
                             menuLabel(
-                                title: "Hide channels without streams",
+                                title: String(\MyTVStrings.channelFilterHideUnavailable),
                                 isSelected: viewModel.hideUnavailableStreams
                             )
                         }
@@ -384,7 +382,7 @@ private extension ChannelListView {
 
                 // MARK: - Appearance
                 Section(viewModel.appearanceSectionTitle) {
-                    AppearanceMenu()
+                    AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { AppDI.shared.getHaptics().selection() })
                 }
 
                 Divider()
@@ -401,8 +399,8 @@ private extension ChannelListView {
 
             } label: {
                 Image(\.line3Horizontal)
-                    .accessibilityLabel(Text(VoiceOver.A11y.Menu.options))
-                    .accessibilityHint(Text(VoiceOver.A11y.Menu.Options.hint))
+                    .accessibilityLabel(Text(String(\MyTVStrings.a11yMenuOptions)))
+                    .accessibilityHint(Text(String(\MyTVStrings.a11yMenuOptionsHint)))
             }
         }
        

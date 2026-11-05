@@ -1,3 +1,4 @@
+import LocalizationKit
 import UIComponentsKit
 //
 //  ChannelListViewModel.swift
@@ -43,11 +44,11 @@ final class ChannelListViewModel: ObservableObject {
         var title: String {
             switch self {
             case .name:
-                return Localizable.App.Grouping.name
+                return String(\MyTVStrings.groupingName)
             case .country:
-                return Localizable.App.Grouping.country
+                return String(\MyTVStrings.groupingCountry)
             case .category:
-                return Localizable.App.Grouping.category
+                return String(\MyTVStrings.groupingCategory)
             }
         }
     }
@@ -61,9 +62,9 @@ final class ChannelListViewModel: ObservableObject {
         var title: String {
             switch self {
             case .ascending:
-                return Localizable.Channel.Sort.Order.ascending
+                return String(\MyTVStrings.sortAscending)
             case .descending:
-                return Localizable.Channel.Sort.Order.descending
+                return String(\MyTVStrings.sortDescending)
             }
         }
     }
@@ -77,9 +78,9 @@ final class ChannelListViewModel: ObservableObject {
         var title: String {
             switch self {
             case .all:
-                return Localizable.Channel.Scope.all
+                return String(\MyTVStrings.allChannels)
             case .favorites:
-                return Localizable.Channel.Scope.favorites
+                return String(\MyTVStrings.favorites)
             }
         }
     }
@@ -209,99 +210,99 @@ final class ChannelListViewModel: ObservableObject {
     }
 
     var navigationTitle: String {
-        Localizable.App.name
+        String(\MyTVStrings.appName)
     }
 
     var cancelButtonTitle: String {
-        Localizable.App.cancel
+        LocalizationController.shared.string("app.cancel")
     }
 
     var channelEmptyTitle: String {
-        Localizable.Channel.Empty.title
+        String(\MyTVStrings.noChannelsTitle)
     }
 
     var channelEmptyMessage: String {
-        Localizable.Channel.Empty.message
+        String(\MyTVStrings.noChannelsMessage)
     }
 
     var noResultsTitle: String {
-        Localizable.Channel.No.Results.title
+        String(\MyTVStrings.noResultsTitle)
     }
 
     var noResultsMessage: String {
-        Localizable.Channel.No.Results.message
+        String(\MyTVStrings.noResultsMessage)
     }
 
     var sortAndFilterSectionTitle: String {
-        Localizable.Channel.Menu.Section.Sortandfilter.title
+        String(\MyTVStrings.sortAndFilterTitle)
     }
 
     var groupByMenuTitle: String {
-        Localizable.Channel.Menu.Section.GroupBy.title
+        String(\MyTVStrings.sectionGroupBy)
     }
 
     var sectionSortingTitle: String {
-        Localizable.Channel.Menu.Section.Section.title
+        String(\MyTVStrings.sectionTitle)
     }
 
     var channelSortingTitle: String {
-        Localizable.Channel.Menu.Section.Channel.title
+        String(\MyTVStrings.channelTitle)
     }
 
     var sortingMenuTitle: String {
-        Localizable.Channel.Menu.Section.Sorting.title
+        String(\MyTVStrings.sectionSorting)
     }
 
     var countriesFilterTitle: String {
-        Localizable.Channel.Filter.countries
+        String(\MyTVStrings.countries)
     }
 
     var categoriesFilterTitle: String {
-        Localizable.Channel.Filter.categories
+        String(\MyTVStrings.categories)
     }
 
     var filterMenuTitle: String {
-        Localizable.Channel.Menu.Section.Filter.title
+        String(\MyTVStrings.sectionFilter)
     }
 
     var actionsSectionTitle: String {
-        Localizable.Channel.Menu.Section.actions
+        String(\MyTVStrings.actionsTitle)
     }
 
     var clearCacheActionTitle: String {
-        Localizable.Channel.Menu.Action.clearCache
+        String(\MyTVStrings.clearCacheAction)
     }
 
     var clearFiltersActionTitle: String {
-        Localizable.Channel.Menu.Action.clearFilters
+        String(\MyTVStrings.clearFiltersAction)
     }
 
     var removeFavoritesActionTitle: String {
-        Localizable.Channel.Menu.Action.removeFavorites
+        String(\MyTVStrings.removeFavoritesAction)
     }
 
     var layoutSectionTitle: String {
-        Localizable.Channel.Menu.Section.layout
+        String(\MyTVStrings.layoutMenuTitle)
     }
 
     var appearanceSectionTitle: String {
-        Localizable.Channel.Menu.Section.appearance
+        String(\MyTVStrings.appearanceMenuTitle)
     }
 
     var aboutSectionTitle: String {
-        Localizable.Channel.Menu.Section.about
+        String(\MyTVStrings.aboutMenuTitle)
     }
 
     var layoutMenuTitle: String {
-        Localizable.Channel.Layout.title
+        String(\MyTVStrings.layoutTitle)
     }
 
     func title(for layout: ChannelLayout) -> String {
         switch layout {
         case .list:
-            return Localizable.Channel.Layout.list
+            return String(\MyTVStrings.layoutList)
         case .grid:
-            return Localizable.Channel.Layout.grid
+            return String(\MyTVStrings.layoutGrid)
         }
     }
 
@@ -461,11 +462,11 @@ final class ChannelListViewModel: ObservableObject {
     var toolbarAlertTitle: String {
         switch pendingAction {
         case .clearCache:
-            return Localizable.Channel.Alert.Clear.Cache.title
+            return String(\MyTVStrings.clearCacheAlertTitle)
         case .clearFilters:
-            return Localizable.Channel.Alert.Clear.Filters.title
+            return String(\MyTVStrings.clearFiltersAlertTitle)
         case .removeFavorites:
-            return Localizable.Channel.Alert.Remove.Favorites.title
+            return String(\MyTVStrings.removeFavoritesAlertTitle)
         case .none:
             return ""
         }
@@ -474,11 +475,11 @@ final class ChannelListViewModel: ObservableObject {
     var toolbarAlertConfirm: String {
         switch pendingAction {
         case .clearCache:
-            return Localizable.Channel.Alert.Clear.Cache.confirm
+            return String(\MyTVStrings.clearCacheConfirm)
         case .clearFilters:
-            return Localizable.Channel.Alert.Clear.Filters.confirm
+            return String(\MyTVStrings.clearFiltersConfirm)
         case .removeFavorites:
-            return Localizable.Channel.Alert.Remove.Favorites.confirm
+            return String(\MyTVStrings.removeFavoritesConfirm)
         case .none:
             return ""
         }
@@ -487,9 +488,9 @@ final class ChannelListViewModel: ObservableObject {
     var gridAlertTitle: String {
         switch gridAlert {
         case .autoList:
-            return Localizable.Channel.Layout.Grid.AutoList.title
+            return String(\MyTVStrings.layoutAutoListTitle)
         case .gridUnavailable:
-            return Localizable.Channel.Layout.Grid.Unavailable.title
+            return String(\MyTVStrings.layoutUnavailableTitle)
         case .none:
             return ""
         }
@@ -498,9 +499,9 @@ final class ChannelListViewModel: ObservableObject {
     var gridAlertMessage: String {
         switch gridAlert {
         case .autoList:
-            return Localizable.Channel.Layout.Grid.AutoList.message
+            return String(\MyTVStrings.layoutAutoListMessage)
         case .gridUnavailable:
-            return Localizable.Channel.Layout.Grid.Unavailable.message
+            return String(\MyTVStrings.layoutUnavailableMessage)
         case .none:
             return ""
         }
@@ -509,11 +510,11 @@ final class ChannelListViewModel: ObservableObject {
     var gridAlertOk: String {
         switch gridAlert {
         case .autoList:
-            return Localizable.Channel.Layout.Grid.AutoList.ok
+            return String(\MyTVStrings.layoutAutoListOk)
         case .gridUnavailable:
-            return Localizable.Channel.Layout.Grid.Unavailable.ok
+            return String(\MyTVStrings.layoutUnavailableOk)
         case .none:
-            return Localizable.Channel.Layout.Grid.Unavailable.ok
+            return String(\MyTVStrings.layoutUnavailableOk)
         }
     }
 }

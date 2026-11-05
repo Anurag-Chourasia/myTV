@@ -7,7 +7,7 @@
 
 
 import Foundation
-import CommonNetworking
+import CommonNetworkingKit
 
 protocol HTTPClient {
     func get<T: Decodable>(_ url: URL) async throws -> T
@@ -17,15 +17,15 @@ protocol HTTPClient {
 /// Preserves MyTV response and cancellation semantics over shared transport.
 final class CommonNetworkingHTTPClient: HTTPClient {
 
-    private let transport: CommonNetworking.HTTPClient
+    private let transport: CommonNetworkingKit.HTTPClient
 
     init(session: URLSession = .shared) {
         #if DEBUG
         let logging = UserDefaults.standard.object(forKey: "developer.httpLogs") as? Bool
             ?? (ProcessInfo.processInfo.environment["HTTP_LOGGING"] == "1")
-        self.transport = CommonNetworking.HTTPClient(session: session, logger: logging ? .console : nil)
+        self.transport = CommonNetworkingKit.HTTPClient(session: session, logger: logging ? .console : nil)
         #else
-        self.transport = CommonNetworking.HTTPClient(session: session)
+        self.transport = CommonNetworkingKit.HTTPClient(session: session)
         #endif
     }
 

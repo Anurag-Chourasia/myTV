@@ -1,3 +1,4 @@
+import LocalizationKit
 //
 //  ErrorViewModel.swift
 //  myTV
@@ -13,8 +14,8 @@ struct ErrorViewModel {
 
     static var generic: ErrorViewModel {
         ErrorViewModel(
-            title: Localizable.Error.Generic.title,
-            retryTitle: Localizable.App.retry
+            title: String(\CommonStrings.errorGeneric),
+            retryTitle: LocalizationController.shared.string("app.retry")
         )
     }
 }

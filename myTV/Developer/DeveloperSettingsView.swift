@@ -8,7 +8,7 @@ extension LocalizationController: AuthLocalizing {}
 
 struct TVLaunchView: View {
     @State private var authenticationEnabled = AppRuntime.authenticationEnabled
-    private let localization = LocalizationController()
+    private let localization = LocalizationController(initialLocale: .current)
     #if DEBUG
     @State private var showingLaunchSettings = !AppRuntime.isShowcaseLaunch
     @State private var showingSettingsSheet = false
@@ -20,24 +20,21 @@ struct TVLaunchView: View {
         Group {
             if showingLaunchSettings {
                 NavigationStack {
-                    DeveloperSettingsView(buttonTitle: "Open MyTV") {
+                    DeveloperSettingsView(buttonTitle: String(\CommonStrings.developerOpenApp)) {
                         authenticationEnabled = AppRuntime.authenticationEnabled
                         showingLaunchSettings = false
                     }
                 }
             } else {
-                appContent
-                    .id(configurationID)
-                    .safeAreaInset(edge: .top) {
-                        if AppRuntime.isShowcaseMode {
-                            ShowcaseBadgeView {
-                                showingSettingsSheet = true
-                            }
-                        }
+                VStack(spacing: \.zero) {
+                    if AppRuntime.isShowcaseMode {
+                        ShowcaseBadgeView { showingSettingsSheet = true }
                     }
+                    appContent.id(configurationID)
+                }
                     .sheet(isPresented: $showingSettingsSheet) {
                         NavigationStack {
-                            DeveloperSettingsView(buttonTitle: "Close") {
+                            DeveloperSettingsView(buttonTitle: String(\CommonStrings.close)) {
                                 showingSettingsSheet = false
                                 authenticationEnabled = AppRuntime.authenticationEnabled
                                 configurationID = UUID()
@@ -95,6 +92,7 @@ struct ShowcaseBadgeView: View {
             )
         }
         .padding(.top, \.four)
+        .padding(.horizontal, \.sixteen)
         .accessibilityIdentifier(.showcaseDemoIndicator)
         .accessibilityLabel(\.showcaseDemoA11y)
     }
@@ -243,8 +241,8 @@ struct DeveloperSettingsView: View {
             }
             Section(header: Text(\.developerEnvironment)) {
                 Picker(String(\.developerDataSource), selection: $source) {
-                    Text("Live · IPTV directory").tag("live")
-                    Text("Stub · local fixtures").tag("stub")
+                    Text(String(\MyTVStrings.channelDeveloperLive)).tag("live")
+                    Text(String(\CommonStrings.developerSourceStub)).tag("stub")
                 }
                 if source == "stub" {
                     Picker(String(\.developerScenario), selection: $scenario) {
@@ -253,28 +251,28 @@ struct DeveloperSettingsView: View {
                         Text(\.developerScenarioOffline).tag("offline")
                     }
                 }
-                Text("Stub mode uses local channels and makes no directory or playback requests. Favorites remain on this device.")
+                Text(String(\MyTVStrings.channelDeveloperStubNote))
             }
             Section(header: Text(\.developerFeatureFlags)) {
                 Toggle(isOn: $authentication) {
                     Text(\.developerAuthentication)
                 }
                 .accessibilityIdentifier(.developerAuthentication)
-                Text("New feature, off by default. When enabled, Open MyTV shows sign-in before the channel catalog. Apply settings to activate changes; disabling it keeps any saved session for later.")
+                Text(String(\MyTVStrings.channelDeveloperAuthNote))
 
-                Toggle("Haptic feedback", isOn: $haptics)
-                Toggle("Logo preview and sharing", isOn: $preview)
+                Toggle(String(\MyTVStrings.channelDeveloperHaptics), isOn: $haptics)
+                Toggle(String(\MyTVStrings.channelDeveloperLogoPreview), isOn: $preview)
             }
             Section(header: Text(\.developerDebugLogs)) {
                 Toggle(isOn: $logs) {
                     Text(\.developerHttpLogs)
                 }
-                Text("Redacted directory requests and responses. Large responses can slow debugging. Release builds never enable these logs.")
+                Text(String(\MyTVStrings.channelDeveloperLogsNote))
             }
-            Section("Layout") {
-                Picker("Channel layout", selection: $layout) {
-                    Text("List").tag("list")
-                    Text("Grid").tag("grid")
+            Section(String(\MyTVStrings.layoutMenuTitle)) {
+                Picker(String(\MyTVStrings.channelDeveloperLayout), selection: $layout) {
+                    Text(String(\MyTVStrings.layoutList)).tag("list")
+                    Text(String(\MyTVStrings.layoutGrid)).tag("grid")
                 }
             }
             Section(header: Text(\.developerVersionSimulation)) {
@@ -284,9 +282,9 @@ struct DeveloperSettingsView: View {
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
                 TextField(String(\.developerSimulatedBuild), text: $build)
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
-                Text("Changes only the version displayed in Know Your Developer.")
+                Text(String(\MyTVStrings.channelDeveloperVersionNote))
             }
-            Section("Appearance") { AppearanceMenu() }
+            Section(String(\MyTVStrings.appearanceMenuTitle)) { AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { AppDI.shared.getHaptics().selection() }) }
             Section(header: Text(\.developerPrivacySupport)) {
                 Link(destination: URL(string: "https://github.com/Anurag-Chourasia/myTV/blob/main/Docs/PrivacyInventory.md")!) {
                     Label(Text(\.developerPrivacyPolicy), \.handRaised)
@@ -298,7 +296,7 @@ struct DeveloperSettingsView: View {
                 }
                 .accessibilityIdentifier(.developerSupport)
 
-                Text("MyTV saves favorite channels locally on your device. Stream playback is direct and unauthenticated. No personal data is tracked or sold to third parties.")
+                Text(String(\MyTVStrings.channelDeveloperPrivacy))
                     .font(Typography.caption)
                     .foregroundColor(\.secondary)
             }

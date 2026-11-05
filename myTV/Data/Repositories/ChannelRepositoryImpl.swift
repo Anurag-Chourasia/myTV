@@ -126,7 +126,7 @@ private extension ChannelRepositoryImpl {
         value
             .lowercased()
             .replacingOccurrences(
-                of: Localizable.App.Normalize.regex,
+                of: "[^a-z0-9]",
                 with: "",
                 options: .regularExpression
             )

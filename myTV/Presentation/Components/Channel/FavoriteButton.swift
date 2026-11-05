@@ -1,3 +1,4 @@
+import LocalizationKit
 import DesignTokensKit
 //
 //  FavoriteButton.swift
@@ -8,24 +9,24 @@ import DesignTokensKit
 
 
 import SwiftUI
+import UIComponentsKit
 
 struct FavoriteButton: View {
     let isFavorite: Bool
     let action: () -> Void
     
     var body: some View {
-        Button {
-            action()
-        } label: {
+        SelectionToggleButton(
+            isSelected: isFavorite,
+            selectedLabel: String(\MyTVStrings.a11yFavoriteRemove),
+            unselectedLabel: String(\MyTVStrings.a11yFavoriteAdd),
+            action: action
+        ) {
             Image(isFavorite ? \.heartFill : \.heart)
                 .foregroundColor(isFavorite ? \.red : \.secondary)
         }
-        .buttonStyle(.plain)
         .frame(width: \.p24, height: \.p24)
         .scaleEffect(isFavorite ? ScaleToken.p1_15 : ScaleToken.p1_0)
-        .accessibilityLabel(
-            Text(isFavorite ? VoiceOver.A11y.Favorite.remove : VoiceOver.A11y.Favorite.add)
-        )
-        .accessibilityHint(Text(VoiceOver.A11y.Favorite.hint))
+        .accessibilityHint(Text(String(\MyTVStrings.a11yFavoriteHint)))
     }
 }

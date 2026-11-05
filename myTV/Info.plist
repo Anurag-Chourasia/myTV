@@ -2,34 +2,38 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Save channel logos you choose to your photo library.</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>audio</string>
-	</array>
-	<key>SUPABASE_URL</key>
-	<string>https://ulszjssbmmfnheemfwiy.supabase.co</string>
-	<key>SUPABASE_PUBLISHABLE_KEY</key>
-	<string>sb_publishable_1E6uHLzc52xPFVTrT7tl7Q_x2udH9R2</string>
-	<key>AUTH_CALLBACK_URL</key>
-	<string>mytv-auth://auth/callback</string>
 	<key>AUTHKIT_ENABLED</key>
 	<false/>
+	<key>AUTH_CALLBACK_URL</key>
+	<string>mytv-auth://auth/callback</string>
 	<key>AUTH_PROVIDERS</key>
 	<string>google,github</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLName</key>
 			<string>mytv-auth</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>mytv-auth</string>
 			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
 		</dict>
+	</array>
+	<key>SUPABASE_PUBLISHABLE_KEY</key>
+	<string>sb_publishable_1E6uHLzc52xPFVTrT7tl7Q_x2udH9R2</string>
+	<key>SUPABASE_URL</key>
+	<string>https://ulszjssbmmfnheemfwiy.supabase.co</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>fr</string>
+		<string>ar</string>
 	</array>
 </dict>
 </plist>

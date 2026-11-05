@@ -7,6 +7,7 @@ import DesignTokensKit
 //
 
 import SwiftUI
+import LocalizationKit
 
 struct MultiSelectView: View {
 
@@ -41,7 +42,7 @@ struct MultiSelectView: View {
         List {
 
             Section {
-                Button("Clear", role: .destructive) { viewModel.clear() }
+                Button(String(\CommonStrings.clear), role: .destructive) { viewModel.clear() }
                     .disabled(viewModel.draftSelection.isEmpty)
             }
 
@@ -101,7 +102,7 @@ private extension MultiSelectView {
         .buttonStyle(.plain)
         .accessibilityLabel(Text(viewModel.labelForOption(option)))
         .accessibilityValue(
-            viewModel.isSelected(option) ? Text(VoiceOver.A11y.selected) : Text("")
+            viewModel.isSelected(option) ? Text(String(\MyTVStrings.a11ySelected)) : Text("")
         )
     }
 
