@@ -292,7 +292,7 @@ private extension ChannelListView {
                     Menu {
                         Button { viewModel.hideUnavailableStreams.toggle() } label: {
                             menuLabel(
-                                title: "Hide channels without streams",
+                                title: String(\MyTVStrings.channelFilterHideUnavailable),
                                 isSelected: viewModel.hideUnavailableStreams
                             )
                         }
