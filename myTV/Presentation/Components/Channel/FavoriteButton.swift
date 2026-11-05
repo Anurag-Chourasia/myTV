@@ -8,24 +8,24 @@ import DesignTokensKit
 
 
 import SwiftUI
+import UIComponentsKit
 
 struct FavoriteButton: View {
     let isFavorite: Bool
     let action: () -> Void
     
     var body: some View {
-        Button {
-            action()
-        } label: {
+        SelectionToggleButton(
+            isSelected: isFavorite,
+            selectedLabel: VoiceOver.A11y.Favorite.remove,
+            unselectedLabel: VoiceOver.A11y.Favorite.add,
+            action: action
+        ) {
             Image(isFavorite ? \.heartFill : \.heart)
                 .foregroundColor(isFavorite ? \.red : \.secondary)
         }
-        .buttonStyle(.plain)
         .frame(width: \.p24, height: \.p24)
         .scaleEffect(isFavorite ? ScaleToken.p1_15 : ScaleToken.p1_0)
-        .accessibilityLabel(
-            Text(isFavorite ? VoiceOver.A11y.Favorite.remove : VoiceOver.A11y.Favorite.add)
-        )
         .accessibilityHint(Text(VoiceOver.A11y.Favorite.hint))
     }
 }

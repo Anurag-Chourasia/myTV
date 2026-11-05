@@ -99,10 +99,10 @@ private extension AboutView {
                 }
 
                 Section(viewModel.appearanceMenuSectionTitle) {
-                    AppearanceMenu()
+                    AppearanceMenu(title: Localizable.Channel.Menu.Section.appearance, systemTitle: Localizable.App.Appearance.Color.system, lightTitle: Localizable.App.Appearance.Color.light, darkTitle: Localizable.App.Appearance.Color.dark, onSelection: { AppDI.shared.getHaptics().selection() })
                 }
             } label: {
-                Image(systemName: "line.3.horizontal")
+                Image(\.line3Horizontal)
                     .accessibilityLabel(Text(VoiceOver.A11y.Menu.options))
                     .accessibilityHint(Text(VoiceOver.A11y.Menu.Options.hint))
             }

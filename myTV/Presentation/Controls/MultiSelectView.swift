@@ -7,6 +7,7 @@ import DesignTokensKit
 //
 
 import SwiftUI
+import LocalizationKit
 
 struct MultiSelectView: View {
 
@@ -41,7 +42,7 @@ struct MultiSelectView: View {
         List {
 
             Section {
-                Button("Clear", role: .destructive) { viewModel.clear() }
+                Button(String(\CommonStrings.clear), role: .destructive) { viewModel.clear() }
                     .disabled(viewModel.draftSelection.isEmpty)
             }
 

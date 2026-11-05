@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import LocalizationKit
 import DesignTokensKit
 import UIComponentsKit
 
@@ -28,7 +29,7 @@ struct ChannelGridView: View {
                     .multilineTextAlignment(.center)
                     .lineLimit(CatalogMetrics.gridTitleLines)
                 if channel.hasStreams == false {
-                    Text("No streams available")
+                    Text(String(\MyTVStrings.channelStreamsUnavailable))
                         .font(Typography.caption)
                         .foregroundColor(\.secondary)
                         .multilineTextAlignment(.center)

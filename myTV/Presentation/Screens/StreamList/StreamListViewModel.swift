@@ -115,7 +115,9 @@ private extension StreamListViewModel {
             object: nil,
             queue: .main
         ) { [weak self] notification in
-            self?.handleAudioInterruption(notification)
+            Task { @MainActor [weak self] in
+                self?.handleAudioInterruption(notification)
+            }
         }
 
         // 2. Audio route changes (unplugging headphones, disconnecting Bluetooth)
@@ -124,7 +126,9 @@ private extension StreamListViewModel {
             object: nil,
             queue: .main
         ) { [weak self] notification in
-            self?.handleAudioRouteChange(notification)
+            Task { @MainActor [weak self] in
+                self?.handleAudioRouteChange(notification)
+            }
         }
 
         // 3. App moving to background (pause if PiP is not active to prevent zombie threads)
@@ -133,7 +137,9 @@ private extension StreamListViewModel {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.handleDidEnterBackground()
+            Task { @MainActor [weak self] in
+                self?.handleDidEnterBackground()
+            }
         }
         #endif
     }

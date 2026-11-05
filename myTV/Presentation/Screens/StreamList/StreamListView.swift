@@ -8,6 +8,8 @@ import DesignTokensKit
 
 
 import SwiftUI
+import LocalizationKit
+import UIComponentsKit
 internal import AVFoundation
 
 struct StreamListView: View {
@@ -20,7 +22,7 @@ struct StreamListView: View {
         ZStack {
             content
             if viewModel.isPreparingPlayback {
-                LoadingView(viewModel: viewModel.loadingViewModel)
+                LoadingOverlayView(message: viewModel.loadingViewModel.message)
             }
         }
     }
@@ -53,7 +55,7 @@ struct StreamListView: View {
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
                                 Button { viewModel.dismissPlayer() } label: { Image(\.close) }
-                                    .accessibilityLabel("Close player")
+                                    .accessibilityLabel(String(\MyTVStrings.streamPlayerClose))
                             }
                         }
                         .onAppear { player.play() }
@@ -91,11 +93,10 @@ private extension StreamListView {
             }
 
         case .empty:
-            EmptyStateView(
-                title: viewModel.emptyStateTitle,
-                message: viewModel.emptyStateMessage,
-                symbol: \.antennaRadiowavesLeftAndRightSlash
-            )
+            EmptyStateMessageView(symbol: \.antennaRadiowavesLeftAndRightSlash, title: viewModel.emptyStateTitle, message: viewModel.emptyStateMessage)
+                .padding(.all, \.sixteen)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityElement(children: .combine)
 
         case .loaded:
             streamList

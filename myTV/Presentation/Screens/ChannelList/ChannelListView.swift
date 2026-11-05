@@ -128,19 +128,17 @@ private extension ChannelListView {
             }
 
         case .empty:
-            EmptyStateView(
-                title: viewModel.channelEmptyTitle,
-                message: viewModel.channelEmptyMessage,
-                symbol: \.tvSlash
-            )
+            EmptyStateMessageView(symbol: \.tvSlash, title: viewModel.channelEmptyTitle, message: viewModel.channelEmptyMessage)
+                .padding(.all, \.sixteen)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityElement(children: .combine)
 
         case .loaded:
             if viewModel.isFilteredEmpty {
-                EmptyStateView(
-                    title: viewModel.noResultsTitle,
-                    message: viewModel.noResultsMessage,
-                    symbol: \.magnifyingglass
-                )
+                EmptyStateMessageView(symbol: \.magnifyingglass, title: viewModel.noResultsTitle, message: viewModel.noResultsMessage)
+                .padding(.all, \.sixteen)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityElement(children: .combine)
             } else {
                 channelContent
             }
@@ -384,7 +382,7 @@ private extension ChannelListView {
 
                 // MARK: - Appearance
                 Section(viewModel.appearanceSectionTitle) {
-                    AppearanceMenu()
+                    AppearanceMenu(title: Localizable.Channel.Menu.Section.appearance, systemTitle: Localizable.App.Appearance.Color.system, lightTitle: Localizable.App.Appearance.Color.light, darkTitle: Localizable.App.Appearance.Color.dark, onSelection: { AppDI.shared.getHaptics().selection() })
                 }
 
                 Divider()

@@ -36,7 +36,7 @@ struct ChannelLogo: View {
         .accessibilityLabel(\.channelLogo)
         .accessibilityActions {
             if AppRuntime.logoPreviewEnabled {
-                Button("Preview logo") { previewPresented = true }
+                Button(String(\MyTVStrings.channelLogoPreview)) { previewPresented = true }
             }
         }
         .sheet(isPresented: $previewPresented) { ChannelLogoPreview(url: url) }
@@ -63,21 +63,21 @@ private struct ChannelLogoPreview: View {
                     Image(uiImage: image).resizable().scaledToFit()
                         .accessibilityLabel(\.channelLogo)
                 } else if case .failure = loader.state {
-                    Label("Logo unavailable", \.tv)
-                } else { ProgressView("Loading logo…") }
+                    Label(String(\MyTVStrings.channelLogoUnavailable), \.tv)
+                } else { ProgressView(String(\MyTVStrings.channelLogoLoading)) }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(\.sixteen)
             .background(\.grouped)
-            .navigationTitle("Logo preview")
+            .navigationTitle(String(\MyTVStrings.channelLogoPreviewTitle))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button { dismiss() } label: { Image(\.close) }
-                        .accessibilityLabel("Close logo preview")
+                        .accessibilityLabel(String(\MyTVStrings.channelLogoClose))
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button { sharing = true } label: { Label("Share logo", \.squareAndArrowUp) }
+                    Button { sharing = true } label: { Label(String(\MyTVStrings.channelLogoShare), \.squareAndArrowUp) }
                         .disabled(image == nil)
                 }
             }
@@ -85,7 +85,7 @@ private struct ChannelLogoPreview: View {
             .sheet(isPresented: $sharing) {
                 if let image { LogoShareSheet(image: image) { shareError = $0.localizedDescription } }
             }
-            .alert("Couldn’t share logo", isPresented: Binding(
+            .alert(String(\MyTVStrings.channelLogoShareFailed), isPresented: Binding(
                 get: { shareError != nil }, set: { if !$0 { shareError = nil } }
             )) { Button(\.ok, role: .cancel) {} } message: { Text(shareError ?? "") }
             .task { await loader.load() }

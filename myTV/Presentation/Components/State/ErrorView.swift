@@ -16,7 +16,7 @@ struct ErrorView: View {
 
     var body: some View {
         StateMessage {
-            Image(systemName: "wifi.exclamationmark")
+            Image(\.wifiExclamationmark)
         } title: {
             Text(viewModel.title)
         } detail: {
