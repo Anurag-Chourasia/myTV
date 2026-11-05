@@ -700,7 +700,7 @@
 			repositoryURL = "https://github.com/Anurag-Chourasia/LocalizationKit.git";
 			requirement = {
 				kind = exactVersion;
-				version = 0.6.1;
+				version = 0.6.2;
 			};
 		};
 		92828F164BE284EE6D7434F8 /* XCRemoteSwiftPackageReference "CommonNetworking" */ = {

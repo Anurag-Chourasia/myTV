@@ -1,3 +1,4 @@
+import LocalizationKit
 //
 //  LoadingViewModel.swift
 //  myTV
@@ -11,6 +12,6 @@ struct LoadingViewModel {
     let message: String
 
     static var streamPreparationDefault: LoadingViewModel {
-        LoadingViewModel(message: Localizable.Loading.Preparing.stream)
+        LoadingViewModel(message: String(\MyTVStrings.preparingStream))
     }
 }

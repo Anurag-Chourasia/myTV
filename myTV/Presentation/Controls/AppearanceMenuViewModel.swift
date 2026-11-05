@@ -1,3 +1,4 @@
+import LocalizationKit
 import UIComponentsKit
 //
 //  AppearanceMenuViewModel.swift
@@ -11,18 +12,18 @@ import Foundation
 struct AppearanceMenuViewModel {
     let menuTitle: String
 
-    init(menuTitle: String = Localizable.Channel.Menu.Section.appearance) {
+    init(menuTitle: String = String(\MyTVStrings.appearanceMenuTitle)) {
         self.menuTitle = menuTitle
     }
 
     func title(for appearance: AppAppearance) -> String {
         switch appearance {
         case .system:
-            return Localizable.App.Appearance.Color.system
+            return String(\MyTVStrings.appearanceSystem)
         case .light:
-            return Localizable.App.Appearance.Color.light
+            return String(\MyTVStrings.appearanceLight)
         case .dark:
-            return Localizable.App.Appearance.Color.dark
+            return String(\MyTVStrings.appearanceDark)
         }
     }
 }

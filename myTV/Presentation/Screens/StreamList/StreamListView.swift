@@ -124,7 +124,7 @@ private extension StreamListView {
             }
             .buttonStyle(.plain)
             .disabled(viewModel.isPreparingPlayback)
-            .accessibilityHint(Text(VoiceOver.A11y.Stream.Play.hint))
+            .accessibilityHint(Text(String(\MyTVStrings.a11yStreamPlayHint)))
             .accessibilityLabel(Text(stream.title))
             .accessibilityValue(Text(stream.quality ?? ""))
         }

@@ -1,3 +1,4 @@
+import LocalizationKit
 import UIComponentsKit
 //
 //  AboutViewModel.swift
@@ -40,63 +41,63 @@ final class AboutViewModel: ObservableObject {
     }
 
     var navigationTitle: String {
-        Localizable.About.title
+        String(\MyTVStrings.aboutTitle)
     }
 
     var invalidLinkAlertTitle: String {
-        Localizable.About.Alert.Error.title
+        String(\MyTVStrings.aboutAlertErrorTitle)
     }
 
     var invalidLinkAlertOk: String {
-        Localizable.About.Alert.Error.ok
+        String(\MyTVStrings.aboutAlertErrorOk)
     }
 
     var invalidLinkAlertMessage: String {
-        Localizable.About.Alert.Error.invalidLink
+        String(\MyTVStrings.aboutAlertErrorInvalidLink)
     }
 
     var layoutMenuSectionTitle: String {
-        Localizable.About.Menu.layout
+        String(\MyTVStrings.layoutMenuTitle)
     }
 
     var appearanceMenuSectionTitle: String {
-        Localizable.About.Menu.appearance
+        String(\MyTVStrings.appearanceMenuTitle)
     }
 
     var appInfoTitle: String {
-        Localizable.About.App.Info.title
+        String(\MyTVStrings.aboutAppInfoTitle)
     }
 
     var appName: String {
-        Localizable.About.App.name
+        String(\MyTVStrings.aboutAppName)
     }
 
     var appVersionPrefix: String {
-        Localizable.About.App.Version.prefix
+        String(\MyTVStrings.aboutAppVersionPrefix)
     }
 
     var disclaimerTitle: String {
-        Localizable.About.Disclaimer.title
+        String(\MyTVStrings.aboutDisclaimerTitle)
     }
 
     var disclaimerText: String {
-        Localizable.About.Disclaimer.text
+        String(\MyTVStrings.aboutDisclaimerText)
     }
 
     var socialTitle: String {
-        Localizable.About.Social.title
+        String(\MyTVStrings.aboutSocialTitle)
     }
 
     var layoutMenuTitle: String {
-        Localizable.Channel.Layout.title
+        String(\MyTVStrings.layoutTitle)
     }
 
     func title(for layout: ChannelLayout) -> String {
         switch layout {
         case .list:
-            return Localizable.Channel.Layout.list
+            return String(\MyTVStrings.layoutList)
         case .grid:
-            return Localizable.Channel.Layout.grid
+            return String(\MyTVStrings.layoutGrid)
         }
     }
 
@@ -162,9 +163,9 @@ final class AboutViewModel: ObservableObject {
     var gridAlertTitle: String {
         switch gridAlert {
         case .autoList:
-            return Localizable.Channel.Layout.Grid.AutoList.title
+            return String(\MyTVStrings.layoutAutoListTitle)
         case .gridUnavailable:
-            return Localizable.Channel.Layout.Grid.Unavailable.title
+            return String(\MyTVStrings.layoutUnavailableTitle)
         case .none:
             return ""
         }
@@ -173,9 +174,9 @@ final class AboutViewModel: ObservableObject {
     var gridAlertMessage: String {
         switch gridAlert {
         case .autoList:
-            return Localizable.Channel.Layout.Grid.AutoList.message
+            return String(\MyTVStrings.layoutAutoListMessage)
         case .gridUnavailable:
-            return Localizable.Channel.Layout.Grid.Unavailable.message
+            return String(\MyTVStrings.layoutUnavailableMessage)
         case .none:
             return ""
         }
@@ -184,11 +185,11 @@ final class AboutViewModel: ObservableObject {
     var gridAlertOk: String {
         switch gridAlert {
         case .autoList:
-            return Localizable.Channel.Layout.Grid.AutoList.ok
+            return String(\MyTVStrings.layoutAutoListOk)
         case .gridUnavailable:
-            return Localizable.Channel.Layout.Grid.Unavailable.ok
+            return String(\MyTVStrings.layoutUnavailableOk)
         case .none:
-            return Localizable.Channel.Layout.Grid.Unavailable.ok
+            return String(\MyTVStrings.layoutUnavailableOk)
         }
     }
 }

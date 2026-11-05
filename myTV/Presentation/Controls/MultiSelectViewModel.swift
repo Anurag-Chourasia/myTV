@@ -1,3 +1,4 @@
+import LocalizationKit
 //
 //  MultiSelectViewModel.swift
 //  myTV
@@ -46,19 +47,19 @@ final class MultiSelectViewModel: ObservableObject {
     }
 
     var selectedSectionTitle: String {
-        Localizable.Multiselectview.Section.selected
+        String(\MyTVStrings.multiSelectSelected)
     }
 
     var allSectionTitle: String {
-        Localizable.Multiselectview.Section.all
+        String(\MyTVStrings.multiSelectAll)
     }
 
     var applyButtonTitle: String {
-        Localizable.App.apply
+        String(\MyTVStrings.apply)
     }
 
     var searchPrompt: String {
-        "\(Localizable.App.search) \(title)"
+        "\(String(\MyTVStrings.search)) \(title)"
     }
 
     var selectedOptions: [String] {

@@ -1,3 +1,4 @@
+import LocalizationKit
 //
 //  OfflineBannerViewModel.swift
 //  myTV
@@ -11,6 +12,6 @@ struct OfflineBannerViewModel {
     let message: String
 
     static var `default`: OfflineBannerViewModel {
-        OfflineBannerViewModel(message: Localizable.App.Offline.banner)
+        OfflineBannerViewModel(message: String(\MyTVStrings.offlineBanner))
     }
 }

@@ -17,11 +17,12 @@ private struct ScreenTools: ViewModifier {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
-                        AppearanceMenu(title: Localizable.Channel.Menu.Section.appearance, systemTitle: Localizable.App.Appearance.Color.system, lightTitle: Localizable.App.Appearance.Color.light, darkTitle: Localizable.App.Appearance.Color.dark, onSelection: { AppDI.shared.getHaptics().selection() })
+                        AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { AppDI.shared.getHaptics().selection() })
                         Button { developerPresented = true } label: {
                             Label(Text(\.knowYourDeveloper), \.personCropCircle)
                         }
                     } label: { Label(Text(\.appOptions), \.line3Horizontal) }
+                    .labelStyle(.iconOnly)
                     .tint(Color("BrandAction"))
                     .accessibilityIdentifier(.screenTools)
                 }

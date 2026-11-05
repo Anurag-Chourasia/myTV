@@ -1,3 +1,4 @@
+import LocalizationKit
 //
 //  StreamListViewModel.swift
 //  myTV
@@ -198,19 +199,19 @@ extension StreamListViewModel {
     }
 
     var emptyStateTitle: String {
-        Localizable.Stream.List.Empty.title
+        String(\MyTVStrings.streamListEmptyTitle)
     }
 
     var emptyStateMessage: String {
-        Localizable.Stream.List.Empty.message
+        String(\MyTVStrings.streamListEmptyMessage)
     }
 
     var playbackErrorTitle: String {
-        Localizable.Stream.Player.Error.title
+        String(\MyTVStrings.playbackErrorTitle)
     }
 
     var okButtonTitle: String {
-        Localizable.App.ok
+        LocalizationController.shared.string("app.ok")
     }
 
     func loadStreams(channelId: String) async {
@@ -271,12 +272,12 @@ extension StreamListViewModel {
     ) {
         haptics.impact(.light)
         guard !allStreams.isEmpty else {
-            playbackError = Localizable.Stream.List.Empty.title
+            playbackError = String(\MyTVStrings.streamListEmptyTitle)
             return
         }
 
         guard let startIndex = allStreams.firstIndex(of: stream) else {
-            playbackError = Localizable.Stream.Player.Error.title
+            playbackError = String(\MyTVStrings.playbackErrorTitle)
             return
         }
 
@@ -309,7 +310,7 @@ private extension StreamListViewModel {
 
         guard currentStreamIndex < playbackQueue.count else {
             teardown()
-            playbackError = Localizable.Stream.Player.Error.noWorkingStreams
+            playbackError = String(\MyTVStrings.noWorkingStreams)
             return
         }
 
@@ -320,7 +321,7 @@ private extension StreamListViewModel {
         guard isAttemptingPlayback, targetSession == sessionID else { return }
 
         guard let url = URL(string: stream.url) else {
-            handlePlaybackFailure(message: Localizable.Stream.Player.Error.invalidURL, for: targetSession)
+            handlePlaybackFailure(message: String(\MyTVStrings.invalidStreamURL), for: targetSession)
             return
         }
 
@@ -348,7 +349,7 @@ private extension StreamListViewModel {
                 case .failed:
                     self.handlePlaybackFailure(
                         message: item.error?.localizedDescription
-                            ?? Localizable.Stream.Player.Error.cannotPlay,
+                            ?? String(\MyTVStrings.cannotPlayStream),
                         for: targetSession
                     )
 
@@ -371,7 +372,7 @@ private extension StreamListViewModel {
                 guard self.isAttemptingPlayback,
                       self.sessionID == targetSession,
                       self.player?.currentItem === item else { return }
-                self.handlePlaybackFailure(message: Localizable.Stream.Player.Error.cannotPlay, for: targetSession)
+                self.handlePlaybackFailure(message: String(\MyTVStrings.cannotPlayStream), for: targetSession)
             }
         }
     }

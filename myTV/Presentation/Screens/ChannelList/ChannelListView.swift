@@ -178,7 +178,7 @@ private extension ChannelListView {
                                 }
                             )
                         }
-                        .accessibilityHint(Text(VoiceOver.A11y.Channel.Open.hint))
+                        .accessibilityHint(Text(String(\MyTVStrings.a11yChannelOpenHint)))
                     }
                 }
             }
@@ -207,7 +207,7 @@ private extension ChannelListView {
                                     }
                                 )
                             }
-                            .accessibilityHint(Text(VoiceOver.A11y.Channel.Open.hint))
+                            .accessibilityHint(Text(String(\MyTVStrings.a11yChannelOpenHint)))
                         }
                     }
                 }
@@ -382,7 +382,7 @@ private extension ChannelListView {
 
                 // MARK: - Appearance
                 Section(viewModel.appearanceSectionTitle) {
-                    AppearanceMenu(title: Localizable.Channel.Menu.Section.appearance, systemTitle: Localizable.App.Appearance.Color.system, lightTitle: Localizable.App.Appearance.Color.light, darkTitle: Localizable.App.Appearance.Color.dark, onSelection: { AppDI.shared.getHaptics().selection() })
+                    AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { AppDI.shared.getHaptics().selection() })
                 }
 
                 Divider()
@@ -399,8 +399,8 @@ private extension ChannelListView {
 
             } label: {
                 Image(\.line3Horizontal)
-                    .accessibilityLabel(Text(VoiceOver.A11y.Menu.options))
-                    .accessibilityHint(Text(VoiceOver.A11y.Menu.Options.hint))
+                    .accessibilityLabel(Text(String(\MyTVStrings.a11yMenuOptions)))
+                    .accessibilityHint(Text(String(\MyTVStrings.a11yMenuOptionsHint)))
             }
         }
        

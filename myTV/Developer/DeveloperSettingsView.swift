@@ -8,7 +8,7 @@ extension LocalizationController: AuthLocalizing {}
 
 struct TVLaunchView: View {
     @State private var authenticationEnabled = AppRuntime.authenticationEnabled
-    private let localization = LocalizationController()
+    private let localization = LocalizationController(initialLocale: .current)
     #if DEBUG
     @State private var showingLaunchSettings = !AppRuntime.isShowcaseLaunch
     @State private var showingSettingsSheet = false
@@ -20,24 +20,21 @@ struct TVLaunchView: View {
         Group {
             if showingLaunchSettings {
                 NavigationStack {
-                    DeveloperSettingsView(buttonTitle: "Open MyTV") {
+                    DeveloperSettingsView(buttonTitle: String(\CommonStrings.developerOpenApp)) {
                         authenticationEnabled = AppRuntime.authenticationEnabled
                         showingLaunchSettings = false
                     }
                 }
             } else {
-                appContent
-                    .id(configurationID)
-                    .safeAreaInset(edge: .top) {
-                        if AppRuntime.isShowcaseMode {
-                            ShowcaseBadgeView {
-                                showingSettingsSheet = true
-                            }
-                        }
+                VStack(spacing: \.zero) {
+                    if AppRuntime.isShowcaseMode {
+                        ShowcaseBadgeView { showingSettingsSheet = true }
                     }
+                    appContent.id(configurationID)
+                }
                     .sheet(isPresented: $showingSettingsSheet) {
                         NavigationStack {
-                            DeveloperSettingsView(buttonTitle: "Close") {
+                            DeveloperSettingsView(buttonTitle: String(\CommonStrings.close)) {
                                 showingSettingsSheet = false
                                 authenticationEnabled = AppRuntime.authenticationEnabled
                                 configurationID = UUID()
@@ -95,6 +92,7 @@ struct ShowcaseBadgeView: View {
             )
         }
         .padding(.top, \.four)
+        .padding(.horizontal, \.sixteen)
         .accessibilityIdentifier(.showcaseDemoIndicator)
         .accessibilityLabel(\.showcaseDemoA11y)
     }
@@ -286,7 +284,7 @@ struct DeveloperSettingsView: View {
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
                 Text(String(\MyTVStrings.channelDeveloperVersionNote))
             }
-            Section(String(\MyTVStrings.appearanceMenuTitle)) { AppearanceMenu(title: Localizable.Channel.Menu.Section.appearance, systemTitle: Localizable.App.Appearance.Color.system, lightTitle: Localizable.App.Appearance.Color.light, darkTitle: Localizable.App.Appearance.Color.dark, onSelection: { AppDI.shared.getHaptics().selection() }) }
+            Section(String(\MyTVStrings.appearanceMenuTitle)) { AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { AppDI.shared.getHaptics().selection() }) }
             Section(header: Text(\.developerPrivacySupport)) {
                 Link(destination: URL(string: "https://github.com/Anurag-Chourasia/myTV/blob/main/Docs/PrivacyInventory.md")!) {
                     Label(Text(\.developerPrivacyPolicy), \.handRaised)
