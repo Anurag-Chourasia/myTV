@@ -1,7 +1,8 @@
 """Exercise the real playback view model on macOS with local audio and service doubles."""
 from pathlib import Path
-import shutil, subprocess, tempfile, wave
+import shutil, subprocess, tempfile, wave, json
 root = Path(__file__).resolve().parents[1]
+localization_version = json.loads((root / 'Scripts/dependencies.json').read_text())['localizationkit']['version']
 with tempfile.TemporaryDirectory(prefix='mytv-playback-') as temp:
     p = Path(temp)
     source = p / 'Sources/Playback'
@@ -25,9 +26,9 @@ with tempfile.TemporaryDirectory(prefix='mytv-playback-') as temp:
         audio.writeframes(bytes(16000))
     (p / 'Package.swift').write_text('''// swift-tools-version: 5.9
 import PackageDescription
-let package = Package(name: "Playback", platforms: [.macOS(.v14)], targets: [
-    .target(name: "Playback"),
+let package = Package(name: "Playback", platforms: [.macOS(.v14)], dependencies: [.package(url: "https://github.com/Anurag-Chourasia/LocalizationKit.git", exact: "LOCALIZATION_VERSION")], targets: [
+    .target(name: "Playback", dependencies: [.product(name: "LocalizationKit", package: "LocalizationKit")]),
     .testTarget(name: "PlaybackTests", dependencies: ["Playback"], resources: [.process("silence.wav")])
 ], swiftLanguageVersions: [.v5])
-''')
+'''.replace('LOCALIZATION_VERSION', localization_version))
     subprocess.run(['xcrun', 'swift', 'test', '--package-path', str(p), '--triple', 'arm64-apple-macosx14.0'], check=True)
