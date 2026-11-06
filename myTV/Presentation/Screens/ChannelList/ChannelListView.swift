@@ -305,7 +305,8 @@ private extension ChannelListView {
                                 options: viewModel.allCountries,
                                 selection: $viewModel.selectedCountries,
                                 labelForOption: viewModel.countryDisplayName,
-                                sortKeyForOption: viewModel.countrySortKey
+                                sortKeyForOption: viewModel.countrySortKey,
+                                haptics: viewModel.haptics
                             )
                         } label: {
                             menuLabel(
@@ -321,7 +322,8 @@ private extension ChannelListView {
                                 options: viewModel.allCategories,
                                 selection: $viewModel.selectedCategories,
                                 labelForOption: viewModel.categoryDisplayName,
-                                sortKeyForOption: viewModel.categorySortKey
+                                sortKeyForOption: viewModel.categorySortKey,
+                                haptics: viewModel.haptics
                             )
                         } label: {
                             menuLabel(
@@ -382,7 +384,7 @@ private extension ChannelListView {
 
                 // MARK: - Appearance
                 Section(viewModel.appearanceSectionTitle) {
-                    AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { AppDI.shared.getHaptics().selection() })
+                    AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { viewModel.selectionHaptic() })
                 }
 
                 Divider()

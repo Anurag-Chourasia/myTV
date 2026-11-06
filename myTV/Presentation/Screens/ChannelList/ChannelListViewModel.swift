@@ -139,20 +139,23 @@ final class ChannelListViewModel: ObservableObject {
     private let fetchChannels: FetchChannelsUseCase
     private let reachability: ReachabilityService
     private let favorites: FavoriteChannelStore
-    private let haptics: HapticService
+    let haptics: HapticService
+    private let imageCache: any ImageCache
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Init
     init(
-        fetchChannels: DefaultFetchChannelsUseCase,
+        fetchChannels: FetchChannelsUseCase,
         reachability: ReachabilityService,
         haptics: HapticService,
-        favorites: FavoriteChannelStore? = nil
+        favorites: FavoriteChannelStore? = nil,
+        imageCache: (any ImageCache)? = nil
     ) {
         self.fetchChannels = fetchChannels
         self.reachability = reachability
         self.haptics = haptics
         self.favorites = favorites ?? FavoriteChannelStore()
+        self.imageCache = imageCache ?? DefaultImageCache.shared
         favoriteChannelIDs = self.favorites.load()
 
         grouping = Grouping(rawValue: storedGroupingRaw) ?? .name
@@ -440,8 +443,12 @@ final class ChannelListViewModel: ObservableObject {
         channels = []
         groupedResult = []
         fetchChannels.clearCache()
-        DefaultImageCache.shared.clear()
+        imageCache.clear()
         await load()
+    }
+
+    func selectionHaptic() {
+        haptics.selection()
     }
 
     func enforceListIfAccessibility(_ isAccessibilitySize: Bool) {

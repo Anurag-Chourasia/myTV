@@ -10,14 +10,17 @@ import DesignTokensKit
 import LocalizationKit
 import UIComponentsKit
 
-private struct ScreenTools: ViewModifier {
+struct ScreenTools: ViewModifier {
     @State private var developerPresented = false
+    var haptics: HapticService = AppDI.shared.getHaptics()
+    var makeAboutViewModel: () -> AboutViewModel = { AppDI.shared.makeAboutViewModel() }
+
     func body(content: Content) -> some View {
         content
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
-                        AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { AppDI.shared.getHaptics().selection() })
+                        AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { haptics.selection() })
                         Button { developerPresented = true } label: {
                             Label(Text(\.knowYourDeveloper), \.personCropCircle)
                         }
@@ -29,7 +32,7 @@ private struct ScreenTools: ViewModifier {
             }
             .sheet(isPresented: $developerPresented) {
                 NavigationStack {
-                    AboutView(viewModel: AppDI.shared.makeAboutViewModel())
+                    AboutView(viewModel: makeAboutViewModel())
                         .toolbar {
                             ToolbarItem(placement: .navigationBarLeading) {
                                 Button { developerPresented = false } label: { Image(\.close) }
@@ -42,5 +45,15 @@ private struct ScreenTools: ViewModifier {
 }
 
 extension View {
-    func screenTools() -> some View { modifier(ScreenTools()) }
+    func screenTools(
+        haptics: HapticService? = nil,
+        makeAboutViewModel: (() -> AboutViewModel)? = nil
+    ) -> some View {
+        modifier(
+            ScreenTools(
+                haptics: haptics ?? AppDI.shared.getHaptics(),
+                makeAboutViewModel: makeAboutViewModel ?? { AppDI.shared.makeAboutViewModel() }
+            )
+        )
+    }
 }

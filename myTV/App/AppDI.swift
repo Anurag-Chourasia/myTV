@@ -5,6 +5,8 @@
 //  Created by Anurag Chourasia on 23/01/26.
 //
 
+import Foundation
+
 final class AppDI {
 
     static let shared = AppDI()
@@ -13,6 +15,8 @@ final class AppDI {
             HapticServiceImpl()
 
     private lazy var reachability: ReachabilityService = ReachabilityServiceImpl()
+    private lazy var imageCache: ImageCache = DefaultImageCache.shared
+    private lazy var urlSession: URLSession = .shared
 
     private func makeChannelRepository() -> ChannelRepository {
         #if DEBUG
@@ -32,7 +36,8 @@ final class AppDI {
             fetchChannels: fetchChannels,
             reachability: reachability,
             haptics: haptics,
-            favorites: favorites
+            favorites: favorites,
+            imageCache: imageCache
         )
     }
 
@@ -56,5 +61,13 @@ final class AppDI {
     
     func getHaptics() -> HapticService {
         haptics
+    }
+
+    func getImageCache() -> ImageCache {
+        imageCache
+    }
+
+    func getURLSession() -> URLSession {
+        urlSession
     }
 }
