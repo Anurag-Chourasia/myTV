@@ -173,6 +173,7 @@
 				34C031DF2F23888E0029B9CC /* Sources */,
 				34C031E02F23888E0029B9CC /* Frameworks */,
 				34C031E12F23888E0029B9CC /* Resources */,
+				BEB43720AB7845C79D2F8DE8 /* Copy Debug fixture resources */,
 			);
 			buildRules = (
 			);
@@ -311,6 +312,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n/usr/bin/env python3 \"${SRCROOT}/myTV/Scripts/generate_localization.py\"\n/usr/bin/env python3 \"${SRCROOT}/myTV/Scripts/generate_voiceover.py\"\n";
+		};
+		BEB43720AB7845C79D2F8DE8 /* Copy Debug fixture resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = ();
+			inputPaths = (
+				"$(SRCROOT)/Scripts/copy-developer-fixtures.sh",
+				"$(SRCROOT)/Submodules/AppStubData/Sources/AppStubData/Resources/mytv-developer-catalog.json",
+			);
+			name = "Copy Debug fixture resources";
+			outputPaths = ("$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/DeveloperFixtures",);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${SRCROOT}/Scripts/copy-developer-fixtures.sh\"";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 

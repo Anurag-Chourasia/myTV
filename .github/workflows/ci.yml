@@ -139,6 +139,9 @@ jobs:
           -onlyUsePackageVersionsFromResolvedFile -disableAutomaticPackageResolution
           -scmProvider system SDKROOT=iphonesimulator CODE_SIGNING_ALLOWED=NO build
 
+      - name: Verify Release fixture boundary
+        run: python3 Scripts/check_release_fixtures.py "$RUNNER_TEMP/AppDerived/Build/Products/Release-iphonesimulator/myTV.app/myTV"
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7

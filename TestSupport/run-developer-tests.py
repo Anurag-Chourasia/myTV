@@ -15,10 +15,13 @@ with tempfile.TemporaryDirectory(prefix="mytv-developer-") as directory:
                      "Domain/Entities/Channel.swift", "Domain/Entities/Stream.swift",
                      "Domain/Repositories/ChannelRepository.swift"]:
         shutil.copy2(root / "myTV" / relative, source / Path(relative).name)
+    (source / "Fixtures").mkdir()
+    shutil.copy2(root / "Submodules/AppStubData/Sources/AppStubData/Resources/mytv-developer-catalog.json",
+                 source / "Fixtures/mytv-developer-catalog.json")
     (package / "Package.swift").write_text('''// swift-tools-version: 6.0
 import PackageDescription
 let package = Package(name: "Runtime", platforms: [.macOS(.v14)], targets: [
-    .target(name: "Runtime", swiftSettings: [.unsafeFlags(["-default-isolation", "MainActor"])]),
+    .target(name: "Runtime", resources: [.process("Fixtures")], swiftSettings: [.unsafeFlags(["-default-isolation", "MainActor"])]),
     .testTarget(name: "RuntimeTests", dependencies: ["Runtime"])
 ])
 ''')

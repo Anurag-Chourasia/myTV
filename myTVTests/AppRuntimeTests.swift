@@ -90,4 +90,16 @@ final class AppRuntimeTests: XCTestCase {
         XCTAssertEqual(AppRuntime.stubScenario, "success")
         #endif
     }
+    #if DEBUG
+    func testMalformedSharedCatalogReportsFailure() async {
+        let repository = DeveloperStubRepository(scenario: "success", loadData: { Data("invalid".utf8) })
+        do {
+            _ = try await repository.fetchChannels()
+            XCTFail("Malformed shared fixture must fail decoding")
+        } catch {
+            XCTAssertTrue(error is DecodingError)
+        }
+    }
+    #endif
+
 }
