@@ -18,7 +18,6 @@ patterns = {
 }
 failures=[]
 for path in source.rglob('*.swift'):
-    if '.generated.' in path.name: continue
     for number, line in enumerate(path.read_text().splitlines(), 1):
         if line.lstrip().startswith('//'): continue
         # Mutable model state is not a design dimension. Hex parsing is a data conversion utility.
