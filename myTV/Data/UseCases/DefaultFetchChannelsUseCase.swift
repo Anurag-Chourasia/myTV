@@ -5,11 +5,6 @@
 //  Created by Anurag Chourasia on 23/01/26.
 //
 
-protocol FetchChannelsUseCase {
-    func execute() async throws -> [Channel]
-    func clearCache()
-}
-
 final class DefaultFetchChannelsUseCase: FetchChannelsUseCase {
 
     private let repository: ChannelRepository
