@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Anurag-Chourasia/DesignTokensKit.git",
       "state" : {
-        "revision" : "3fdf1660eab5608bafc3ee2d105ccb1fa5a76787",
-        "version" : "1.22.1"
+        "revision" : "8d01425cdbec70654062499ce118773ca9a6b791",
+        "version" : "1.22.2"
       }
     },
     {
