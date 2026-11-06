@@ -87,11 +87,11 @@ struct ShowcaseBadgeView: View {
             .padding(.horizontal, \.ten)
             .padding(.vertical, \.four)
             .background(.ultraThinMaterial)
-            .foregroundColor(Color("BrandAction"))
+            .foregroundColor(\.action)
             .clipShape(Capsule())
             .overlay(
                 Capsule()
-                    .stroke(Color("BrandAction").opacity(OpacityTheme.default.p0_35), lineWidth: DesignMetricTheme.default.p1)
+                    .stroke(\.action, opacity: \.p0_35)
             )
         }
         .padding(.top, \.four)

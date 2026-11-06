@@ -284,7 +284,7 @@ final class BackendAuthorizationAndRLSTests: XCTestCase {
 
         // Request 1: succeeds
         await session.requestPasswordReset(email: "victim@mytv.test", redirectTo: redirectURL)
-        XCTAssertEqual(session.notice, "If an account exists, a reset link will be sent to your email.")
+        XCTAssertEqual(session.notice, AuthNotice.passwordResetSent.localizationKey)
         XCTAssertNil(session.errorMessage)
 
         // Request 2: succeeds
@@ -294,7 +294,7 @@ final class BackendAuthorizationAndRLSTests: XCTestCase {
         // Request 3: burst rate-limit trigger (HTTP 429 over_email_send_rate_limit)
         await session.requestPasswordReset(email: "victim@mytv.test", redirectTo: redirectURL)
         XCTAssertNotNil(session.errorMessage)
-        XCTAssertTrue(session.errorMessage?.contains("Rate limit exceeded") ?? false)
+        XCTAssertEqual(session.semanticError, .generic)
         XCTAssertFalse(session.isLoading)
         XCTAssertEqual(session.state, .unauthenticated)
     }

@@ -64,7 +64,7 @@ struct MultiSelectView: View {
         }
         .navigationTitle(viewModel.title)
         .screenTools()
-        .tint(Color("BrandAction"))
+        .tint(\.action)
         .searchable(
             text: $viewModel.searchText,
             placement: .navigationBarDrawer(displayMode: .always),

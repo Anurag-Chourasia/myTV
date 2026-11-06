@@ -23,7 +23,7 @@ private struct ScreenTools: ViewModifier {
                         }
                     } label: { Label(Text(\.appOptions), \.line3Horizontal) }
                     .labelStyle(.iconOnly)
-                    .tint(Color("BrandAction"))
+                    .tint(\.action)
                     .accessibilityIdentifier(.screenTools)
                 }
             }

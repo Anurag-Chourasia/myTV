@@ -81,7 +81,7 @@ private struct ChannelLogoPreview: View {
                         .disabled(image == nil)
                 }
             }
-            .tint(Color("BrandAction"))
+            .tint(\.action)
             .sheet(isPresented: $sharing) {
                 if let image { LogoShareSheet(image: image) { shareError = $0.localizedDescription } }
             }

@@ -61,12 +61,12 @@ struct ChannelListView: View {
                         )
                     }
             }
-            .background(Color("BrandBackground"))
+            .background(\.background)
             .searchable(text: $viewModel.searchText)
             .navigationTitle(viewModel.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { menuBar }
-            .tint(Color("BrandAction"))
+            .tint(\.action)
             .sheet(isPresented: $developerPresented) {
                 NavigationStack {
                     AboutView(viewModel: makeAboutViewModel())

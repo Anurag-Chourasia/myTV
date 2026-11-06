@@ -123,7 +123,7 @@ final class AuthenticationLifecycleTests: XCTestCase {
 
         // 2. Signup Flow (verification required notice)
         await session.signUp(email: "newuser@example.com", password: "Password123!")
-        XCTAssertEqual(session.notice, "Check your email to confirm your account.")
+        XCTAssertEqual(session.notice, AuthNotice.confirmEmail.localizationKey)
         XCTAssertEqual(session.state, .unauthenticated)
 
         // 3. Email & Password Sign In
@@ -167,7 +167,7 @@ final class AuthenticationLifecycleTests: XCTestCase {
 
         // 7. Password Recovery Request & Deep-Link Callback Handling
         await session.requestPasswordReset(email: "forgotten@mytv.test", redirectTo: redirectURL)
-        XCTAssertEqual(session.notice, "If an account exists, a reset link will be sent to your email.")
+        XCTAssertEqual(session.notice, AuthNotice.passwordResetSent.localizationKey)
         XCTAssertEqual(backend.resetRequestedEmails, ["forgotten@mytv.test"])
 
         // Deep-link arrives on requesting device
@@ -178,7 +178,7 @@ final class AuthenticationLifecycleTests: XCTestCase {
         // Update password on requesting device
         await session.updatePassword("NewSecurePassword88!")
         XCTAssertEqual(backend.updatedPasswords, ["NewSecurePassword88!"])
-        XCTAssertEqual(session.notice, "Your password has been updated.")
+        XCTAssertEqual(session.notice, AuthNotice.passwordUpdated.localizationKey)
         XCTAssertFalse(session.isPasswordRecovery)
 
         // 8. Replay / Expired link rejection simulation
@@ -203,7 +203,7 @@ final class AuthenticationLifecycleTests: XCTestCase {
 
         XCTAssertEqual(backend.deleteAccountCallCount, 1)
         XCTAssertEqual(session.state, .unauthenticated)
-        XCTAssertEqual(session.notice, "Your account and associated cloud data have been deleted.")
+        XCTAssertEqual(session.notice, AuthNotice.accountDeleted.localizationKey)
         XCTAssertNil(session.errorMessage)
 
         let currentUser = try await authService.currentUser()
@@ -237,7 +237,7 @@ final class AuthenticationLifecycleTests: XCTestCase {
 
         XCTAssertNil(session.errorMessage)
         XCTAssertEqual(session.state, .unauthenticated)
-        XCTAssertEqual(session.notice, "Your account and associated cloud data have been deleted.")
+        XCTAssertEqual(session.notice, AuthNotice.accountDeleted.localizationKey)
         XCTAssertEqual(backend.deleteAccountCallCount, 1)
     }
 
@@ -281,7 +281,7 @@ final class AuthenticationLifecycleTests: XCTestCase {
         await session.signIn(provider: .apple, redirectTo: redirectURL)
 
         XCTAssertEqual(session.state, .unauthenticated)
-        XCTAssertEqual(session.errorMessage, "Unsupported provider: provider is not enabled")
+        XCTAssertEqual(session.semanticError, .generic)
         XCTAssertFalse(session.isLoading)
     }
 }
