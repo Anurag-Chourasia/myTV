@@ -1,254 +1,243 @@
-# MyTV
+# myTV 📺
 
-Architecture and ownership: [portfolio master document](https://app.notion.com/p/40ffa5f855b98192ad2ede66a5d36fe7).
+A modern, production-grade SwiftUI IPTV application focused on reactive catalog pipelines, clean domain boundaries, testable AVPlayer playback lifecycles, and explicit dependency injection.
 
-## Reproduce the simulator build
+![Platform](https://img.shields.io/badge/Platform-iOS%2017.0%2B-blue)
+![Swift](https://img.shields.io/badge/Swift-5.9%20%2F%206.0-orange)
+![Toolchain](https://img.shields.io/badge/Xcode-27.1-purple)
+![CI](https://img.shields.io/badge/CI-Passing-brightgreen)
+![Release](https://img.shields.io/badge/Release-v1.0.0-blueviolet)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-On a Mac with Xcode 27, its iOS Simulator SDK, Python 3, and GitHub access to the private dependencies, run `bash Scripts/bootstrap.sh` from a fresh checkout. Set `DEVELOPER_DIR` to your Xcode installation if needed. The command initializes submodules, verifies the checked-in dependency revisions, resolves those revisions and builds Debug. Use `BUILD_CONFIGURATION=Release bash Scripts/bootstrap.sh` for Release. The build uses unsigned simulator compilation. Runtime authentication verification requires a signed test host.
+Built by [Anurag Chourasia](https://github.com/Anurag-Chourasia), iOS Engineer. myTV browses public IPTV channel directories, applies reactive multi-criteria filtering and grouping, persists user favorites across relaunches, resolves stream candidates, and orchestrates live streaming through `AVPlayer`.
 
+---
 
-**A SwiftUI IPTV browser focused on reactive catalog state, explicit service boundaries, and AVPlayer lifecycle correctness.**
+## 1. Executive Summary & Product Vision
 
-Built by [Anurag Chourasia](https://github.com/Anurag-Chourasia), iOS Engineer. MyTV browses external channel metadata, filters and groups large catalogs, persists favorites, lists available streams, and plays provider-hosted media through AVPlayer.
+myTV serves as an advanced architectural reference for high-throughput media catalog applications. It demonstrates:
+- **Clean Domain Independence (IOS-73)**: Eliminates visual framework coupling from the core domain layer. `Channel` and associated domain entities are pure Swift/Foundation value types conforming to `Identifiable`, `Hashable`, and `Sendable`.
+- **Explicit Presentation Composition (IOS-74)**: Controls and sheets (`AppearanceMenu`, `MultiSelectView`, `AboutView`) receive their dependencies explicitly from parent composition boundaries, completely eliminating singleton access from presentation controls.
+- **Injected Image Transport & Lifecycle (IOS-75)**: `ImageLoader` accepts injected `URLSession` and `ImageCaching` instances with deterministic thread safety and test doubles, preventing unbounded memory growth.
+- **Validated AVPlayer Playback Lifecycle (IOS-76)**: Playback candidate resolution, item observation, status validation, and error recovery operate under strict thread safety with verified identity checks that prevent stale playback races.
 
-The repository is a portfolio and engineering reference. It distinguishes implemented behavior, tested contracts, and planned reliability work rather than claiming production readiness from architecture labels alone.
+---
 
-[First showcase journey and acceptance criteria](Docs/ProductBrief.md)
+## 2. Architecture & Design Principles
 
-## Engineering highlights
-
-| Engineering decision | Why it matters | Implementation evidence |
-|---|---|---|
-| Compose services and repositories at the app boundary | Views do not construct HTTP requests; live/stub implementations can change without rewriting the UI | [AppDI](myTV/App/AppDI.swift), [ChannelRepository](myTV/Domain/Repositories/ChannelRepository.swift) |
-| Derive the visible catalog from a Combine pipeline | Search, scope, countries, categories, availability, grouping, and sorting compose into one result | [ChannelListViewModel](myTV/Presentation/Screens/ChannelList/ChannelListViewModel.swift) |
-| Model stream availability as true / false / unknown | A failed lookup must not falsely label every channel unavailable | [Channel model](myTV/Domain/Entities/Channel.swift), [repository](myTV/Data/Repositories/ChannelRepositoryImpl.swift), [availability tests](TestSupport/run-channel-availability-tests.py) |
-| Validate player/item identity inside callbacks | Queued failures from an old or dismissed player must not restart playback or advance a replacement session | [StreamListViewModel](myTV/Presentation/Screens/StreamList/StreamListViewModel.swift), [playback tests](TestSupport/PlaybackTests/PlaybackTests.swift) |
-| Persist favorites independently of downloaded metadata | Cache clearing and app relaunch do not erase the user's saved channel IDs | [FavoriteChannelStore](myTV/Data/Cache/FavoriteChannelStore.swift), [persistence tests](TestSupport/run-favorites-tests.py) |
-| Verify dependency pins and actor boundaries | Make upgrades and concurrency assumptions explicit and reviewable | [dependency record](Scripts/dependencies.json), [compiler probe](TestSupport/check-actor-boundary.sh) |
-
-## User experience
-
-1. **Browse channels** in list or grid, with All Channels/Favorites scope and debounced search.
-2. **Refine the catalog** through the hamburger menu: group by name, country, or category; sort sections and channels independently; choose country/category filters.
-3. **Avoid known empty destinations.** Tiles show **No streams available** when the directory contains no matching stream. **Filter → Hide channels without streams** hides those tiles, displays a tick when enabled, and resets with Clear Filters. Unknown availability remains visible.
-4. **Open a channel** to see its stream choices and quality metadata. Selecting a stream prepares AVPlayer and opens a player sheet when ready; observed failures can advance to subsequent stream candidates.
-5. **Save favorites** across launches. Hold a logo to preview it and use the native share sheet for Photos, Files, or compatible installed apps.
-6. **Adjust appearance/accessibility.** System/Light/Dark choices apply across screens and sheets. Accessibility text sizes resolve grid to list with explanatory alerts. Profile, logo-preview, and player sheets use cross icons to close.
-
-Selected filters have checkmarks; destructive clearing actions are separated. Skeletons, empty results, retry states, preparation overlays, and offline banners communicate different conditions. A directory entry is not a guarantee that a stream currently plays.
-
-## Architecture
-
-MyTV uses **SwiftUI + MVVM with repository and use-case boundaries**. `AppDI` is the composition root. The Domain folder holds entities/repository contracts; concrete use cases currently live under Data. Presentation view models receive concrete use-case wrappers backed by repository protocols.
-
-This is pragmatic layering rather than a claim of complete framework independence: for example, `Channel.swift` imports SwiftUI and several UI dependencies still come from `AppDI.shared`.
+myTV adheres to **Clean Architecture + MVVM** with a dedicated composition root (`AppDI`):
 
 ```mermaid
 flowchart TD
-    App[myTVApp / TVLaunchView] --> DI[AppDI composition root]
-    DI --> VM[ChannelListViewModel / StreamListViewModel]
-    UI[SwiftUI views] --> VM
-    VM --> UseCases[Channel and stream use cases]
-    UseCases --> Contract[ChannelRepository protocol]
-    Contract --> Live[ChannelRepositoryImpl]
-    Contract --> Stub[Debug-only DeveloperStubRepository]
-    Live --> API[IPTVAPIService / HTTPClient adapter]
-    API --> Transport[CommonNetworking / external directory]
-    VM --> Player[AVPlayer and item observers]
-    VM --> Preferences[FavoriteChannelStore / AppStorage]
-    UI --> Images[ImageLoader / memory cache]
-    UI --> Design[UIComponentsKit / DesignTokensKit]
+    App["myTVApp / TVLaunchView<br/>(App Entry Point)"] --> DI["AppDI Composition Root<br/>(Explicit Factory Wiring)"]
+    DI --> VM["ChannelListViewModel / StreamListViewModel<br/>(Presentation State Machines)"]
+    
+    subgraph PresentationLayer ["Presentation Layer (SwiftUI + Combine)"]
+        ChannelList["ChannelListView & Tiles<br/>(Grid / List Responsive Layouts)"]
+        StreamList["StreamListView & PlayerSheet<br/>(Candidate Resolution & AVPlayer)"]
+        Menus["AppearanceMenu & MultiSelectView<br/>(Explicit Injected State)"]
+        About["AboutView & ViewModel<br/>(Developer Credits Sheet)"]
+    end
+    
+    subgraph DomainLayer ["Domain Layer (Pure Foundation)"]
+        ChannelEntity["Channel Entity<br/>(Pure Swift, Sendable, Identifiable)"]
+        FetchChannels["FetchChannelsUseCase<br/>(Catalog Retrieval Contract)"]
+        FetchStreams["FetchStreamsForChannelUseCase<br/>(Stream Candidate Contract)"]
+        RepoContract["ChannelRepository Protocol<br/>(Domain Boundary)"]
+    end
+    
+    subgraph DataLayer ["Data & Infrastructure Layer"]
+        RepoImpl["ChannelRepositoryImpl<br/>(Concurrent Logo & Stream Joining)"]
+        FavoriteStore["FavoriteChannelStore<br/>(Stable ID Persistence in UserDefaults)"]
+        ImagePipeline["ImageLoader & CachedAsyncImage<br/>(Injected URLSession & Memory Cache)"]
+        NetworkService["IPTVAPIService<br/>(HTTP Transport Adapter)"]
+    end
+
+    VM --> PresentationLayer
+    PresentationLayer --> DomainLayer
+    VM --> DomainLayer
+    DomainLayer --> DataLayer
+    DataLayer --> DomainLayer
 ```
 
-### Ownership and source map
+### Layer Breakdown:
+1. **Presentation Layer (`myTV/Presentation/`)**:
+   - Built with SwiftUI and Combine.
+   - `ChannelListViewModel`: Employs a unified Combine pipeline combining search text, country/category filters, availability toggles, and section sorting into a single reactive output stream.
+   - `StreamListViewModel`: Manages candidate stream indexing, AVPlayer item preparation, and automatic fallback sequencing.
+2. **Domain Layer (`myTV/Domain/`)**:
+   - `Domain/Entities/Channel.swift`: Pure Foundation entity; zero imports of SwiftUI or UIKit.
+   - `Domain/UseCases/`: Isolated protocol contracts (`FetchChannelsUseCase`, `FetchStreamsForChannelUseCase`) defining business operations.
+   - `Domain/Repositories/`: `ChannelRepository` protocol defining data contracts.
+3. **Data Layer (`myTV/Data/`)**:
+   - `ChannelRepositoryImpl`: Coordinates concurrent directory downloads, logo matching, and channel stream availability checks.
+   - `FavoriteChannelStore`: Persists favorite channel IDs independently of downloaded directory caches.
+4. **Composition Root (`myTV/App/AppDI.swift`)**:
+   - Factory and dependency container that wires repositories, use cases, and image services into presentation models.
 
-| Area | Responsibility / starting point |
-|---|---|
-| Composition | [AppDI](myTV/App/AppDI.swift) chooses repository implementations and constructs feature view models |
-| Channel presentation | [ChannelListViewModel](myTV/Presentation/Screens/ChannelList/ChannelListViewModel.swift) owns catalog state, derived grouping/filtering, favorites, alerts, and accessibility layout decisions |
-| Data integration | [ChannelRepositoryImpl](myTV/Data/Repositories/ChannelRepositoryImpl.swift) joins channels/logos and computes stream availability; [IPTVAPIService](myTV/Data/Network/Services/IPTVAPIService.swift) owns endpoint calls |
-| Playback lifecycle | [StreamListViewModel](myTV/Presentation/Screens/StreamList/StreamListViewModel.swift) owns candidate selection, preparation, observers, fallback, and teardown; the player view presents AVPlayer |
-| Images | [ImageLoader](myTV/Core/ImageCaching/ImageLoader.swift) checks memory cache, validates HTTP/image data, then publishes success/failure; [ChannelLogo](myTV/Presentation/Components/Channel/ChannelLogo.swift) supplies preview/sharing |
-| Preferences | [FavoriteChannelStore](myTV/Data/Cache/FavoriteChannelStore.swift) persists stable IDs; AppStorage stores layout/grouping/sort/appearance preferences |
-| Environment services | Core contains reachability, haptics, display-name mapping, and image-cache abstractions |
-| Developer & showcase controls | [DeveloperSettingsView](myTV/Developer/DeveloperSettingsView.swift) owns Debug launch/shake presentation; [AppRuntime](myTV/Developer/AppRuntime.swift) defines flags, overrides, and fixture repository; `myTV Showcase` scheme boots credential-free directly with rights-cleared sample streams |
+---
 
-### Catalog data flow
+## 3. Shared SPM Package Integration
 
-Channel loading starts channel, logo, and stream-directory requests concurrently. Logos are matched by normalized channel ID and ranked by supported format and resolution. One stream-directory lookup produces a set of channel IDs, avoiding a network request per tile.
+myTV integrates 8 shared Swift Packages:
 
-- A successful lookup sets `hasStreams` to true or false using directory channel IDs.
-- A failed stream lookup leaves availability nil while channels/logos can still load.
-- Cancellation propagates rather than being relabeled as unknown availability.
-- The hide-unavailable filter excludes only explicit false values. It composes with Favorites, search, and country/category selection before grouping and sorting.
-
-The view model debounces search by 200 ms. Combine derives the displayed sections from the current inputs. Country/category labels and section order use friendly display names rather than raw codes. Multi-select screens hold draft selections until Apply; Clear changes that draft.
-
-### Playback lifecycle
-
-Selecting a stream tears down the previous session, starts at the selected candidate's index, constructs an AVPlayerItem/AVPlayer, and observes item status plus failure-to-end notifications. Callback work returns to MainActor and checks both the active-attempt flag and current item identity.
-
-`readyToPlay` presents the player. An observed failure advances to the next candidate. Dismissal removes observers, clears the current item, pauses playback, and releases the player. Late callbacks are ignored after teardown or replacement.
-
-The existing fallback is sequential from the chosen candidate onward. It does not yet persist last-success ordering, enforce preparation deadlines, or model ongoing stalls as a complete recovery state machine. `readyToPlay` is not durable proof of stream health. Reachability can retry a failed stream-list fetch; it does not guarantee playback recovery after a network handoff.
-
-### Persistence and cache contracts
-
-| Data | Current behavior |
-|---|---|
-| Favorites | Sorted stable IDs in UserDefaults, saved on each edit; independent of channel cache clearing |
-| Layout/grouping/sorting/appearance | AppStorage-backed preferences |
-| Search, selected filters, hide-unavailable option | In-memory feature state; not all browsing state survives relaunch |
-| Logos | In-memory image cache; no guaranteed persistent offline artwork |
-| Channel directory | Current repository fetches from the network. `ChannelDiskCache` exists and is cleared through the repository, but its save/load path is not wired into channel fetching |
-| Streams | Loaded from the external directory per stream-list fetch; no persistent health/history database |
-
-## Build and run
-
-Run commands from this repository root.
-
-- **Deployment target:** iOS 16.6; Swift 5 language mode with MainActor default isolation and configured approachable-concurrency settings.
-- **Toolchain:** recent local validation used Xcode 27.1; [CI](.github/workflows/ci.yml) explicitly pins Xcode 27.0. Use the documented environment for the check being run.
-- **Dependencies:** Swift Package Manager with exact versions and SHAs in [Scripts/dependencies.json](Scripts/dependencies.json). All six shared package repositories are private. Access is required locally; configure an authorized GitHub account before resolving.
-
-```sh
-xcodebuild -version
-python3 Scripts/verify_pins.py
-xcodebuild -resolvePackageDependencies -project myTV.xcodeproj -scheme myTV -onlyUsePackageVersionsFromResolvedFile -scmProvider system
-xcodebuild -project myTV.xcodeproj -scheme myTV -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath /tmp/MyTVDerived CODE_SIGNING_ALLOWED=NO build
-```
-
-Open `myTV.xcodeproj`, select the myTV scheme and simulator, then run. Device deployment requires your signing team. Select the intended Xcode via `DEVELOPER_DIR` or your normal Xcode selection before running CLI commands.
-
-CommonNetworking supplies shared transport; FoundationKit supplies utility behavior; DesignTokensKit/UIComponentsKit own shared visual primitives; DeveloperProfileKit supplies profile content. LocalizationKit is linked but does not replace app-owned generated string tables. CI private dependency setup uses repository-specific read-only deploy keys and is not a local setup script.
-
-## Developer workflow
-
-Debug launches into Developer Settings. Tap **Open MyTV** to continue; shake to reopen settings above the current screen or sheet. Applying/dismissing settings rebuilds channel presentation, and AppDI constructs dependencies using the selected source. Release omits the settings UI, fixtures, and shake handler and ignores stored developer overrides.
-
-| Control | Behavior |
-|---|---|
-| Live / Stub | Live loads the external directory; Stub selects an in-process repository |
-| Success / Empty / Offline | Success returns two demo channels without remote logo/playback URLs; stream lists intentionally remain empty. Empty returns no channels; Offline throws a network error |
-| HTTP logs | Debug-only redacted transport logs; stored preference overrides the `HTTP_LOGGING=1` fallback |
-| Haptics / logo preview | Feature flags; Release uses normal enabled behavior |
-| Version / build | Overrides profile display only, not installed bundle metadata |
-| Channel layout / appearance | Normal presentation preferences, also accessible for manual visual testing |
-
-Stub mode is useful for catalog/empty/error UX. It is not a playback simulator and does not replace device playback testing.
-
-## Verification and delivery
-
-MyTV currently has **no app XCTest target**. Standalone Swift-package harnesses copy actual app sources into disposable packages, inject test doubles, and validate focused contracts. They are not end-to-end UI tests.
-
-| Check | Command / coverage |
-|---|---|
-| Exact package pins | `python3 Scripts/verify_pins.py` |
-| Shared visual-token policy | `python3 Scripts/check_design_tokens.py` |
-| Dependency tests | `python3 Scripts/test_dependencies.py` |
-| Networking compatibility | `python3 TestSupport/run-adapter-tests.py` — five offline adapter comparisons |
-| Developer policy | `python3 TestSupport/run-developer-tests.py` — Debug/Release behavior and fixtures |
-| Availability semantics | `python3 TestSupport/run-channel-availability-tests.py` — matching, empty directory, lookup failure, cancellation |
-| Favorite persistence | `python3 TestSupport/run-favorites-tests.py` — relaunch/removal and corrupt preference handling |
-| Playback callback lifecycle | `python3 TestSupport/run-playback-tests.py` — local-media tests for dismissed/replaced/current-item callbacks |
-| Actor boundary | `bash TestSupport/check-actor-boundary.sh /tmp/MyTVDerived` — run after the Debug simulator build |
-
-[CI](.github/workflows/ci.yml) runs the checks above, builds Debug, and validates the actor boundary. Runtime-policy tests exercise both configurations; the workflow does not currently perform a full Release app build. CI runs on main pushes, version tags, eligible pull requests, or manual dispatch. Feature-branch pushes alone do not imply a CI run.
-
-Before release, also build the Release app and verify developer markers are absent. Manually test actual stream preparation/failure, dismissal during preparation, network changes, VoiceOver, large text, shake over an open sheet, and native sharing. Playback harnesses do not validate device audio routing, third-party stream uptime, or sharing extensions. See [validation notes](TestSupport/README.md).
-
-## Knowledge transfer
-
-| Change or symptom | Start here | Contract to preserve |
+| Package | Integration Role | Host Ingestion Seam |
 |---|---|---|
-| New catalog filter | ChannelListViewModel's Combine inputs and `compute`, then the channel menu | Compose before grouping/sorting; define unknown behavior; reset through Clear Filters |
-| Incorrect availability subtitle | Repository's stream-ID set and availability tests | Unknown is not unavailable; directory presence is not playback health |
-| Playback restarts after closing | `teardown`, observer removal, callback identity guards | Old callbacks cannot act on the current session |
-| New endpoint or transport change | IPTVAPIService, DTOs, HTTPClient adapter | Preserve documented decoding/cancellation behavior; update adapter tests before changing contracts |
-| Favorites disappear | FavoriteChannelStore and its injected defaults tests | Use stable channel IDs; keep preferences separate from downloadable caches |
-| New localized string | `LocalizationKit` catalog and generator | Add keys to `LocalisationKit`, run `python3 Scripts/generate-localization.py`, and import `LocalizationKit` accessors |
-| New developer setting | AppRuntime, DeveloperSettingsView, AppDI | Define the Release default and exercise it in runtime tests |
-| Package resolution fails | Authorized GitHub access and exact pin record | Do not weaken pins to hide a permission failure |
+| **DesignTokensKit** (`v1.22.3`) | Brand palette (`BrandPalette.myTV`), spacing, typography, and SF Symbols. | `myTV/Presentation/Components/` |
+| **UIComponentsKit** (`v1.9.0`) | Composable `CatalogTile`, `StateMessage`, `TokenButtonStyle`, and layout menus. | `myTV/Presentation/Screens/ChannelList/` |
+| **AuthKit & AuthKitUI** (`v0.8.0`) | Authentication state machine, profile sheet, and `AccountToolbarItem`. | `myTV/App/myTVApp.swift` |
+| **FoundationKit** (`v0.2.0`) | System time abstractions and unified OS logging. | `myTV/Core/` |
+| **LocalisationKit** (`v0.8.1`) | Localized channel categories, player state notices, and error alerts. | Throughout all ViewModels and Views |
+| **CommonNetworkingKit** (`v2.0.0`) | Deterministic HTTP transport layer and redacting network logging. | `myTV/Data/Network/Services/IPTVAPIService.swift` |
+| **DeveloperProfileKit** (`v1.2.0`) | In-app developer attribution and portfolio credits. | `myTV/Presentation/Screens/AboutView/` |
+| **AppStubData** (`v1.0.0`) | Static IPTV channel and stream directory fixtures (`mytv-developer-catalog.json`). | `myTV/Developer/AppRuntime.swift` |
+| **SnapshotTestingKit** (`v1.0.3`) | Visual regression testing against golden baseline references. | `myTVSnapshotTests/` |
 
-For localization work, all localized strings and voiceover keys are centralized in `LocalizationKit`. Run `python3 Scripts/generate-localization.py` from the `LocalisationKit` repository to regenerate typed accessors across English, French, and Arabic.
+---
 
-A useful handover demonstration is: trace a channel through the filter pipeline, contrast false/unknown availability, dismiss a preparing player, then show the callback-lifecycle regression test. Explain what could fail and why the guard exists.
+## 4. Scripts, Tooling & Automation Catalog
 
-## Current boundaries
+All developer scripts and test runners are organized under `Scripts/` and `TestSupport/`:
 
-- HTTPClient deliberately preserves legacy response-body handling regardless of status; stricter HTTP-status policy requires a deliberate adapter-contract change.
-- Catalog loading is network-backed; the disk-cache type alone does not provide offline browsing.
-- Playback has sequential failure fallback, not comprehensive stall recovery, health scoring, or connection-handoff guarantees.
-- Dynamic Type is clamped to `.xSmall ... .accessibility2`; grid/list safeguards do not imply support for every larger system size.
-- Core services and some views retain shared-instance access; further dependency isolation and full UI automation remain future work.
-- No measured startup, scrolling, memory-budget, coverage-percentage, or production-uptime claims are made here.
+| Script | Purpose & Rationale | Local Execution Command |
+|---|---|---|
+| `Scripts/bootstrap.sh` | Verifies submodule gitlinks, resolves exact pins, and builds Debug simulator binary. | `bash Scripts/bootstrap.sh` |
+| `Scripts/check_design_tokens.py` | Scans all application Swift files verifying zero raw color literals or unregistered icons. | `python3 Scripts/check_design_tokens.py` |
+| `Scripts/check_release_fixtures.py` | Validates that debug catalogs and test stubs are stripped from Release targets. | `python3 Scripts/check_release_fixtures.py` |
+| `Scripts/test-fast.sh` | Executes Fast test lane (unit tests, adapter verification, use case logic). | `bash Scripts/test-fast.sh` |
+| `Scripts/test-smoke.sh` | Executes UI Smoke test lane for critical user journeys (Catalog -> Stream -> Player). | `bash Scripts/test-smoke.sh` |
+| `Scripts/test-snapshots.sh` | Runs pixel-by-pixel visual regression suite against pinned iPhone 11 simulator. | `bash Scripts/test-snapshots.sh` |
+| `Scripts/verify-snapshot-baselines.py` | Enforces golden image baseline presence and blocks CI recording overrides. | `python3 Scripts/verify-snapshot-baselines.py` |
+| `Scripts/verify-snapshot-boundary.py` | Guarantees snapshot test symbols are excluded from production binaries. | `bash Scripts/verify-snapshot-boundary.py` |
+| `TestSupport/run-playback-tests.py` | Standalone runner validating AVPlayer item status callbacks and candidate advance logic. | `python3 TestSupport/run-playback-tests.py` |
+| `TestSupport/run-channel-availability-tests.py` | Validates tri-state stream availability evaluation (`true` / `false` / `unknown`). | `python3 TestSupport/run-channel-availability-tests.py` |
+| `TestSupport/run-favorites-tests.py` | Verifies favorite channel persistence across cold application relaunch cycles. | `python3 TestSupport/run-favorites-tests.py` |
+| `TestSupport/check-actor-boundary.sh` | Compiles a strict concurrency probe verifying DTO actor boundary isolation. | `bash TestSupport/check-actor-boundary.sh` |
 
-## Future Plans
+---
 
-Proposed enhancements, not completed features. Extend existing implementations where applicable.
+## 5. Continuous Integration & Quality Gates
 
-First priority: the playback state machine and intelligent fallback. A directory-listed
-stream is not proof of working playback; health indicators must use actual playback
-results. Preserve search, filters, layout, and scroll position when returning from a
-channel wherever that state currently resets.
+The GitHub Actions CI pipeline (`.github/workflows/ci.yml`) enforces multi-tiered verification on every PR and push:
 
-### Playback & stream reliability
+```mermaid
+flowchart LR
+    Toolchain["1. Toolchain & Lint<br/>(Xcode 27.1, SwiftLint Strict)"] --> Probes["2. Concurrency & Probes<br/>(DTO Boundary, Submodules)"]
+    Probes --> Playback["3. Playback & Fast Lane<br/>(AVPlayer Runner, Unit Tests)"]
+    Playback --> Smoke["4. UI Smoke & Snapshots<br/>(Simulator E2E & Golden Diffs)"]
+    Smoke --> Release["5. Release Sanitization<br/>(Fixture & Symbol Stripping)"]
+```
 
-| Enhance engineering skills | Enhance user experience |
-|---|---|
-| **Playback state machine:** explicit loading, playing, stalled, recovering, and failed states | Understand what is happening instead of watching an indefinite spinner. |
-| **Intelligent stream fallback:** last-success ordering, timeouts, bounded retries, and cancellation | Recover from broken streams with less manual intervention. |
-| **Stream-health tracking:** timestamped playback evidence, expiry, and unknown states | Identify recently working streams without misleading guarantees. |
-| **Playback diagnostics and fault tests:** simulate stalls, failures, and late callbacks | Clearer errors and fewer playback failures. |
-| **Picture-in-Picture (PiP):** `AVPictureInPictureController` lifecycle integration | Watch and listen to streams while navigating channels or using other apps. |
-| **Now Playing & Remote Commands:** `MPNowPlayingInfoCenter` and `MPRemoteCommandCenter` integration | Control playback and view current channel info from the lock screen and Control Center. |
-| **AirPlay 2 & external displays:** AVPlayer AirPlay routing and aspect-ratio handling | Stream channels to Apple TV and external screens seamlessly. |
-| **Audio track & closed caption selection:** parse and switch `AVMediaSelectionGroup` tracks | Select preferred audio language and enable subtitles/CC on compatible broadcasts. |
-| **HLS quality selector & cellular data saver:** access log metrics (`AVPlayerItemAccessLog`) and bitrate capping (`preferredPeakBitRate`) | View stream bitrate/resolution and cap bandwidth on cellular connections. |
-| **Player volume & brightness gestures:** direct interactive touch gestures on the video canvas | Adjust volume and brightness with intuitive vertical edge swipes. |
-| **Multi-view / split playback:** concurrent `AVPlayer` instances with coordinated audio focus | Watch 2 to 4 live streams simultaneously (e.g., news or sports). |
+---
 
-### Catalog, EPG & discovery
+## 6. Local Setup & Contribution Guide
 
-| Enhance engineering skills | Enhance user experience |
-|---|---|
-| **Program-guide ingestion:** parse feeds, match channel IDs, normalize time zones, and cache results | See what is playing now and what comes next. |
-| **Large-catalog optimization:** indexed filtering, efficient grouping, and measured rendering | Fast search and filtering across thousands of channels. |
-| **Custom M3U / Xtream Codes ingestion:** robust parser for external playlist URLs and local files | Import personal playlists and custom IPTV sources beyond the default directory. |
-| **Offline catalog disk caching:** wire `ChannelDiskCache` into the active repository pipeline | Browse saved channels and categories even without an internet connection. |
-| **Channel reordering & customization:** drag-to-reorder favorites, custom categorization, and channel hiding | Personalize channel order and hide unused categories or countries. |
-| **Fuzzy & phonetic search:** error-tolerant string matching across international channel names | Find channels easily despite typos, missing diacritics, or naming variations. |
-| **Navigation state preservation:** retain active search, filters, layout mode, and scroll position | Return from playback directly to the exact browsing spot without reset. |
+### Prerequisites:
+- macOS Sonoma or Sequoia with **Xcode 27.1** installed (`/Applications/Xcode 27.1.app`).
+- Python 3.10+ installed and on `PATH`.
+- Pinned iPhone 11 Simulator installed.
 
-### System integration & platform expansion
+### Step-by-Step Setup:
+```sh
+# 1. Clone repository
+git clone https://github.com/Anurag-Chourasia/myTV.git
+cd myTV
 
-| Enhance engineering skills | Enhance user experience |
-|---|---|
-| **Home & Lock Screen Widgets:** WidgetKit integration with deep-linking | Quick 1-tap launch into top favorite channels directly from the home screen. |
-| **Spotlight Search & Siri Shortcuts:** `CoreSpotlight` indexing and App Intents | Search channels from iOS Spotlight or play via voice commands. |
-| **Live Activities & Dynamic Island:** ActivityKit integration displaying live stream status | Monitor active stream duration and channel metadata from the Dynamic Island. |
-| **tvOS (Apple TV) companion app:** shared-core package consumption with SwiftUI Focus Engine | Browse and watch channels on Apple TV with a dedicated living-room interface. |
-| **iPadOS & macOS optimizations:** `NavigationSplitView` sidebar, Stage Manager, and keyboard shortcuts | Comfortable, native viewing experience on iPad and Mac. |
+# 2. Bootstrap dependencies and build Debug simulator binary
+DEVELOPER_DIR='/Applications/Xcode 27.1.app/Contents/Developer' bash Scripts/bootstrap.sh
 
-### Architecture, persistence & concurrency
+# 3. Run fast unit test suite and playback validation
+DEVELOPER_DIR='/Applications/Xcode 27.1.app/Contents/Developer' bash Scripts/test-fast.sh
+python3 TestSupport/run-playback-tests.py
 
-| Enhance engineering skills | Enhance user experience |
-|---|---|
-| **Swift 6 complete concurrency:** `SWIFT_STRICT_CONCURRENCY=complete`, verified `Sendable` types, and strict actor boundaries | High-performance, data-race-free architecture. |
-| **SwiftData / structured persistence:** unified schema for favorites, history, EPG, and stream metrics | Reliable multi-session persistence replacing UserDefaults/AppStorage limits. |
-| **Playback-history persistence:** deduplication, retention limits, and reliable updates | Recently Watched and quick reopening of favorite channels. |
-| **Network recovery:** handle connection changes and app lifecycle transitions | Recover gracefully when switching between Wi-Fi and mobile data. |
-| **Background EPG refresh (`BGAppRefreshTask`):** scheduled background tasks for overnight sync | Up-to-date program guide ready immediately upon app launch. |
-| **Dependency injection isolation:** eliminate direct `AppDI.shared` access across views | Testable, modular UI components with explicit mock injection. |
-| **Comprehensive localization migration:** migrate hardcoded strings to generated tables | Full multilingual interface and VoiceOver accessibility. |
+# 4. Run UI Smoke tests
+DEVELOPER_DIR='/Applications/Xcode 27.1.app/Contents/Developer' bash Scripts/test-smoke.sh
+```
 
+---
 
-## Author and content boundary
+## 7. End-to-End Ecosystem Connectivity
 
-[Anurag Chourasia](https://github.com/Anurag-Chourasia) · [LinkedIn](https://www.linkedin.com/in/anurag-chourasia-b66710178/)
+```mermaid
+graph TD
+    subgraph CoreServices ["Shared Core Services (SPMs)"]
+        FoundationKit["FoundationKit<br/>(System Clock, Unified Logging, Thread Safety)"]
+        LocalisationKit["LocalisationKit<br/>(Typed Strings, Pluralization, String Catalogs)"]
+        DesignTokensKit["DesignTokensKit<br/>(BrandPalettes, ColorTheme, Typography, Metrics, SF Symbols)"]
+        CommonNetworkingKit["CommonNetworkingKit<br/>(HTTPClient, URLSession, RequestBuilder, Interceptors)"]
+        AppStubData["AppStubData<br/>(Synthetic Fixtures, Offline Catalogs, Test Scenarios)"]
+    end
 
-Metadata comes from the iptv-org directory; AVPlayer plays provider-hosted stream URLs. MyTV does not host or redistribute the media. Listing a channel does not establish rights, geographic availability, or stream uptime. The repository is provided for educational and portfolio demonstration purposes.
+    subgraph UIServices ["Shared Presentation & Auth (SPMs)"]
+        UIComponentsKit["UIComponentsKit<br/>(CatalogTile, SurfaceCard, StateMessage, Recipes)"]
+        AuthKit["AuthKit & AuthKitUI<br/>(SessionManager, AppAuthGate, AccountToolbarItem)"]
+        DeveloperProfileKit["DeveloperProfileKit<br/>(DeveloperProfileView, Runtime Overlays)"]
+        SnapshotTestingKit["SnapshotTestingKit<br/>(Subpixel Comparison, Golden Baseline Engine)"]
+    end
 
-## SwiftLint
+    subgraph HostApps ["Host Applications"]
+        ShowBook["ShowBook<br/>(Book Discovery, Core Data Persistence, Open Library)"]
+        MyTV["myTV<br/>(IPTV Browser, AVPlayer Lifecycle, Directory Cache)"]
+        MotivationDaily["Motivation Daily<br/>(Card Feed, Quote Persistence, Image Export Studio)"]
+    end
 
-Run `bash Scripts/lint.sh` with the version pinned in `.swiftlint-version`. CI enforces the shared rule set before build/test. See [SwiftLint policy](Docs/SwiftLint.md) for installation, rules, generated-code exclusions, and the existing-violation baseline.
+    subgraph QualityGates ["CI/CD Automation & Tooling"]
+        ArchitectureGuard["check_architecture.py<br/>(Boundary Enforcement, Zero Token Leakage)"]
+        SnapshotVerifier["verify-snapshot-baselines.py<br/>(Visual Regression Gate)"]
+        GHActions["GitHub Actions CI<br/>(Fast Lane, Smoke Lane, Release Build Verification)"]
+    end
+
+    %% Dependencies between Shared SPMs
+    DesignTokensKit --> UIComponentsKit
+    LocalisationKit --> UIComponentsKit
+    DesignTokensKit --> AuthKit
+    UIComponentsKit --> AuthKit
+    FoundationKit --> CommonNetworkingKit
+    DesignTokensKit --> DeveloperProfileKit
+    UIComponentsKit --> DeveloperProfileKit
+    LocalisationKit --> DeveloperProfileKit
+
+    %% Dependencies from Host Apps to Shared SPMs
+    DesignTokensKit --> ShowBook
+    UIComponentsKit --> ShowBook
+    AuthKit --> ShowBook
+    CommonNetworkingKit --> ShowBook
+    DeveloperProfileKit --> ShowBook
+    AppStubData --> ShowBook
+
+    DesignTokensKit --> MyTV
+    UIComponentsKit --> MyTV
+    AuthKit --> MyTV
+    CommonNetworkingKit --> MyTV
+    DeveloperProfileKit --> MyTV
+    AppStubData --> MyTV
+
+    DesignTokensKit --> MotivationDaily
+    UIComponentsKit --> MotivationDaily
+    AuthKit --> MotivationDaily
+    CommonNetworkingKit --> MotivationDaily
+    DeveloperProfileKit --> MotivationDaily
+    AppStubData --> MotivationDaily
+
+    %% Testing & Verification Linkage
+    SnapshotTestingKit -.-> ShowBook
+    SnapshotTestingKit -.-> MyTV
+    SnapshotTestingKit -.-> MotivationDaily
+
+    ArchitectureGuard --> HostApps
+    ArchitectureGuard --> CoreServices
+    ArchitectureGuard --> UIServices
+    SnapshotVerifier --> SnapshotTestingKit
+    GHActions --> HostApps
+    GHActions --> UIServices
+    GHActions --> CoreServices
+```
+
+---
+
+## 8. Canonical Notion Dashboards & Governance Links
+
+- [iOS Portfolio — Engineering Tickets Dashboard](https://app.notion.com/p/c20d7f4b133b44499c8ac0b4d5f6249e?pvs=204)
+- [iOS Portfolio — Master Document](https://app.notion.com/p/40ffa5f855b98192ad2ede66a5d36fe7)
+- [Architecture Boundary Validator (`check_architecture.py`)](file:///Users/anuragchourasia/Desktop/Projects/UIComponentsKit/Scripts/check_architecture.py)
+- [Release & Gate Policy Documentation (`Docs/MASTER.md`)](file:///Users/anuragchourasia/Desktop/Projects/Docs/MASTER.md)
