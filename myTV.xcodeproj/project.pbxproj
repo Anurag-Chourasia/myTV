@@ -48,7 +48,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				Scripts/generate_localization.py,
 			);
 			target = 34C031E22F23888E0029B9CC /* myTV */;
 		};
@@ -169,7 +168,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 34C031EE2F23888F0029B9CC /* Build configuration list for PBXNativeTarget "myTV" */;
 			buildPhases = (
-				345AC8552F247666006D4440 /* ShellScript */,
 				34C031DF2F23888E0029B9CC /* Sources */,
 				34C031E02F23888E0029B9CC /* Frameworks */,
 				34C031E12F23888E0029B9CC /* Resources */,
@@ -292,27 +290,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		345AC8552F247666006D4440 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/myTV/Resources/Localization/Base.lproj/Localizable.strings",
-				"$(SRCROOT)/myTV/Resources/Localization/Base.lproj/VoiceOver.strings",
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(SRCROOT)/myTV/Resources/Localization/Localizable.generated.swift",
-				"$(SRCROOT)/myTV/Resources/Localization/VoiceOver.generated.swift",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n/usr/bin/env python3 \"${SRCROOT}/myTV/Scripts/generate_localization.py\"\n/usr/bin/env python3 \"${SRCROOT}/myTV/Scripts/generate_voiceover.py\"\n";
-		};
 		BEB43720AB7845C79D2F8DE8 /* Copy Debug fixture resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;

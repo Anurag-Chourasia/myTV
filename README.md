@@ -166,11 +166,11 @@ Before release, also build the Release app and verify developer markers are abse
 | Playback restarts after closing | `teardown`, observer removal, callback identity guards | Old callbacks cannot act on the current session |
 | New endpoint or transport change | IPTVAPIService, DTOs, HTTPClient adapter | Preserve documented decoding/cancellation behavior; update adapter tests before changing contracts |
 | Favorites disappear | FavoriteChannelStore and its injected defaults tests | Use stable channel IDs; keep preferences separate from downloadable caches |
-| New localized string | Base string tables and generator scripts | Add source keys, regenerate accessors, and check VoiceOver wording separately |
+| New localized string | `LocalizationKit` catalog and generator | Add keys to `LocalisationKit`, run `python3 Scripts/generate-localization.py`, and import `LocalizationKit` accessors |
 | New developer setting | AppRuntime, DeveloperSettingsView, AppDI | Define the Release default and exercise it in runtime tests |
 | Package resolution fails | Authorized GitHub access and exact pin record | Do not weaken pins to hide a permission failure |
 
-For localization work, run `python3 myTV/Scripts/generate_localization.py` and `python3 myTV/Scripts/generate_voiceover.py` from the repository root after editing their source tables. Base tables exist, but recent English literals still need migration; this is not complete multilingual coverage.
+For localization work, all localized strings and voiceover keys are centralized in `LocalizationKit`. Run `python3 Scripts/generate-localization.py` from the `LocalisationKit` repository to regenerate typed accessors across English, French, and Arabic.
 
 A useful handover demonstration is: trace a channel through the filter pipeline, contrast false/unknown availability, dismiss a preparing player, then show the callback-lifecycle regression test. Explain what could fail and why the guard exists.
 
