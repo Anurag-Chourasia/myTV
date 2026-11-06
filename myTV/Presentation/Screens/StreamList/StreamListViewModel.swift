@@ -1,11 +1,19 @@
-import LocalizationKit
 //
 //  StreamListViewModel.swift
 //  myTV
 //
 //  Created by Anurag Chourasia on 23/01/26.
 //
+//  ARCHITECTURAL PLAYBACK COORDINATION RECORD (IOS-76):
+//  StreamListViewModel serves as the dedicated @MainActor presentation coordinator
+//  for stream discovery, candidate fallback, and AVPlayer lifecycle management.
+//  Session integrity is guarded via UUID `playbackSessionID`, item KVO status observation
+//  invalidation (`statusObserver?.invalidate()`), and notification listener cleanup (`removePlayerObservers()`).
+//  Consolidating playback coordination in this ViewModel preserves verified rapid-switch/dismissal
+//  race safety without introducing artificial player wrapper overhead.
+//
 
+import LocalizationKit
 import Foundation
 import Combine
 import AVKit

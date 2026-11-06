@@ -23,11 +23,12 @@ final class ImageLoader: ObservableObject {
 
     private let url: URL?
     private let cache: ImageCache
+    private let session: URLSession
 
-    init(url: URL?, cache: ImageCache? = nil) {
+    init(url: URL?, cache: ImageCache? = nil, session: URLSession = .shared) {
         self.url = url
-        // If no cache is provided, use the shared one
         self.cache = cache ?? DefaultImageCache.shared
+        self.session = session
     }
 
     func load() async {
@@ -46,7 +47,9 @@ final class ImageLoader: ObservableObject {
         state = .loading
 
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await session.data(from: url)
+
+            if Task.isCancelled { return }
 
             guard
                 let http = response as? HTTPURLResponse,
@@ -61,6 +64,7 @@ final class ImageLoader: ObservableObject {
             state = .success(image)
 
         } catch {
+            if Task.isCancelled { return }
             state = .failure
             #if DEBUG
             print("❌ Image load failed:", error.localizedDescription)

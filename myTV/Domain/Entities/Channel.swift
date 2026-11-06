@@ -5,7 +5,7 @@
 //  Created by Anurag Chourasia on 23/01/26.
 //
 
-import SwiftUI
+import Foundation
 
 struct Channel: Identifiable, Equatable {
     let id: String

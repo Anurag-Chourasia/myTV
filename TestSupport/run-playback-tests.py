@@ -10,6 +10,7 @@ with tempfile.TemporaryDirectory(prefix='mytv-playback-') as temp:
     for relative in [
         'Presentation/Screens/StreamList/StreamListViewModel.swift',
         'Domain/Entities/Stream.swift', 'Domain/Entities/Channel.swift',
+        'Domain/UseCases/FetchStreamsForChannelUseCase.swift',
         'Domain/Repositories/ChannelRepository.swift',
         'Data/UseCases/DefaultFetchStreamsForChannelUseCase.swift',
         'Core/Reachibility/ReachabilityService.swift', 'Core/Haptic/HapticService.swift'

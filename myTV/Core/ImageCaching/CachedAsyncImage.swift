@@ -15,10 +15,12 @@ struct CachedAsyncImage<Placeholder: View>: View {
 
     init(
         url: URL?,
+        cache: ImageCache? = nil,
+        session: URLSession = .shared,
         @ViewBuilder placeholder: () -> Placeholder
     ) {
         _loader = StateObject(
-            wrappedValue: ImageLoader(url: url)
+            wrappedValue: ImageLoader(url: url, cache: cache, session: session)
         )
         self.placeholder = placeholder()
     }

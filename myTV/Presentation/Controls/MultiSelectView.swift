@@ -22,9 +22,11 @@ struct MultiSelectView: View {
         selection: Binding<Set<String>>,
         allowsMultipleSelection: Bool = true,
         labelForOption: @escaping (String) -> String = { $0 },
-        sortKeyForOption: @escaping (String) -> String = { $0 }
+        sortKeyForOption: @escaping (String) -> String = { $0 },
+        haptics: HapticService? = nil
     ) {
         self._committedSelection = selection
+        let resolvedHaptics = haptics ?? AppDI.shared.getHaptics()
         _viewModel = StateObject(
             wrappedValue: MultiSelectViewModel(
                 title: title,
@@ -33,7 +35,7 @@ struct MultiSelectView: View {
                 allowsMultipleSelection: allowsMultipleSelection,
                 labelForOption: labelForOption,
                 sortKeyForOption: sortKeyForOption,
-                haptics: AppDI.shared.getHaptics()
+                haptics: resolvedHaptics
             )
         )
     }

@@ -192,4 +192,8 @@ final class AboutViewModel: ObservableObject {
             return String(\MyTVStrings.layoutUnavailableOk)
         }
     }
+
+    func selectionHaptic() {
+        haptics.selection()
+    }
 }
