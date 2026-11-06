@@ -43,6 +43,9 @@ xcrun xcodebuild test -project myTV.xcodeproj -scheme myTV \
     -only-testing:myTVTests/PrivacyManifestTests \
     -only-testing:myTVTests/ChannelListViewModelTests \
     -only-testing:myTVTests/StreamListViewModelTests \
+    -only-testing:myTVTests/FavoriteChannelStoreTests \
+    -only-testing:myTVTests/OfflineAndStaleCacheTests/testFavoritesPersistIndependentlyAcrossOfflineRelaunchAndCacheClear \
+    -only-testing:myTVTests/RiskBasedIsolationAndConcurrencyTests/testAccountSwitchingIsolatesFavoriteStoreKeys \
     -only-testing:myTVTests/MultiSelectViewModelTests
 
 END_TIME=$(date +%s)

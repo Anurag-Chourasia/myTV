@@ -195,7 +195,7 @@ final class OfflineAndStaleCacheTests: XCTestCase {
     }
 
     func testFavoritesPersistIndependentlyAcrossOfflineRelaunchAndCacheClear() async throws {
-        let favorites = FavoriteChannelStore(defaults: defaults)
+        let favorites = FavoriteChannelStore(defaults: defaults, ownerID: UUID())
         favorites.save(["stale-favorite-ch"])
 
         let api = ControllableMockIPTVService()

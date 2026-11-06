@@ -32,22 +32,15 @@ final class RiskBasedIsolationAndConcurrencyTests: XCTestCase {
 
     func testAccountSwitchingIsolatesFavoriteStoreKeys() throws {
         let currentDefaults = try XCTUnwrap(defaults)
-        let userAKey = "favorites_user_\(UUID().uuidString)"
-        let userBKey = "favorites_user_\(UUID().uuidString)"
-
-        // User A saves favorites
-        currentDefaults.set(["chan-1", "chan-2"], forKey: userAKey)
-        XCTAssertEqual(Set(currentDefaults.stringArray(forKey: userAKey) ?? []), ["chan-1", "chan-2"])
-
-        // User B has zero favorites
-        XCTAssertEqual(Set(currentDefaults.stringArray(forKey: userBKey) ?? []), [])
-
-        // User B saves their own favorites
-        currentDefaults.set(["chan-99"], forKey: userBKey)
-        XCTAssertEqual(Set(currentDefaults.stringArray(forKey: userBKey) ?? []), ["chan-99"])
-
-        // User A's favorites remain unchanged and isolated
-        XCTAssertEqual(Set(currentDefaults.stringArray(forKey: userAKey) ?? []), ["chan-1", "chan-2"])
+        let ownerA = UUID()
+        let ownerB = UUID()
+        let accountA = FavoriteChannelStore(defaults: currentDefaults, ownerID: ownerA)
+        let accountB = FavoriteChannelStore(defaults: currentDefaults, ownerID: ownerB)
+        accountA.save(["chan-1", "chan-2"])
+        XCTAssertTrue(accountB.load().isEmpty)
+        accountB.save(["chan-99"])
+        XCTAssertEqual(accountA.load(), ["chan-1", "chan-2"])
+        XCTAssertEqual(FavoriteChannelStore(defaults: currentDefaults, ownerID: ownerB).load(), ["chan-99"])
     }
 
     // MARK: - Concurrent Favorites Access Safety

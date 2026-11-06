@@ -1,6 +1,7 @@
 import SwiftUI
 import DesignTokensKit
 import AuthKitUI
+import AuthKit
 import LocalizationKit
 import UIComponentsKit
 
@@ -56,8 +57,10 @@ struct TVLaunchView: View {
 
     @ViewBuilder private var appContent: some View {
         if authenticationEnabled {
-            AppAuthGate(brand: .myTV, localizer: localization) { _, _ in
-                ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel())
+            AppAuthGate(brand: .myTV, localizer: localization) { user, _ in
+                ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel(
+                    favorites: FavoriteChannelStore(ownerID: user.id)))
+                    .id(user.id)
             }
         } else {
             ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel())
