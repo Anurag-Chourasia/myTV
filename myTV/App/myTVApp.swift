@@ -18,7 +18,7 @@ struct myTVApp: App {
             .componentTheme(ComponentTheme(
                 surface: LayoutPreset.compactMedia.card,
                 button: LayoutPreset.compactMedia.button,
-                colors: SemanticColors(palette: BrandPalette.myTV)))
+                colors: SemanticColors(surface: \.surface, border: \.border, action: \.action, onAction: \.onAction)))
             .environment(\.designTokens, DesignTokensTheme(brand: .myTV))
             .tint(\.action)
             .appAppearance()
