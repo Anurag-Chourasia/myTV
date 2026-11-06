@@ -19,7 +19,7 @@ struct ChannelGridView: View {
 
     var body: some View {
         CatalogTile(layout: .grid, metrics: themedMetrics,
-                    colors: SemanticColors(surface: Color("BrandSurface"), border: Color("BrandBorder"))) {
+                    colors: SemanticColors(surface: \.surface, border: \.border)) {
             ChannelLogo(url: channel.logoURL, height: logoSize.height, width: logoSize.width)
         } details: {
             VStack(alignment: .center, spacing: \.four) {

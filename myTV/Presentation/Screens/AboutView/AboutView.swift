@@ -49,7 +49,7 @@ struct AboutView: View {
             }
         }
         .background(\.grouped)
-        .tint(Color("BrandAction"))
+        .tint(\.action)
         .alert(
             viewModel.gridAlertTitle,
             isPresented: Binding(
