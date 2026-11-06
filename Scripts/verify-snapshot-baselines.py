@@ -20,6 +20,8 @@ missing = []
 total_count = 0
 
 for test, name in component_cases:
+    if test == "testActualDynamicTypeVariants":
+        continue
     for variant in ["light", "dark", "accessibility"]:
         total_count += 1
         baseline = snapshots_dir / "ComponentSnapshotTests" / f"{test}.{name}-{variant}.png"
@@ -50,3 +52,9 @@ if missing:
     sys.exit(f"Missing {len(missing)} reviewed snapshot baselines:\n" + "\n".join(missing[:5]))
 
 print(f"Verified {total_count} snapshot reference baselines across iPhone 11, iPhone Duo, and iPad; visual review remains required.")
+
+# Explicit Dynamic Type variants use the canonical scene renderer.
+for variant in ("light", "dark", "accessibility"):
+    path = root / "myTVSnapshotTests/__Snapshots__/iOS-27.0" / f"channel-empty-{variant}.png"
+    if not path.is_file():
+        sys.exit(f"Missing reviewed Dynamic Type reference: {path}")

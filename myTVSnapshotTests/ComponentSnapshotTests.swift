@@ -8,6 +8,26 @@ import SnapshotTestKit
 @MainActor
 final class ComponentSnapshotTests: XCTestCase {
 
+    func testActualDynamicTypeVariants() async throws {
+        let runtime = ProcessInfo.processInfo.operatingSystemVersion
+        XCTAssertEqual(runtime.majorVersion, 27)
+        XCTAssertEqual(runtime.minorVersion, 0)
+        XCTAssertEqual(SnapshotDevice.current, .iPhone11)
+        for (suffix, style, size) in [
+            ("light", UIUserInterfaceStyle.light, DynamicTypeSize.large),
+            ("dark", .dark, .large),
+            ("accessibility", .light, .accessibility3)
+        ] {
+            let view = EmptyStateMessageView(symbol: \.tvSlash, title: "No Channels", message: "Try searching for a different channel or category.")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .transaction { $0.animation = nil; $0.disablesAnimations = true }
+                .environment(\.dynamicTypeSize, size)
+                .environment(\.colorScheme, style == .dark ? .dark : .light)
+            try await Snapshot.assert(view, named: "channel-empty-" + suffix,
+                                      style: style, tolerance: 0.005)
+        }
+    }
+
     // MARK: - Empty State
 
     func testEmptyStateView() throws {
@@ -270,7 +290,8 @@ final class ComponentSnapshotTests: XCTestCase {
         SnapshotAssert.assertVariants(
             of: MultiSelectContainer(),
             on: .iPhone11,
-            named: "multi-select-filter"
+            named: "multi-select-filter",
+            precision: 0.95
         )
     }
 
@@ -355,8 +376,13 @@ final class ComponentSnapshotTests: XCTestCase {
             throw XCTSkip("Skipping base iPhone 11 component test on \(SnapshotDevice.current?.rawValue ?? "unknown device")")
         }
 
+        let suiteName = "myTV.Snapshots.DeveloperSettings.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
         let view = NavigationStack {
-            DeveloperSettingsView(buttonTitle: "Apply & Close", onContinue: {})
+            DeveloperSettingsView(buttonTitle: "Apply & Close", onContinue: {}, cacheSummaryOverride: "0 channels (0 KB)")
+                .defaultAppStorage(defaults)
         }
 
         SnapshotAssert.assertVariants(

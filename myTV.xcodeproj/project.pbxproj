@@ -323,7 +323,10 @@
 				"$(SRCROOT)/Submodules/AppStubData/Sources/AppStubData/Resources/mytv-developer-catalog.json",
 			);
 			name = "Copy Debug fixture resources";
-			outputPaths = ("$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/DeveloperFixtures",);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/DeveloperFixtures",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/DeveloperFixtures/mytv-developer-catalog.json",
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "sh \"${SRCROOT}/Scripts/copy-developer-fixtures.sh\"";
@@ -741,7 +744,7 @@
 			repositoryURL = "https://github.com/Anurag-Chourasia/SnapshotTestKit.git";
 			requirement = {
 				kind = exactVersion;
-				version = 1.0.2;
+				version = 1.0.4;
 			};
 		};
 		AFEF0A9C4B01264D395D40C1 /* XCRemoteSwiftPackageReference "FoundationKit" */ = {
