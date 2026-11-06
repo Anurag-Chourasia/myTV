@@ -82,7 +82,7 @@ final class ImageLoaderTests: XCTestCase {
             UIColor.blue.setFill()
             ctx.fill(CGRect(origin: .zero, size: size))
         }
-        return image.pngData()!
+        return image.pngData() ?? Data()
     }
 
     func testNilURLFailsImmediately() async {
@@ -114,7 +114,10 @@ final class ImageLoaderTests: XCTestCase {
         let url = URL(string: "https://example.com/logo.png")!
         let data = createTestImageData()
         ImageTestURLProtocol.handler = { request in
-            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
+            guard let requestURL = request.url,
+                  let response = HTTPURLResponse(url: requestURL, statusCode: 200, httpVersion: nil, headerFields: nil) else {
+                throw URLError(.badServerResponse)
+            }
             return (response, data)
         }
 
@@ -131,7 +134,10 @@ final class ImageLoaderTests: XCTestCase {
     func testNon2xxStatusCodeFails() async {
         let url = URL(string: "https://example.com/logo.png")!
         ImageTestURLProtocol.handler = { request in
-            let response = HTTPURLResponse(url: request.url!, statusCode: 404, httpVersion: nil, headerFields: nil)!
+            guard let requestURL = request.url,
+                  let response = HTTPURLResponse(url: requestURL, statusCode: 404, httpVersion: nil, headerFields: nil) else {
+                throw URLError(.badServerResponse)
+            }
             return (response, Data())
         }
 
@@ -148,8 +154,11 @@ final class ImageLoaderTests: XCTestCase {
     func testInvalidImageDataFails() async {
         let url = URL(string: "https://example.com/logo.png")!
         ImageTestURLProtocol.handler = { request in
-            let response = HTTPURLResponse(url: request.url!, statusCode: 200, httpVersion: nil, headerFields: nil)!
-            return (response, "not an image".data(using: .utf8)!)
+            guard let requestURL = request.url,
+                  let response = HTTPURLResponse(url: requestURL, statusCode: 200, httpVersion: nil, headerFields: nil) else {
+                throw URLError(.badServerResponse)
+            }
+            return (response, Data("not an image".utf8))
         }
 
         let loader = ImageLoader(url: url, cache: cache, session: session)
