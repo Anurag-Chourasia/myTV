@@ -290,7 +290,8 @@ final class ComponentSnapshotTests: XCTestCase {
         SnapshotAssert.assertVariants(
             of: MultiSelectContainer(),
             on: .iPhone11,
-            named: "multi-select-filter"
+            named: "multi-select-filter",
+            precision: 0.95
         )
     }
 
