@@ -125,6 +125,9 @@ jobs:
       - name: Run UI Smoke test lane (PR and Push)
         run: bash Scripts/test-smoke.sh
 
+      - name: Compare reviewed snapshots on pinned iPhone 11 runtime
+        run: bash Scripts/test-snapshots.sh
+
       - name: Run Integration & Performance test lanes (Merge to main & Scheduled)
         if: github.event_name != 'pull_request'
         run: |
@@ -141,6 +144,9 @@ jobs:
 
       - name: Verify Release fixture boundary
         run: python3 Scripts/check_release_fixtures.py "$RUNNER_TEMP/AppDerived/Build/Products/Release-iphonesimulator/myTV.app/myTV"
+
+      - name: Verify snapshot and XCTest exclusion from Release
+        run: python3 Scripts/verify-snapshot-boundary.py "$RUNNER_TEMP/AppDerived/Build/Products/Release-iphonesimulator/myTV.app/myTV"
 
       - name: Upload test results
         if: always()

@@ -6,26 +6,37 @@ import SnapshotTestKit
 @MainActor
 final class ChannelListSnapshotTests: XCTestCase {
 
+    private var defaults: UserDefaults!
+    private var defaultsSuite: String!
+
     override func setUp() async throws {
         try await super.setUp()
+        defaultsSuite = "myTV.Snapshots.ChannelList.\(UUID().uuidString)"
+        defaults = try XCTUnwrap(UserDefaults(suiteName: defaultsSuite))
         UserDefaults.standard.set("stub", forKey: "developer.source")
         UserDefaults.standard.set("success", forKey: "developer.scenario")
     }
 
     override func tearDown() async throws {
+        if let defaultsSuite { defaults?.removePersistentDomain(forName: defaultsSuite) }
+        defaults = nil
         UserDefaults.standard.removeObject(forKey: "developer.source")
         UserDefaults.standard.removeObject(forKey: "developer.scenario")
         try await super.tearDown()
     }
 
-    // MARK: - Base Device: iPhone 11 (iOS 26.5)
+    private func makeViewModel() -> ChannelListViewModel {
+        AppDI.shared.makeChannelListViewModel(favorites: FavoriteChannelStore(defaults: defaults))
+    }
+
+    // MARK: - Base Device: iPhone 11 (iOS 27.0)
 
     func testChannelListOnBaseDevice_iPhone11() async throws {
         guard SnapshotDevice.current == .iPhone11 else {
             throw XCTSkip("Skipping base iPhone 11 tests when running on \(SnapshotDevice.current?.rawValue ?? "unknown device")")
         }
 
-        let viewModel = AppDI.shared.makeChannelListViewModel()
+        let viewModel = makeViewModel()
         await viewModel.load()
         let view = ChannelListView(viewModel: viewModel)
 
@@ -45,7 +56,7 @@ final class ChannelListSnapshotTests: XCTestCase {
         UserDefaults.standard.set("stub", forKey: "developer.source")
         UserDefaults.standard.set("empty", forKey: "developer.scenario")
 
-        let viewModel = AppDI.shared.makeChannelListViewModel()
+        let viewModel = makeViewModel()
         await viewModel.load()
         let view = ChannelListView(viewModel: viewModel)
 
@@ -64,7 +75,7 @@ final class ChannelListSnapshotTests: XCTestCase {
         UserDefaults.standard.set("stub", forKey: "developer.source")
         UserDefaults.standard.set("offline", forKey: "developer.scenario")
 
-        let viewModel = AppDI.shared.makeChannelListViewModel()
+        let viewModel = makeViewModel()
         await viewModel.load()
         let view = ChannelListView(viewModel: viewModel)
 
@@ -82,7 +93,7 @@ final class ChannelListSnapshotTests: XCTestCase {
             throw XCTSkip("Skipping iPhone Duo tests when running on \(SnapshotDevice.current?.rawValue ?? "unknown device")")
         }
 
-        let viewModel = AppDI.shared.makeChannelListViewModel()
+        let viewModel = makeViewModel()
         await viewModel.load()
         let view = ChannelListView(viewModel: viewModel)
 
@@ -102,7 +113,7 @@ final class ChannelListSnapshotTests: XCTestCase {
         UserDefaults.standard.set("stub", forKey: "developer.source")
         UserDefaults.standard.set("empty", forKey: "developer.scenario")
 
-        let viewModel = AppDI.shared.makeChannelListViewModel()
+        let viewModel = makeViewModel()
         await viewModel.load()
         let view = ChannelListView(viewModel: viewModel)
 
@@ -121,7 +132,7 @@ final class ChannelListSnapshotTests: XCTestCase {
         UserDefaults.standard.set("stub", forKey: "developer.source")
         UserDefaults.standard.set("offline", forKey: "developer.scenario")
 
-        let viewModel = AppDI.shared.makeChannelListViewModel()
+        let viewModel = makeViewModel()
         await viewModel.load()
         let view = ChannelListView(viewModel: viewModel)
 
@@ -139,7 +150,7 @@ final class ChannelListSnapshotTests: XCTestCase {
             throw XCTSkip("Skipping iPad tests when running on \(SnapshotDevice.current?.rawValue ?? "unknown device")")
         }
 
-        let viewModel = AppDI.shared.makeChannelListViewModel()
+        let viewModel = makeViewModel()
         await viewModel.load()
         let view = ChannelListView(viewModel: viewModel)
 
@@ -159,7 +170,7 @@ final class ChannelListSnapshotTests: XCTestCase {
         UserDefaults.standard.set("stub", forKey: "developer.source")
         UserDefaults.standard.set("empty", forKey: "developer.scenario")
 
-        let viewModel = AppDI.shared.makeChannelListViewModel()
+        let viewModel = makeViewModel()
         await viewModel.load()
         let view = ChannelListView(viewModel: viewModel)
 
@@ -178,7 +189,7 @@ final class ChannelListSnapshotTests: XCTestCase {
         UserDefaults.standard.set("stub", forKey: "developer.source")
         UserDefaults.standard.set("offline", forKey: "developer.scenario")
 
-        let viewModel = AppDI.shared.makeChannelListViewModel()
+        let viewModel = makeViewModel()
         await viewModel.load()
         let view = ChannelListView(viewModel: viewModel)
 

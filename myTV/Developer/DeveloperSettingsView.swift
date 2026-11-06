@@ -176,6 +176,7 @@ private struct DebugSettingsPresenter: UIViewControllerRepresentable {
 struct DeveloperSettingsView: View {
     var buttonTitle = "Apply and close"
     var onContinue: () -> Void
+    var cacheSummaryOverride: String?
     @AppStorage("developer.source") private var source = "live"
     @AppStorage("developer.scenario") private var scenario = "success"
     @AppStorage("developer.httpLogs") private var logs = ProcessInfo.processInfo.environment["HTTP_LOGGING"] == "1"
@@ -323,6 +324,10 @@ struct DeveloperSettingsView: View {
     }
 
     private func refreshCacheSummary() {
+        if let cacheSummaryOverride {
+            cacheSummary = cacheSummaryOverride
+            return
+        }
         let count = diskCache.entryCount
         if count == 0 {
             cacheSummary = "0 channels (0 KB)"
