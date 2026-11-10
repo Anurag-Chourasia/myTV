@@ -58,8 +58,7 @@ struct TVLaunchView: View {
     @ViewBuilder private var appContent: some View {
         if authenticationEnabled {
             AppAuthGate(brand: .myTV, localizer: localization) { user, _ in
-                ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel(
-                    favorites: FavoriteChannelStore(ownerID: user.id)))
+                ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel(ownerID: user.id))
                     .id(user.id)
             }
         } else {

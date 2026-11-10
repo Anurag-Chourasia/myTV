@@ -105,18 +105,17 @@ final class ChannelListViewModel: ObservableObject {
         manageCache: (any ManageChannelCacheUseCase)? = nil,
         reachability: ReachabilityService,
         haptics: HapticService,
-        favorites: (any FavoriteChannelStoring)? = nil,
-        imageCache: (any ImageCache)? = nil
+        favorites: any FavoriteChannelStoring = InMemoryFavoriteChannelStore(),
+        imageCache: any ImageCache = EmptyImageCache()
     ) {
         self.fetchChannels = fetchChannels
         self.filterChannels = filterChannels
         self.manageCache = manageCache
         self.reachability = reachability
         self.haptics = haptics
-        let resolvedFavorites = favorites ?? FavoriteChannelStore()
-        self.favorites = resolvedFavorites
-        self.imageCache = imageCache ?? DefaultImageCache.shared
-        favoriteChannelIDs = resolvedFavorites.load()
+        self.favorites = favorites
+        self.imageCache = imageCache
+        favoriteChannelIDs = favorites.load()
 
         grouping = Grouping(rawValue: storedGroupingRaw) ?? .name
         sectionSort = SortOrder(rawValue: storedSectionSortRaw) ?? .ascending

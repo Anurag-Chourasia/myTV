@@ -12,3 +12,9 @@ protocol ImageCache {
     func insert(_ image: UIImage, forKey key: String)
     func clear()
 }
+
+final class EmptyImageCache: ImageCache {
+    func image(forKey key: String) -> UIImage? { nil }
+    func insert(_ image: UIImage, forKey key: String) {}
+    func clear() {}
+}

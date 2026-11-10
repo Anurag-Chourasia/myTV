@@ -28,18 +28,22 @@ final class AppDI {
         )
     }
 
-    func makeChannelListViewModel(favorites: (any FavoriteChannelStoring)? = nil) -> ChannelListViewModel {
+    func makeChannelListViewModel(
+        favorites: (any FavoriteChannelStoring)? = nil,
+        ownerID: UUID? = nil
+    ) -> ChannelListViewModel {
         let repository = makeChannelRepository()
         let fetchChannels = DefaultFetchChannelsUseCase(repository: repository)
         let filterChannels = DefaultFilterChannelsUseCase()
         let manageCache = DefaultManageChannelCacheUseCase(repository: repository)
+        let resolvedFavorites = favorites ?? FavoriteChannelStore(ownerID: ownerID)
         return ChannelListViewModel(
             fetchChannels: fetchChannels,
             filterChannels: filterChannels,
             manageCache: manageCache,
             reachability: reachability,
             haptics: haptics,
-            favorites: favorites,
+            favorites: resolvedFavorites,
             imageCache: imageCache
         )
     }
