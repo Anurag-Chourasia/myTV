@@ -84,6 +84,7 @@ enum AppRuntime {
 }
 
 #if DEBUG
+/// Preview and test repository backed by AppStubData shared fixtures (`mytv-developer-catalog.json`).
 /// Selected at dependency construction; no real stream or image URLs are exposed.
 final class DeveloperStubRepository: ChannelRepository {
     private let scenario: String
