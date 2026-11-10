@@ -8,6 +8,7 @@
 
 import SwiftUI
 import Combine
+import CommonNetworkingKit
 
 @MainActor
 final class ImageLoader: ObservableObject {
@@ -23,12 +24,26 @@ final class ImageLoader: ObservableObject {
 
     private let url: URL?
     private let cache: ImageCache
-    private let session: URLSession
+    private let fetcher: any ImageDataFetching
 
-    init(url: URL?, cache: ImageCache? = nil, session: URLSession = .shared) {
+    init(
+        url: URL?,
+        cache: ImageCache? = nil,
+        fetcher: (any ImageDataFetching)? = nil
+    ) {
         self.url = url
         self.cache = cache ?? DefaultImageCache.shared
-        self.session = session
+        self.fetcher = fetcher ?? AppDI.shared.getImageDataFetcher()
+    }
+
+    init(
+        url: URL?,
+        cache: ImageCache? = nil,
+        session: URLSession
+    ) {
+        self.url = url
+        self.cache = cache ?? DefaultImageCache.shared
+        self.fetcher = ImageDataFetcher(session: session)
     }
 
     func load() async {
@@ -47,15 +62,11 @@ final class ImageLoader: ObservableObject {
         state = .loading
 
         do {
-            let (data, response) = try await session.data(from: url)
+            let data = try await fetcher.fetchData(for: url)
 
             if Task.isCancelled { return }
 
-            guard
-                let http = response as? HTTPURLResponse,
-                (200..<300).contains(http.statusCode),
-                let image = UIImage(data: data)
-            else {
+            guard let image = UIImage(data: data) else {
                 state = .failure
                 return
             }
@@ -66,9 +77,6 @@ final class ImageLoader: ObservableObject {
         } catch {
             if Task.isCancelled { return }
             state = .failure
-            #if DEBUG
-            print("❌ Image load failed:", error.localizedDescription)
-            #endif
         }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CommonNetworkingKit
 
 final class AppDI {
 
@@ -16,7 +17,7 @@ final class AppDI {
 
     private lazy var reachability: ReachabilityService = ReachabilityServiceImpl()
     private lazy var imageCache: ImageCache = DefaultImageCache.shared
-    private lazy var urlSession: URLSession = .shared
+    private lazy var imageFetcher: any ImageDataFetching = ImageDataFetcher()
 
     func makeChannelRepository() -> any ChannelRepository {
         #if DEBUG
@@ -82,7 +83,7 @@ final class AppDI {
         imageCache
     }
 
-    func getURLSession() -> URLSession {
-        urlSession
+    func getImageDataFetcher() -> any ImageDataFetching {
+        imageFetcher
     }
 }
