@@ -93,4 +93,14 @@ final class StreamListViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.isShowingPlaybackError)
         XCTAssertNil(viewModel.playbackError)
     }
+
+    func testStaticTitlesAndViewModels() {
+        let viewModel = makeViewModel()
+        XCTAssertFalse(viewModel.emptyStateTitle.isEmpty)
+        XCTAssertFalse(viewModel.emptyStateMessage.isEmpty)
+        XCTAssertFalse(viewModel.playbackErrorTitle.isEmpty)
+        XCTAssertFalse(viewModel.okButtonTitle.isEmpty)
+        XCTAssertFalse(viewModel.offlineBannerViewModel.message.isEmpty)
+        XCTAssertFalse(viewModel.loadingViewModel.message.isEmpty)
+    }
 }

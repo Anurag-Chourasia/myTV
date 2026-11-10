@@ -7,7 +7,7 @@
 </BuildActionEntry>
 </BuildActionEntries>
 </BuildAction>
-<TestAction buildConfiguration="Debug" selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier="Xcode.DebuggerFoundation.Launcher.LLDB" shouldUseLaunchSchemeArgsEnv="YES">
+<TestAction buildConfiguration="Debug" codeCoverageEnabled="YES" selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier="Xcode.DebuggerFoundation.Launcher.LLDB" shouldUseLaunchSchemeArgsEnv="YES">
 <MacroExpansion>
 <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="34C031E22F23888E0029B9CC" BuildableName="myTV.app" BlueprintName="myTV" ReferencedContainer="container:myTV.xcodeproj"/>
 </MacroExpansion>

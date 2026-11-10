@@ -96,4 +96,33 @@ final class MultiSelectViewModelTests: XCTestCase {
         viewModel.toggle("Dark")
         XCTAssertEqual(viewModel.draftSelection, ["Dark"])
     }
+
+    func testTitlesAndSearchFiltering() {
+        let options = ["News", "Sports", "Music", "Cinema"]
+        let viewModel = MultiSelectViewModel(
+            title: "Categories",
+            options: options,
+            initialSelection: ["News"],
+            allowsMultipleSelection: true,
+            labelForOption: { $0 },
+            sortKeyForOption: { $0 },
+            haptics: AppDI.shared.getHaptics()
+        )
+
+        XCTAssertFalse(viewModel.selectedSectionTitle.isEmpty)
+        XCTAssertFalse(viewModel.allSectionTitle.isEmpty)
+        XCTAssertFalse(viewModel.applyButtonTitle.isEmpty)
+        XCTAssertTrue(viewModel.searchPrompt.contains("Categories"))
+
+        XCTAssertEqual(viewModel.selectedOptions, ["News"])
+        XCTAssertEqual(viewModel.unselectedOptions, ["Cinema", "Music", "Sports"])
+
+        viewModel.searchText = "Spo"
+        XCTAssertEqual(viewModel.unselectedOptions, ["Sports"])
+        XCTAssertEqual(viewModel.selectedOptions, [])
+
+        viewModel.searchText = "New"
+        XCTAssertEqual(viewModel.selectedOptions, ["News"])
+        XCTAssertEqual(viewModel.unselectedOptions, [])
+    }
 }

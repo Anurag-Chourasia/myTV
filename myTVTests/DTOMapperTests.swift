@@ -71,4 +71,38 @@ final class DTOMapperTests: XCTestCase {
         XCTAssertEqual(stream.url, "https://stream.euronews.com/live.m3u8")
         XCTAssertEqual(stream.quality, "1080p")
     }
+
+    func testLogoDTODecodingAndEncodingFormats() throws {
+        let jsonPng = Data(#"{"channel":"ch1","tags":[],"width":100,"height":100,"format":"PNG","url":"https://example.com/logo.png"}"#.utf8)
+        let jsonJpg = Data(#"{"channel":"ch2","tags":[],"width":100,"height":100,"format":"JPG","url":"https://example.com/logo.jpg"}"#.utf8)
+        let jsonJpeg = Data(#"{"channel":"ch3","tags":[],"width":100,"height":100,"format":"JPEG","url":"https://example.com/logo.jpeg"}"#.utf8)
+        let jsonSvg = Data(#"{"channel":"ch4","tags":[],"width":100,"height":100,"format":"SVG","url":"https://example.com/logo.svg"}"#.utf8)
+        let jsonOther = Data(#"{"channel":"ch5","tags":[],"width":100,"height":100,"format":"WEBP","url":"https://example.com/logo.webp"}"#.utf8)
+
+        let dtoPng = try JSONDecoder().decode(LogoDTO.self, from: jsonPng)
+        let dtoJpg = try JSONDecoder().decode(LogoDTO.self, from: jsonJpg)
+        let dtoJpeg = try JSONDecoder().decode(LogoDTO.self, from: jsonJpeg)
+        let dtoSvg = try JSONDecoder().decode(LogoDTO.self, from: jsonSvg)
+        let dtoOther = try JSONDecoder().decode(LogoDTO.self, from: jsonOther)
+
+        XCTAssertEqual(dtoPng.format, .png)
+        XCTAssertEqual(dtoJpg.format, .jpeg)
+        XCTAssertEqual(dtoJpeg.format, .jpeg)
+        XCTAssertEqual(dtoSvg.format, .svg)
+        XCTAssertEqual(dtoOther.format, .unknown("WEBP"))
+
+        let encodedPng = try JSONEncoder().encode(dtoPng)
+        let redecodedPng = try JSONDecoder().decode(LogoDTO.self, from: encodedPng)
+        XCTAssertEqual(redecodedPng.format, .png)
+
+        let encodedOther = try JSONEncoder().encode(dtoOther)
+        let redecodedOther = try JSONDecoder().decode(LogoDTO.self, from: encodedOther)
+        XCTAssertEqual(redecodedOther.format, .unknown("WEBP"))
+    }
+
+    func testIPTVEndpointCategory() {
+        XCTAssertEqual(IPTVEndpoint.category("news"), "https://iptv-org.github.io/iptv/categories/news.m3u")
+        XCTAssertFalse(IPTVEndpoint.allStreams.isEmpty)
+        XCTAssertFalse(IPTVEndpoint.categoryIndex.isEmpty)
+    }
 }
