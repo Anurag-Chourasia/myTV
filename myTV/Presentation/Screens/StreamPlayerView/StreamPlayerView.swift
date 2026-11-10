@@ -8,6 +8,7 @@
 
 import SwiftUI
 import AVKit
+import FoundationKit
 
 struct StreamPlayerView: UIViewControllerRepresentable {
 
@@ -40,6 +41,7 @@ struct StreamPlayerView: UIViewControllerRepresentable {
 /// Audio-session configuration can block too, so keep it off the UI executor.
 private enum PlaybackAudioSession {
     private nonisolated static let queue = DispatchQueue(label: "myTV.playback-audio-session")
+    private nonisolated static let logger: any AppLogger = UnifiedLogger(subsystem: "com.mytv.player", category: "audio")
 
     nonisolated static func activate() {
         queue.async {
@@ -49,9 +51,9 @@ private enum PlaybackAudioSession {
                 if #available(iOS 27.0, *) {
                     session.activate(options: []) { activated, error in
                         if let error {
-                            print("Failed to activate AVAudioSession: \(error)")
+                            logger.log("Failed to activate AVAudioSession: \(error.localizedDescription)", level: .error)
                         } else if !activated {
-                            print("AVAudioSession activation did not complete.")
+                            logger.log("AVAudioSession activation did not complete.", level: .warning)
                         }
                     }
                 } else {
@@ -59,7 +61,7 @@ private enum PlaybackAudioSession {
                     try session.setActive(true)
                 }
             } catch {
-                print("Failed to set up AVAudioSession: \(error)")
+                logger.log("Failed to set up AVAudioSession: \(error.localizedDescription)", level: .error)
             }
         }
     }

@@ -6,18 +6,33 @@
 //
 
 import Foundation
+import FoundationKit
 
 final class ChannelDiskCache: ChannelCache {
 
     private let fileURL: URL
+    private let byteFormatter: any ByteCountFormatting
+    private let logger: any AppLogger
+    private let clock: any AppClock
 
-    init() {
-        let directory = FileManager.default.urls(
-            for: .cachesDirectory,
-            in: .userDomainMask
-        ).first!
-
-        self.fileURL = directory.appendingPathComponent("channels_cache.json")
+    init(
+        fileURL: URL? = nil,
+        byteFormatter: (any ByteCountFormatting)? = nil,
+        logger: (any AppLogger)? = nil,
+        clock: (any AppClock)? = nil
+    ) {
+        if let fileURL {
+            self.fileURL = fileURL
+        } else {
+            let directory = FileManager.default.urls(
+                for: .cachesDirectory,
+                in: .userDomainMask
+            ).first ?? URL(fileURLWithPath: NSTemporaryDirectory())
+            self.fileURL = directory.appendingPathComponent("channels_cache.json")
+        }
+        self.byteFormatter = byteFormatter ?? ByteCountFormatterFactory.make()
+        self.logger = logger ?? UnifiedLogger(subsystem: "com.mytv.cache", category: "disk")
+        self.clock = clock ?? SystemClock()
     }
 
     var entryCount: Int {
@@ -29,9 +44,7 @@ final class ChannelDiskCache: ChannelCache {
     }
 
     var formattedFileSize: String {
-        let bytes = fileSizeBytes
-        guard bytes > 0 else { return "0 KB" }
-        return ByteCountFormatter.string(fromByteCount: Int64(bytes), countStyle: .file)
+        byteFormatter.string(fromByteCount: fileSizeBytes)
     }
 
     func save(_ channels: [ChannelDTO]) {
@@ -39,8 +52,7 @@ final class ChannelDiskCache: ChannelCache {
             let data = try JSONEncoder().encode(channels)
             try data.write(to: fileURL, options: [.atomic])
         } catch {
-            // Optional: log error
-            print("❌ Failed to save channel cache:", error)
+            logger.log("Failed to save channel cache: \(error.localizedDescription)", level: .error)
         }
     }
 

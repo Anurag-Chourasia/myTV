@@ -7,6 +7,7 @@
 
 import Foundation
 import CommonNetworkingKit
+import FoundationKit
 
 final class AppDI {
 
@@ -18,6 +19,10 @@ final class AppDI {
     private lazy var reachability: ReachabilityService = ReachabilityServiceImpl()
     private lazy var imageCache: ImageCache = DefaultImageCache.shared
     private lazy var imageFetcher: any ImageDataFetching = ImageDataFetcher()
+    private lazy var clock: any AppClock = SystemClock()
+    private lazy var mainQueue: any MainQueueDispatching = MainQueueDispatcher()
+    private lazy var logger: any AppLogger = UnifiedLogger(subsystem: "com.mytv.app", category: "lifecycle")
+    private lazy var byteFormatter: any ByteCountFormatting = ByteCountFormatterFactory.make()
 
     func makeChannelRepository() -> any ChannelRepository {
         #if DEBUG
@@ -25,7 +30,7 @@ final class AppDI {
         #endif
         return ChannelRepositoryImpl(
             api: IPTVAPIServiceImpl(client: CommonNetworkingHTTPClient()),
-            cache: ChannelDiskCache()
+            cache: ChannelDiskCache(byteFormatter: byteFormatter, logger: logger, clock: clock)
         )
     }
 
@@ -85,5 +90,21 @@ final class AppDI {
 
     func getImageDataFetcher() -> any ImageDataFetching {
         imageFetcher
+    }
+
+    func getClock() -> any AppClock {
+        clock
+    }
+
+    func getMainQueue() -> any MainQueueDispatching {
+        mainQueue
+    }
+
+    func getLogger() -> any AppLogger {
+        logger
+    }
+
+    func getByteFormatter() -> any ByteCountFormatting {
+        byteFormatter
     }
 }

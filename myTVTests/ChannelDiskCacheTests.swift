@@ -1,4 +1,5 @@
 import XCTest
+import FoundationKit
 @testable import myTV
 
 final class ChannelDiskCacheTests: XCTestCase {
@@ -102,6 +103,22 @@ final class ChannelDiskCacheTests: XCTestCase {
         XCTAssertEqual(channels.count, 1, "Must return cached channels when offline")
         XCTAssertEqual(channels[0].id, "offline-1")
         XCTAssertEqual(channels[0].name, "Offline Channel")
+    }
+
+    func testInjectedFoundationKitDependencies() {
+        let testDir = FileManager.default.temporaryDirectory.appendingPathComponent("test_cache_\(UUID().uuidString).json")
+        defer { try? FileManager.default.removeItem(at: testDir) }
+
+        let customFormatter = ByteCountFormatterFactory.make(zeroSizeString: "Empty")
+        let customClock = FixedClock(now: Date(timeIntervalSince1970: 1000))
+        let cache = ChannelDiskCache(
+            fileURL: testDir,
+            byteFormatter: customFormatter,
+            clock: customClock
+        )
+
+        XCTAssertEqual(cache.formattedFileSize, "Empty")
+        XCTAssertEqual(customClock.now.timeIntervalSince1970, 1000)
     }
 }
 
