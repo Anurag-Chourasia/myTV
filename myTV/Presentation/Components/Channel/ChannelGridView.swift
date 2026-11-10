@@ -24,13 +24,13 @@ struct ChannelGridView: View {
         } details: {
             VStack(alignment: .center, spacing: \.four) {
                 Text(channel.name)
-                    .font(Typography.headline)
+                    .font(\.headline)
                     .foregroundColor(\.primary)
                     .multilineTextAlignment(.center)
                     .lineLimit(CatalogMetrics.gridTitleLines)
                 if channel.hasStreams == false {
                     Text(\.channelStreamsUnavailable)
-                        .font(Typography.caption)
+                        .font(\.caption)
                         .foregroundColor(\.secondary)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
@@ -43,8 +43,8 @@ struct ChannelGridView: View {
 
     private var themedMetrics: CatalogTileMetrics {
         var metrics = CatalogTileMetrics.compactGrid(accessibility: dynamicTypeSize.isAccessibilitySize)
-        metrics.surface.cornerRadius = LayoutPreset.compactMedia.cardRadius
-        metrics.surface.borderWidth = LayoutPreset.compactMedia.borderWidth
+        metrics.surface.cornerRadius = LayoutPreset.compact.cardRadius
+        metrics.surface.borderWidth = LayoutPreset.compact.borderWidth
         return metrics
     }
 

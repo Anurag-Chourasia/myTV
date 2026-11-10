@@ -20,7 +20,8 @@ struct ChannelStickyBar: View {
                     scope = tab
                 } label: {
                     Text(tab.title)
-                        .font(Typography.subheadline.weight(.semibold))
+                        .font(\.subheadline)
+                        .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, \.eight)
                         .background(

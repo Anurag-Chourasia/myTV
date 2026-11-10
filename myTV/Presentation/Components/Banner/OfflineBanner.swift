@@ -9,7 +9,7 @@ struct OfflineBanner: View {
         OfflineBannerView(
             message: viewModel.message,
             isWarning: true,
-            backgroundColor: ColorTheme.default.red
+            backgroundColor: \.red
         )
     }
 }

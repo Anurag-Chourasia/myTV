@@ -16,7 +16,7 @@ struct ChannelSectionHeader: View {
     var body: some View {
         HStack {
             Text(title)
-                .font(Typography.headline)
+                .font(\.headline)
                 .fontWeight(.semibold)
                 .foregroundColor(\.secondary)
             Spacer()

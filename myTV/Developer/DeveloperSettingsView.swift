@@ -75,12 +75,12 @@ struct ShowcaseBadgeView: View {
         Button(action: onTap) {
             HStack(spacing: \.four) {
                 Image(\.sparkles)
-                    .font(Typography.caption2)
+                    .font(\.caption2)
                 Text(\.showcaseDemoTitle)
-                    .font(Typography.caption)
+                    .font(\.caption)
                     .fontWeight(.bold)
                 Text(\.showcaseDemoTapForControls)
-                    .font(Typography.caption2)
+                    .font(\.caption2)
                     .opacity(\.p0_5)
             }
             .padding(.horizontal, \.ten)
@@ -302,7 +302,7 @@ struct DeveloperSettingsView: View {
                 .accessibilityIdentifier(.developerSupport)
 
                 Text(\.channelDeveloperPrivacy)
-                    .font(Typography.caption)
+                    .font(\.caption)
                     .foregroundColor(\.secondary)
             }
             Section {

@@ -115,7 +115,7 @@ private extension StreamListView {
                     Text(stream.title)
                     if let quality = stream.quality {
                         Text(quality)
-                            .font(Typography.caption)
+                            .font(\.caption)
                             .foregroundColor(\.secondary)
                     }
                 }
