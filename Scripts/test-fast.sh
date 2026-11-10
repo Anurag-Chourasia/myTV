@@ -46,7 +46,8 @@ xcrun xcodebuild test -project myTV.xcodeproj -scheme myTV \
     -only-testing:myTVTests/FavoriteChannelStoreTests \
     -only-testing:myTVTests/OfflineAndStaleCacheTests/testFavoritesPersistIndependentlyAcrossOfflineRelaunchAndCacheClear \
     -only-testing:myTVTests/RiskBasedIsolationAndConcurrencyTests/testAccountSwitchingIsolatesFavoriteStoreKeys \
-    -only-testing:myTVTests/MultiSelectViewModelTests
+    -only-testing:myTVTests/MultiSelectViewModelTests \
+    -only-testing:myTVTests/DomainUseCasesTests
 
 END_TIME=$(date +%s)
 ELAPSED=$((END_TIME - START_TIME))

@@ -188,7 +188,7 @@ struct DeveloperSettingsView: View {
     @AppStorage("channelLayout") private var layout = "list"
     @State private var cacheSummary = ""
 
-    private let diskCache = ChannelDiskCache()
+    private let manageCache: any ManageChannelCacheUseCase = AppDI.shared.makeManageChannelCacheUseCase()
 
     var body: some View {
         Form {
@@ -236,8 +236,10 @@ struct DeveloperSettingsView: View {
             Section(header: Text(\.developerCacheAndOffline)) {
                 LabeledContent(String(\.developerDiskCache), value: cacheSummary.isEmpty ? String(\.developerChecking) : cacheSummary)
                 Button(role: .destructive) {
-                    diskCache.clear()
-                    refreshCacheSummary()
+                    Task {
+                        try? await manageCache.clearCache()
+                        refreshCacheSummary()
+                    }
                 } label: {
                     Text(\.developerPurgeChannelCache)
                 }
@@ -328,11 +330,11 @@ struct DeveloperSettingsView: View {
             cacheSummary = cacheSummaryOverride
             return
         }
-        let count = diskCache.entryCount
+        let count = manageCache.getCachedEntryCount()
         if count == 0 {
             cacheSummary = "0 channels (0 KB)"
         } else {
-            cacheSummary = "\(count) channels (\(diskCache.formattedFileSize))"
+            cacheSummary = "\(count) channels (\(manageCache.getFormattedCacheSize()))"
         }
     }
 }

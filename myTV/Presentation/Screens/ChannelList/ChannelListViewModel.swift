@@ -34,56 +34,9 @@ final class ChannelListViewModel: ObservableObject {
         }
     }
 
-    enum Grouping: String, CaseIterable, Identifiable {
-        case name
-        case country
-        case category
-
-        var id: String { rawValue }
-
-        var title: String {
-            switch self {
-            case .name:
-                return String(\MyTVStrings.groupingName)
-            case .country:
-                return String(\MyTVStrings.groupingCountry)
-            case .category:
-                return String(\MyTVStrings.groupingCategory)
-            }
-        }
-    }
-
-    enum SortOrder: String, CaseIterable, Identifiable {
-        case ascending
-        case descending
-
-        var id: String { rawValue }
-
-        var title: String {
-            switch self {
-            case .ascending:
-                return String(\MyTVStrings.sortAscending)
-            case .descending:
-                return String(\MyTVStrings.sortDescending)
-            }
-        }
-    }
-
-    enum ChannelScope: String, CaseIterable, Identifiable {
-        case all
-        case favorites
-
-        var id: String { rawValue }
-
-        var title: String {
-            switch self {
-            case .all:
-                return String(\MyTVStrings.allChannels)
-            case .favorites:
-                return String(\MyTVStrings.favorites)
-            }
-        }
-    }
+    typealias Grouping = ChannelGrouping
+    typealias SortOrder = ChannelSortOrder
+    typealias ChannelScope = myTV.ChannelScope
 
     enum ToolbarAction {
         case clearCache
@@ -136,27 +89,34 @@ final class ChannelListViewModel: ObservableObject {
     @Published private(set) var layout: ChannelLayout = .list
 
     // MARK: - Dependencies
-    private let fetchChannels: FetchChannelsUseCase
+    private let fetchChannels: any FetchChannelsUseCase
+    private let filterChannels: any FilterChannelsUseCase
+    private let manageCache: (any ManageChannelCacheUseCase)?
     private let reachability: ReachabilityService
-    private let favorites: FavoriteChannelStore
+    private let favorites: any FavoriteChannelStoring
     let haptics: HapticService
     private let imageCache: any ImageCache
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Init
     init(
-        fetchChannels: FetchChannelsUseCase,
+        fetchChannels: any FetchChannelsUseCase,
+        filterChannels: any FilterChannelsUseCase = DefaultFilterChannelsUseCase(),
+        manageCache: (any ManageChannelCacheUseCase)? = nil,
         reachability: ReachabilityService,
         haptics: HapticService,
-        favorites: FavoriteChannelStore? = nil,
+        favorites: (any FavoriteChannelStoring)? = nil,
         imageCache: (any ImageCache)? = nil
     ) {
         self.fetchChannels = fetchChannels
+        self.filterChannels = filterChannels
+        self.manageCache = manageCache
         self.reachability = reachability
         self.haptics = haptics
-        self.favorites = favorites ?? FavoriteChannelStore()
+        let resolvedFavorites = favorites ?? FavoriteChannelStore()
+        self.favorites = resolvedFavorites
         self.imageCache = imageCache ?? DefaultImageCache.shared
-        favoriteChannelIDs = self.favorites.load()
+        favoriteChannelIDs = resolvedFavorites.load()
 
         grouping = Grouping(rawValue: storedGroupingRaw) ?? .name
         sectionSort = SortOrder(rawValue: storedSectionSortRaw) ?? .ascending
@@ -442,7 +402,7 @@ final class ChannelListViewModel: ObservableObject {
         state = .loading
         channels = []
         groupedResult = []
-        fetchChannels.clearCache()
+        try? await manageCache?.clearCache()
         imageCache.clear()
         await load()
     }
@@ -565,17 +525,19 @@ private extension ChannelListViewModel {
             $channelSort
         )
 
+        let filter = filterChannels
+
         Publishers.CombineLatest3(base, extras, sorting)
             .map { base, extras, sorting in
-                Self.compute(
+                filter.execute(
                     channels: base.0,
-                    search: base.1,
-                    countries: base.2,
+                    query: base.1,
                     categories: base.3,
-                    grouping: extras.0,
-                    favorites: extras.1,
+                    countries: base.2,
                     scope: extras.2,
+                    favorites: extras.1,
                     hideUnavailableStreams: extras.3,
+                    grouping: extras.0,
                     sectionSort: sorting.0,
                     channelSort: sorting.1
                 )
@@ -595,54 +557,52 @@ private extension ChannelListViewModel {
         sectionSort: SortOrder,
         channelSort: SortOrder
     ) -> [(String, [Channel])] {
+        DefaultFilterChannelsUseCase().execute(
+            channels: channels,
+            query: search,
+            categories: categories,
+            countries: countries,
+            scope: scope,
+            favorites: favorites,
+            hideUnavailableStreams: hideUnavailableStreams,
+            grouping: grouping,
+            sectionSort: sectionSort,
+            channelSort: channelSort
+        )
+    }
+}
 
-        let filtered = channels.filter {
-            (!hideUnavailableStreams || $0.hasStreams != false) &&
-            (scope == .all || favorites.contains($0.id)) &&
-            (search.isEmpty || $0.name.localizedCaseInsensitiveContains(search)) &&
-            (countries.isEmpty || countries.contains($0.country)) &&
-            (categories.isEmpty || !Set($0.categories).isDisjoint(with: categories))
-        }
-
-        func sortChannels(_ c: [Channel]) -> [Channel] {
-            let comparer: (Channel, Channel) -> Bool = { lhs, rhs in
-                lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
-            }
-            return channelSort == .ascending
-                ? c.sorted(by: comparer)
-                : c.sorted { comparer($1, $0) }
-        }
-
-        var dict: [String: [Channel]] = [:]
-
-        switch grouping {
+extension ChannelGrouping {
+    var title: String {
+        switch self {
         case .name:
-            dict = Dictionary(grouping: filtered) { String($0.name.prefix(1)).uppercased() }
+            return String(\MyTVStrings.groupingName)
         case .country:
-            dict = Dictionary(grouping: filtered) { $0.country }
+            return String(\MyTVStrings.groupingCountry)
         case .category:
-            for channel in filtered {
-                for category in channel.categories {
-                    dict[category, default: []].append(channel)
-                }
-            }
+            return String(\MyTVStrings.groupingCategory)
         }
+    }
+}
 
-        let displayKey: (String) -> String = { key in
-            switch grouping {
-            case .country:
-                return CountryDisplay.sortKey(for: key)
-            case .category:
-                return CategoryDisplay.sortKey(for: key)
-            case .name:
-                return key
-            }
+extension ChannelSortOrder {
+    var title: String {
+        switch self {
+        case .ascending:
+            return String(\MyTVStrings.sortAscending)
+        case .descending:
+            return String(\MyTVStrings.sortDescending)
         }
+    }
+}
 
-        let keys = sectionSort == .ascending
-            ? dict.keys.sorted { displayKey($0) < displayKey($1) }
-            : dict.keys.sorted { displayKey($0) > displayKey($1) }
-
-        return keys.map { ($0, sortChannels(dict[$0] ?? [])) }
+extension ChannelScope {
+    var title: String {
+        switch self {
+        case .all:
+            return String(\MyTVStrings.allChannels)
+        case .favorites:
+            return String(\MyTVStrings.favorites)
+        }
     }
 }

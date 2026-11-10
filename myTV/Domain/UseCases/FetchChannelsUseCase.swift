@@ -5,7 +5,19 @@
 
 import Foundation
 
-protocol FetchChannelsUseCase {
+protocol FetchChannelsUseCase: Sendable {
     func execute() async throws -> [Channel]
-    func clearCache()
+}
+
+final class DefaultFetchChannelsUseCase: FetchChannelsUseCase {
+
+    private let repository: any ChannelRepository
+
+    init(repository: any ChannelRepository) {
+        self.repository = repository
+    }
+
+    func execute() async throws -> [Channel] {
+        try await repository.fetchChannels()
+    }
 }

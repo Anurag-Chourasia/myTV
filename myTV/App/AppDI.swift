@@ -18,7 +18,7 @@ final class AppDI {
     private lazy var imageCache: ImageCache = DefaultImageCache.shared
     private lazy var urlSession: URLSession = .shared
 
-    private func makeChannelRepository() -> ChannelRepository {
+    func makeChannelRepository() -> any ChannelRepository {
         #if DEBUG
         if let scenario = AppRuntime.stubScenario { return DeveloperStubRepository(scenario: scenario) }
         #endif
@@ -28,12 +28,15 @@ final class AppDI {
         )
     }
 
-    func makeChannelListViewModel(favorites: FavoriteChannelStore? = nil) -> ChannelListViewModel {
-        let fetchChannels = DefaultFetchChannelsUseCase(
-            repository: makeChannelRepository()
-        )
+    func makeChannelListViewModel(favorites: (any FavoriteChannelStoring)? = nil) -> ChannelListViewModel {
+        let repository = makeChannelRepository()
+        let fetchChannels = DefaultFetchChannelsUseCase(repository: repository)
+        let filterChannels = DefaultFilterChannelsUseCase()
+        let manageCache = DefaultManageChannelCacheUseCase(repository: repository)
         return ChannelListViewModel(
             fetchChannels: fetchChannels,
+            filterChannels: filterChannels,
+            manageCache: manageCache,
             reachability: reachability,
             haptics: haptics,
             favorites: favorites,
@@ -50,6 +53,14 @@ final class AppDI {
             reachability: reachability,
             haptics: haptics
         )
+    }
+
+    func makeManageChannelCacheUseCase() -> any ManageChannelCacheUseCase {
+        DefaultManageChannelCacheUseCase(repository: makeChannelRepository())
+    }
+
+    func makeFilterChannelsUseCase() -> any FilterChannelsUseCase {
+        DefaultFilterChannelsUseCase()
     }
 
     func makeAboutViewModel() -> AboutViewModel {

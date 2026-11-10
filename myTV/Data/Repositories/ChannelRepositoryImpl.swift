@@ -87,6 +87,14 @@ final class ChannelRepositoryImpl: ChannelRepository {
     func clearCache() {
         cache.clear()
     }
+
+    var cachedEntryCount: Int {
+        cache.entryCount
+    }
+
+    var formattedCacheSize: String {
+        cache.formattedFileSize
+    }
 }
 
 private extension ChannelRepositoryImpl {
