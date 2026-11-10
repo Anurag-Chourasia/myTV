@@ -34,6 +34,7 @@ final class AppDI {
         )
     }
 
+    @MainActor
     func makeChannelListViewModel(
         favorites: (any FavoriteChannelStoring)? = nil,
         ownerID: UUID? = nil
@@ -54,6 +55,7 @@ final class AppDI {
         )
     }
 
+    @MainActor
     func makeStreamListViewModel() -> StreamListViewModel {
         let fetchStreams = DefaultFetchStreamsForChannelUseCase(
             repository: makeChannelRepository()
@@ -73,6 +75,7 @@ final class AppDI {
         DefaultFilterChannelsUseCase()
     }
 
+    @MainActor
     func makeAboutViewModel() -> AboutViewModel {
         return AboutViewModel(
             reachability: reachability,
