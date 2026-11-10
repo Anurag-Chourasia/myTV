@@ -104,7 +104,7 @@ private extension MultiSelectView {
         .buttonStyle(.plain)
         .accessibilityLabel(Text(viewModel.labelForOption(option)))
         .accessibilityValue(
-            viewModel.isSelected(option) ? Text(String(\MyTVStrings.a11ySelected)) : Text("")
+            viewModel.isSelected(option) ? Text(\.a11ySelected) : Text("")
         )
     }
 

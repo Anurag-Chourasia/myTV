@@ -176,7 +176,7 @@ final class ChannelListViewModel: ObservableObject {
     }
 
     var cancelButtonTitle: String {
-        LocalizationController.shared.string("app.cancel")
+        String(\CommonStrings.cancel)
     }
 
     var channelEmptyTitle: String {

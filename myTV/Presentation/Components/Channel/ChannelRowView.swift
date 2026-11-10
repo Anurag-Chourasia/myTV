@@ -27,7 +27,7 @@ struct ChannelRowView: View {
                     .multilineTextAlignment(.leading)
                     .lineLimit(dynamicTypeSize.isAccessibilitySize ? CatalogMetrics.accessibleTitleLines : CatalogMetrics.listTitleLines)
                 if channel.hasStreams == false {
-                    Text(String(\MyTVStrings.channelStreamsUnavailable))
+                    Text(\.channelStreamsUnavailable)
                         .font(Typography.caption)
                         .foregroundColor(\.secondary)
                         .multilineTextAlignment(.leading)

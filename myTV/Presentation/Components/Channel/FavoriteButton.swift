@@ -27,6 +27,6 @@ struct FavoriteButton: View {
         }
         .frame(width: \.p24, height: \.p24)
         .scaleEffect(isFavorite ? ScaleToken.p1_15 : ScaleToken.p1_0)
-        .accessibilityHint(Text(String(\MyTVStrings.a11yFavoriteHint)))
+        .accessibilityHint(\.a11yFavoriteHint)
     }
 }

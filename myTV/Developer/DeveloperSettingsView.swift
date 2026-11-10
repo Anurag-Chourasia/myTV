@@ -173,7 +173,7 @@ private struct DebugSettingsPresenter: UIViewControllerRepresentable {
 }
 
 struct DeveloperSettingsView: View {
-    var buttonTitle = "Apply and close"
+    var buttonTitle = String(\MyTVStrings.applyAndClose)
     var onContinue: () -> Void
     var cacheSummaryOverride: String?
     @AppStorage("developer.source") private var source = "live"
@@ -246,8 +246,8 @@ struct DeveloperSettingsView: View {
             }
             Section(header: Text(\.developerEnvironment)) {
                 Picker(String(\.developerDataSource), selection: $source) {
-                    Text(String(\MyTVStrings.channelDeveloperLive)).tag("live")
-                    Text(String(\CommonStrings.developerSourceStub)).tag("stub")
+                    Text(\.channelDeveloperLive).tag("live")
+                    Text(\CommonStrings.developerSourceStub).tag("stub")
                 }
                 if source == "stub" {
                     Picker(String(\.developerScenario), selection: $scenario) {
@@ -256,14 +256,14 @@ struct DeveloperSettingsView: View {
                         Text(\.developerScenarioOffline).tag("offline")
                     }
                 }
-                Text(String(\MyTVStrings.channelDeveloperStubNote))
+                Text(\.channelDeveloperStubNote)
             }
             Section(header: Text(\.developerFeatureFlags)) {
                 Toggle(isOn: $authentication) {
                     Text(\.developerAuthentication)
                 }
                 .accessibilityIdentifier(.developerAuthentication)
-                Text(String(\MyTVStrings.channelDeveloperAuthNote))
+                Text(\.channelDeveloperAuthNote)
 
                 Toggle(String(\MyTVStrings.channelDeveloperHaptics), isOn: $haptics)
                 Toggle(String(\MyTVStrings.channelDeveloperLogoPreview), isOn: $preview)
@@ -272,12 +272,12 @@ struct DeveloperSettingsView: View {
                 Toggle(isOn: $logs) {
                     Text(\.developerHttpLogs)
                 }
-                Text(String(\MyTVStrings.channelDeveloperLogsNote))
+                Text(\.channelDeveloperLogsNote)
             }
             Section(String(\MyTVStrings.layoutMenuTitle)) {
                 Picker(String(\MyTVStrings.channelDeveloperLayout), selection: $layout) {
-                    Text(String(\MyTVStrings.layoutList)).tag("list")
-                    Text(String(\MyTVStrings.layoutGrid)).tag("grid")
+                    Text(\MyTVStrings.layoutList).tag("list")
+                    Text(\MyTVStrings.layoutGrid).tag("grid")
                 }
             }
             Section(header: Text(\.developerVersionSimulation)) {
@@ -287,7 +287,7 @@ struct DeveloperSettingsView: View {
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
                 TextField(String(\.developerSimulatedBuild), text: $build)
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
-                Text(String(\MyTVStrings.channelDeveloperVersionNote))
+                Text(\.channelDeveloperVersionNote)
             }
             Section(String(\MyTVStrings.appearanceMenuTitle)) { AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { AppDI.shared.getHaptics().selection() }) }
             Section(header: Text(\.developerPrivacySupport)) {
@@ -301,7 +301,7 @@ struct DeveloperSettingsView: View {
                 }
                 .accessibilityIdentifier(.developerSupport)
 
-                Text(String(\MyTVStrings.channelDeveloperPrivacy))
+                Text(\.channelDeveloperPrivacy)
                     .font(Typography.caption)
                     .foregroundColor(\.secondary)
             }
@@ -331,9 +331,9 @@ struct DeveloperSettingsView: View {
         }
         let count = manageCache.getCachedEntryCount()
         if count == 0 {
-            cacheSummary = "0 channels (0 KB)"
+            cacheSummary = String(\MyTVStrings.developerCacheEmpty)
         } else {
-            cacheSummary = "\(count) channels (\(manageCache.getFormattedCacheSize()))"
+            cacheSummary = String(\MyTVStrings.developerCacheSummary, arguments: [count, manageCache.getFormattedCacheSize()])
         }
     }
 }

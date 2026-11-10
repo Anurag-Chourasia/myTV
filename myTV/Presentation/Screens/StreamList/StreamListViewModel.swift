@@ -219,7 +219,7 @@ extension StreamListViewModel {
     }
 
     var okButtonTitle: String {
-        LocalizationController.shared.string("app.ok")
+        String(\CommonStrings.ok)
     }
 
     func loadStreams(channelId: String) async {

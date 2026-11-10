@@ -32,7 +32,7 @@ struct ChannelStickyBar: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text(tab.title))
                 .accessibilityValue(
-                    scope == tab ? Text(String(\MyTVStrings.a11ySelected)) : Text("")
+                    scope == tab ? Text(\.a11ySelected) : Text("")
                 )
             }
         }

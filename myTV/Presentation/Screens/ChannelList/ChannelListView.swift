@@ -178,7 +178,7 @@ private extension ChannelListView {
                                 }
                             )
                         }
-                        .accessibilityHint(Text(String(\MyTVStrings.a11yChannelOpenHint)))
+                        .accessibilityHint(\.a11yChannelOpenHint)
                     }
                 }
             }
@@ -207,7 +207,7 @@ private extension ChannelListView {
                                     }
                                 )
                             }
-                            .accessibilityHint(Text(String(\MyTVStrings.a11yChannelOpenHint)))
+                            .accessibilityHint(\.a11yChannelOpenHint)
                         }
                     }
                 }
@@ -401,8 +401,8 @@ private extension ChannelListView {
 
             } label: {
                 Image(\.line3Horizontal)
-                    .accessibilityLabel(Text(String(\MyTVStrings.a11yMenuOptions)))
-                    .accessibilityHint(Text(String(\MyTVStrings.a11yMenuOptionsHint)))
+                    .accessibilityLabel(\.a11yMenuOptions)
+                    .accessibilityHint(\.a11yMenuOptionsHint)
             }
         }
        

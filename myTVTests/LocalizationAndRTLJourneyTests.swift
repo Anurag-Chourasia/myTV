@@ -164,4 +164,28 @@ final class LocalizationAndRTLJourneyTests: XCTestCase {
         XCTAssertNotNil(bannerHost.view)
         XCTAssertGreaterThan(bannerHost.view.frame.width, 0)
     }
+
+    // MARK: - CategoryDisplay 30 Categories Resolution
+
+    func testCategoryDisplayAll30CategoriesResolvedViaLocalisationKit() {
+        let expectedCategories = [
+            "animation", "auto", "business", "classic", "comedy", "cooking",
+            "culture", "documentary", "education", "entertainment", "family",
+            "general", "interactive", "kids", "legislative", "lifestyle",
+            "movies", "music", "news", "outdoor", "public", "relax",
+            "religious", "science", "series", "shop", "sports", "travel",
+            "weather", "xxx"
+        ]
+
+        for category in expectedCategories {
+            let label = CategoryDisplay.label(for: category)
+            XCTAssertFalse(label.isEmpty, "Category label for \(category) should not be empty")
+            let sortKey = CategoryDisplay.sortKey(for: category)
+            XCTAssertFalse(sortKey.isEmpty, "Sort key for \(category) should not be empty")
+        }
+
+        // Test unmapped fallback (title casing)
+        let customLabel = CategoryDisplay.label(for: "custom_topic")
+        XCTAssertEqual(customLabel, "Custom Topic")
+    }
 }
