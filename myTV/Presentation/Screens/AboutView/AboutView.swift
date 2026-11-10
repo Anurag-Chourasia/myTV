@@ -104,8 +104,8 @@ private extension AboutView {
                 }
             } label: {
                 Image(\.line3Horizontal)
-                    .accessibilityLabel(Text(String(\MyTVStrings.a11yMenuOptions)))
-                    .accessibilityHint(Text(String(\MyTVStrings.a11yMenuOptionsHint)))
+                    .accessibilityLabel(\.a11yMenuOptions)
+                    .accessibilityHint(\.a11yMenuOptionsHint)
             }
         }
     }

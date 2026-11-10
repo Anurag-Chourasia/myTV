@@ -178,7 +178,7 @@ private extension ChannelListView {
                                 }
                             )
                         }
-                        .accessibilityHint(Text(String(\MyTVStrings.a11yChannelOpenHint)))
+                        .accessibilityHint(\.a11yChannelOpenHint)
                     }
                 }
             }
@@ -190,7 +190,7 @@ private extension ChannelListView {
             LazyVStack(alignment: .leading) {
                 ForEach(viewModel.groupedResult, id: \.0) { section, channels in
                     ChannelSectionHeader(title: viewModel.sectionTitle(for: section))
-                    LazyVGrid(columns: [.init(.adaptive(minimum: gridMinWidth), spacing: LayoutPreset.compactMedia.itemSpacing)]) {
+                    LazyVGrid(columns: [.init(.adaptive(minimum: gridMinWidth), spacing: LayoutPreset.compact.itemSpacing)]) {
                         ForEach(channels) { channel in
                             NavigationLink {
                                 StreamListView(
@@ -207,18 +207,18 @@ private extension ChannelListView {
                                     }
                                 )
                             }
-                            .accessibilityHint(Text(String(\MyTVStrings.a11yChannelOpenHint)))
+                            .accessibilityHint(\.a11yChannelOpenHint)
                         }
                     }
                 }
             }
-            .padding(.all, LayoutPreset.compactMedia.screenInset)
+            .padding(.all, LayoutPreset.compact.screenInset)
         }
     }
 }
 
 private extension ChannelListView {
-    var gridMinWidth: CGFloat { dynamicTypeSize.isAccessibilitySize ? DesignMetricTheme.default.p160 : DesignMetricTheme.default.p110 }
+    var gridMinWidth: CGFloat { dynamicTypeSize.isAccessibilitySize ? DesignMetric.p160 : DesignMetric.p110 }
 }
 
 // MARK: - Toolbar
@@ -401,8 +401,8 @@ private extension ChannelListView {
 
             } label: {
                 Image(\.line3Horizontal)
-                    .accessibilityLabel(Text(String(\MyTVStrings.a11yMenuOptions)))
-                    .accessibilityHint(Text(String(\MyTVStrings.a11yMenuOptionsHint)))
+                    .accessibilityLabel(\.a11yMenuOptions)
+                    .accessibilityHint(\.a11yMenuOptionsHint)
             }
         }
        

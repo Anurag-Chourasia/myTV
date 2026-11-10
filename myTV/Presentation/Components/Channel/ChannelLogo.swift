@@ -12,8 +12,8 @@ import LocalizationKit
 struct ChannelLogo: View {
     let url: URL?
     @State private var previewPresented = false
-    var height: CGFloat = DesignMetricTheme.default.p40
-    var width: CGFloat = DesignMetricTheme.default.p40
+    var height: CGFloat = DesignMetric.p40
+    var width: CGFloat = DesignMetric.p40
 
     var body: some View {
         CachedAsyncImage(url: url) {

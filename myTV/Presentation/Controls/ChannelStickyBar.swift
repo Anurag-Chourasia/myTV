@@ -20,7 +20,8 @@ struct ChannelStickyBar: View {
                     scope = tab
                 } label: {
                     Text(tab.title)
-                        .font(Typography.subheadline.weight(.semibold))
+                        .font(\.subheadline)
+                        .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, \.eight)
                         .background(
@@ -32,7 +33,7 @@ struct ChannelStickyBar: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(Text(tab.title))
                 .accessibilityValue(
-                    scope == tab ? Text(String(\MyTVStrings.a11ySelected)) : Text("")
+                    scope == tab ? Text(\.a11ySelected) : Text("")
                 )
             }
         }

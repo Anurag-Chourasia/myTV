@@ -46,7 +46,14 @@ xcrun xcodebuild test -project myTV.xcodeproj -scheme myTV \
     -only-testing:myTVTests/FavoriteChannelStoreTests \
     -only-testing:myTVTests/OfflineAndStaleCacheTests/testFavoritesPersistIndependentlyAcrossOfflineRelaunchAndCacheClear \
     -only-testing:myTVTests/RiskBasedIsolationAndConcurrencyTests/testAccountSwitchingIsolatesFavoriteStoreKeys \
-    -only-testing:myTVTests/MultiSelectViewModelTests
+    -only-testing:myTVTests/MultiSelectViewModelTests \
+    -only-testing:myTVTests/DomainUseCasesTests \
+    -only-testing:myTVTests/ChannelAvailabilityTests \
+    -only-testing:myTVTests/StreamPlaybackTests \
+    -only-testing:myTVTests/AboutViewModelTests \
+    -only-testing:myTVTests/ComponentViewModelsTests
+
+python3 Scripts/check_coverage.py "$result" --governance
 
 END_TIME=$(date +%s)
 ELAPSED=$((END_TIME - START_TIME))

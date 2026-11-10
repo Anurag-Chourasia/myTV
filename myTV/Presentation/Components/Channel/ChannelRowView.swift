@@ -23,12 +23,12 @@ struct ChannelRowView: View {
         } details: {
             VStack(alignment: .leading, spacing: \.four) {
                 Text(channel.name)
-                    .font(Typography.headline)
+                    .font(\.headline)
                     .multilineTextAlignment(.leading)
                     .lineLimit(dynamicTypeSize.isAccessibilitySize ? CatalogMetrics.accessibleTitleLines : CatalogMetrics.listTitleLines)
                 if channel.hasStreams == false {
-                    Text(String(\MyTVStrings.channelStreamsUnavailable))
-                        .font(Typography.caption)
+                    Text(\.channelStreamsUnavailable)
+                        .font(\.caption)
                         .foregroundColor(\.secondary)
                         .multilineTextAlignment(.leading)
                         .fixedSize(horizontal: false, vertical: true)

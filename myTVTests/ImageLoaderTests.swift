@@ -1,6 +1,15 @@
 import XCTest
 import UIKit
+import CommonNetworkingKit
 @testable import myTV
+
+private struct MockImageDataFetcher: ImageDataFetching {
+    let result: Result<Data, Error>
+
+    func fetchData(for url: URL) async throws -> Data {
+        try result.get()
+    }
+}
 
 private final class ImageTestURLProtocol: URLProtocol {
     static var handler: ((URLRequest) throws -> (HTTPURLResponse, Data))?
@@ -168,6 +177,33 @@ final class ImageLoaderTests: XCTestCase {
             XCTAssertNil(cache.image(forKey: url.absoluteString))
         } else {
             XCTFail("Expected failure for corrupt image data")
+        }
+    }
+
+    func testInjectedImageDataFetcherSuccess() async {
+        let url = URL(string: "https://example.com/logo.png")!
+        let data = createTestImageData()
+        let fetcher = MockImageDataFetcher(result: .success(data))
+        let loader = ImageLoader(url: url, cache: cache, fetcher: fetcher)
+        await loader.load()
+
+        if case .success = loader.state {
+            XCTAssertNotNil(cache.image(forKey: url.absoluteString))
+        } else {
+            XCTFail("Expected success from injected fetcher")
+        }
+    }
+
+    func testInjectedImageDataFetcherFailure() async {
+        let url = URL(string: "https://example.com/logo.png")!
+        let fetcher = MockImageDataFetcher(result: .failure(URLError(.cannotConnectToHost)))
+        let loader = ImageLoader(url: url, cache: cache, fetcher: fetcher)
+        await loader.load()
+
+        if case .failure = loader.state {
+            XCTAssertNil(cache.image(forKey: url.absoluteString))
+        } else {
+            XCTFail("Expected failure from injected fetcher")
         }
     }
 

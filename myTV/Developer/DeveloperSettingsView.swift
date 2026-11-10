@@ -58,8 +58,7 @@ struct TVLaunchView: View {
     @ViewBuilder private var appContent: some View {
         if authenticationEnabled {
             AppAuthGate(brand: .myTV, localizer: localization) { user, _ in
-                ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel(
-                    favorites: FavoriteChannelStore(ownerID: user.id)))
+                ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel(ownerID: user.id))
                     .id(user.id)
             }
         } else {
@@ -76,12 +75,12 @@ struct ShowcaseBadgeView: View {
         Button(action: onTap) {
             HStack(spacing: \.four) {
                 Image(\.sparkles)
-                    .font(Typography.caption2)
+                    .font(\.caption2)
                 Text(\.showcaseDemoTitle)
-                    .font(Typography.caption)
+                    .font(\.caption)
                     .fontWeight(.bold)
                 Text(\.showcaseDemoTapForControls)
-                    .font(Typography.caption2)
+                    .font(\.caption2)
                     .opacity(\.p0_5)
             }
             .padding(.horizontal, \.ten)
@@ -174,7 +173,7 @@ private struct DebugSettingsPresenter: UIViewControllerRepresentable {
 }
 
 struct DeveloperSettingsView: View {
-    var buttonTitle = "Apply and close"
+    var buttonTitle = String(\MyTVStrings.applyAndClose)
     var onContinue: () -> Void
     var cacheSummaryOverride: String?
     @AppStorage("developer.source") private var source = "live"
@@ -188,7 +187,7 @@ struct DeveloperSettingsView: View {
     @AppStorage("channelLayout") private var layout = "list"
     @State private var cacheSummary = ""
 
-    private let diskCache = ChannelDiskCache()
+    private let manageCache: any ManageChannelCacheUseCase = AppDI.shared.makeManageChannelCacheUseCase()
 
     var body: some View {
         Form {
@@ -236,8 +235,10 @@ struct DeveloperSettingsView: View {
             Section(header: Text(\.developerCacheAndOffline)) {
                 LabeledContent(String(\.developerDiskCache), value: cacheSummary.isEmpty ? String(\.developerChecking) : cacheSummary)
                 Button(role: .destructive) {
-                    diskCache.clear()
-                    refreshCacheSummary()
+                    Task {
+                        try? await manageCache.clearCache()
+                        refreshCacheSummary()
+                    }
                 } label: {
                     Text(\.developerPurgeChannelCache)
                 }
@@ -245,8 +246,8 @@ struct DeveloperSettingsView: View {
             }
             Section(header: Text(\.developerEnvironment)) {
                 Picker(String(\.developerDataSource), selection: $source) {
-                    Text(String(\MyTVStrings.channelDeveloperLive)).tag("live")
-                    Text(String(\CommonStrings.developerSourceStub)).tag("stub")
+                    Text(\.channelDeveloperLive).tag("live")
+                    Text(\CommonStrings.developerSourceStub).tag("stub")
                 }
                 if source == "stub" {
                     Picker(String(\.developerScenario), selection: $scenario) {
@@ -255,14 +256,14 @@ struct DeveloperSettingsView: View {
                         Text(\.developerScenarioOffline).tag("offline")
                     }
                 }
-                Text(String(\MyTVStrings.channelDeveloperStubNote))
+                Text(\.channelDeveloperStubNote)
             }
             Section(header: Text(\.developerFeatureFlags)) {
                 Toggle(isOn: $authentication) {
                     Text(\.developerAuthentication)
                 }
                 .accessibilityIdentifier(.developerAuthentication)
-                Text(String(\MyTVStrings.channelDeveloperAuthNote))
+                Text(\.channelDeveloperAuthNote)
 
                 Toggle(String(\MyTVStrings.channelDeveloperHaptics), isOn: $haptics)
                 Toggle(String(\MyTVStrings.channelDeveloperLogoPreview), isOn: $preview)
@@ -271,12 +272,12 @@ struct DeveloperSettingsView: View {
                 Toggle(isOn: $logs) {
                     Text(\.developerHttpLogs)
                 }
-                Text(String(\MyTVStrings.channelDeveloperLogsNote))
+                Text(\.channelDeveloperLogsNote)
             }
             Section(String(\MyTVStrings.layoutMenuTitle)) {
                 Picker(String(\MyTVStrings.channelDeveloperLayout), selection: $layout) {
-                    Text(String(\MyTVStrings.layoutList)).tag("list")
-                    Text(String(\MyTVStrings.layoutGrid)).tag("grid")
+                    Text(\MyTVStrings.layoutList).tag("list")
+                    Text(\MyTVStrings.layoutGrid).tag("grid")
                 }
             }
             Section(header: Text(\.developerVersionSimulation)) {
@@ -286,7 +287,7 @@ struct DeveloperSettingsView: View {
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
                 TextField(String(\.developerSimulatedBuild), text: $build)
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
-                Text(String(\MyTVStrings.channelDeveloperVersionNote))
+                Text(\.channelDeveloperVersionNote)
             }
             Section(String(\MyTVStrings.appearanceMenuTitle)) { AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { AppDI.shared.getHaptics().selection() }) }
             Section(header: Text(\.developerPrivacySupport)) {
@@ -300,8 +301,8 @@ struct DeveloperSettingsView: View {
                 }
                 .accessibilityIdentifier(.developerSupport)
 
-                Text(String(\MyTVStrings.channelDeveloperPrivacy))
-                    .font(Typography.caption)
+                Text(\.channelDeveloperPrivacy)
+                    .font(\.caption)
                     .foregroundColor(\.secondary)
             }
             Section {
@@ -328,11 +329,11 @@ struct DeveloperSettingsView: View {
             cacheSummary = cacheSummaryOverride
             return
         }
-        let count = diskCache.entryCount
+        let count = manageCache.getCachedEntryCount()
         if count == 0 {
-            cacheSummary = "0 channels (0 KB)"
+            cacheSummary = String(\MyTVStrings.developerCacheEmpty)
         } else {
-            cacheSummary = "\(count) channels (\(diskCache.formattedFileSize))"
+            cacheSummary = String(\MyTVStrings.developerCacheSummary, arguments: [count, manageCache.getFormattedCacheSize()])
         }
     }
 }

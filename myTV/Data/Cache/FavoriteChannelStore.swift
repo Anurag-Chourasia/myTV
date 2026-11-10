@@ -2,7 +2,7 @@ import Foundation
 
 /// Account IDs come from authentication, never from email or display names.
 /// A single preference write commits the legacy claim together with its copied IDs.
-struct FavoriteChannelStore {
+struct FavoriteChannelStore: FavoriteChannelStoring {
     private static let lock = NSLock()
     private let defaults: UserDefaults
     private let ownerID: String?

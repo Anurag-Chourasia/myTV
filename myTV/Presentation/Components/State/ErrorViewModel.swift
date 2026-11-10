@@ -15,7 +15,7 @@ struct ErrorViewModel {
     static var generic: ErrorViewModel {
         ErrorViewModel(
             title: String(\CommonStrings.errorGeneric),
-            retryTitle: LocalizationController.shared.string("app.retry")
+            retryTitle: String(\CommonStrings.retry)
         )
     }
 }

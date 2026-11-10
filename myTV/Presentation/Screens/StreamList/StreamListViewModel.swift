@@ -40,7 +40,7 @@ final class StreamListViewModel: ObservableObject {
     @Published var showOfflineBanner = false
 
     // MARK: - Dependencies
-    private let fetchStreams: FetchStreamsForChannelUseCase
+    private let fetchStreams: any FetchStreamsForChannelUseCase
     private let reachability: ReachabilityService
     private let haptics: HapticService
     private let notificationCenter: NotificationCenter
@@ -63,7 +63,7 @@ final class StreamListViewModel: ObservableObject {
 
     // MARK: - Init
     init(
-        fetchStreams: DefaultFetchStreamsForChannelUseCase,
+        fetchStreams: any FetchStreamsForChannelUseCase,
         reachability: ReachabilityService,
         haptics: HapticService,
         notificationCenter: NotificationCenter = .default
@@ -219,7 +219,7 @@ extension StreamListViewModel {
     }
 
     var okButtonTitle: String {
-        LocalizationController.shared.string("app.ok")
+        String(\CommonStrings.ok)
     }
 
     func loadStreams(channelId: String) async {

@@ -7,6 +7,7 @@
 
 import Foundation
 import FoundationKit
+import LocalizationKit
 
 enum CategoryDisplay {
 
@@ -15,8 +16,8 @@ enum CategoryDisplay {
         guard !trimmed.isEmpty else { return value }
 
         let key = normalizedKey(from: trimmed)
-        if let mapped = mapping[key] {
-            return mapped
+        if let keyPath = keyPathMapping[key] {
+            return String(keyPath)
         }
 
         return titleCased(from: trimmed)
@@ -57,36 +58,36 @@ enum CategoryDisplay {
         return StringFormatting.trimmed(result)
     }
 
-    private static let mapping: [String: String] = [
-        "animation": "🎞 Animation",
-        "auto": "🚗 Auto",
-        "business": "💼 Business",
-        "classic": "🎼 Classic",
-        "comedy": "😂 Comedy",
-        "cooking": "🍳 Cooking",
-        "culture": "🎨 Culture",
-        "documentary": "🎥 Documentary",
-        "education": "📚 Education",
-        "entertainment": "🎭 Entertainment",
-        "family": "👨‍👩‍👧‍👦 Family",
-        "general": "⭐️ General",
-        "interactive": "🕹 Interactive",
-        "kids": "🧒 Kids",
-        "legislative": "🏛 Legislative",
-        "lifestyle": "✨ Lifestyle",
-        "movies": "🎬 Movies",
-        "music": "🎵 Music",
-        "news": "📰 News",
-        "outdoor": "🏕 Outdoor",
-        "public": "🏛 Public",
-        "relax": "🧘 Relax",
-        "religious": "🙏 Religious",
-        "science": "🔬 Science",
-        "series": "📺 Series",
-        "shop": "🛍 Shop",
-        "sports": "🏆 Sports",
-        "travel": "✈️ Travel",
-        "weather": "⛅️ Weather",
-        "xxx": "🔞 Adult"
+    private static let keyPathMapping: [String: KeyPath<MyTVStrings, String>] = [
+        "animation": \.categoryAnimation,
+        "auto": \.categoryAuto,
+        "business": \.categoryBusiness,
+        "classic": \.categoryClassic,
+        "comedy": \.categoryComedy,
+        "cooking": \.categoryCooking,
+        "culture": \.categoryCulture,
+        "documentary": \.categoryDocumentary,
+        "education": \.categoryEducation,
+        "entertainment": \.categoryEntertainment,
+        "family": \.categoryFamily,
+        "general": \.categoryGeneral,
+        "interactive": \.categoryInteractive,
+        "kids": \.categoryKids,
+        "legislative": \.categoryLegislative,
+        "lifestyle": \.categoryLifestyle,
+        "movies": \.categoryMovies,
+        "music": \.categoryMusic,
+        "news": \.categoryNews,
+        "outdoor": \.categoryOutdoor,
+        "public": \.categoryPublic,
+        "relax": \.categoryRelax,
+        "religious": \.categoryReligious,
+        "science": \.categoryScience,
+        "series": \.categorySeries,
+        "shop": \.categoryShop,
+        "sports": \.categorySports,
+        "travel": \.categoryTravel,
+        "weather": \.categoryWeather,
+        "xxx": \.categoryAdult
     ]
 }

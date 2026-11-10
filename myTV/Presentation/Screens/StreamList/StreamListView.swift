@@ -115,7 +115,7 @@ private extension StreamListView {
                     Text(stream.title)
                     if let quality = stream.quality {
                         Text(quality)
-                            .font(Typography.caption)
+                            .font(\.caption)
                             .foregroundColor(\.secondary)
                     }
                 }
@@ -124,7 +124,7 @@ private extension StreamListView {
             }
             .buttonStyle(.plain)
             .disabled(viewModel.isPreparingPlayback)
-            .accessibilityHint(Text(String(\MyTVStrings.a11yStreamPlayHint)))
+            .accessibilityHint(\.a11yStreamPlayHint)
             .accessibilityLabel(Text(stream.title))
             .accessibilityValue(Text(stream.quality ?? ""))
         }

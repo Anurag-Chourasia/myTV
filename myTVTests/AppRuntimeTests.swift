@@ -105,6 +105,11 @@ final class AppRuntimeTests: XCTestCase {
             XCTAssertTrue(error is DecodingError)
         }
     }
+
+    func testMyTVStubProviderLoadsCatalog() throws {
+        let repo = MyTVStubProvider.makeStubRepository(scenario: "success")
+        XCTAssertNotNil(repo)
+    }
     #endif
 
 }

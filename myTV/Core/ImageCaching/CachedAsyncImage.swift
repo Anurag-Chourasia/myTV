@@ -7,6 +7,7 @@
 
 
 import SwiftUI
+import CommonNetworkingKit
 
 struct CachedAsyncImage<Placeholder: View>: View {
 
@@ -16,11 +17,11 @@ struct CachedAsyncImage<Placeholder: View>: View {
     init(
         url: URL?,
         cache: ImageCache? = nil,
-        session: URLSession = .shared,
+        fetcher: (any ImageDataFetching)? = nil,
         @ViewBuilder placeholder: () -> Placeholder
     ) {
         _loader = StateObject(
-            wrappedValue: ImageLoader(url: url, cache: cache, session: session)
+            wrappedValue: ImageLoader(url: url, cache: cache, fetcher: fetcher)
         )
         self.placeholder = placeholder()
     }
