@@ -8,10 +8,21 @@
 import Foundation
 import CommonNetworkingKit
 import FoundationKit
+import AuthKit
+import AuthKitUI
+import AuthKitSupabase
 
 final class AppDI {
 
     static let shared = AppDI()
+
+    let authBackendFactory: AuthBackendFactory
+
+    init(
+        authBackendFactory: @escaping AuthBackendFactory = SupabaseBackendFactory.make
+    ) {
+        self.authBackendFactory = authBackendFactory
+    }
 
     private lazy var haptics: HapticService =
             HapticServiceImpl()
