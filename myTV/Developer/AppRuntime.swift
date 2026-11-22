@@ -75,7 +75,9 @@ enum AppRuntime {
     }
     private static func override(_ key: String, fallback: String) -> String {
         #if DEBUG
-        let value = UserDefaults.standard.string(forKey: "developer." + key)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let value = UserDefaults.standard
+            .string(forKey: "developer." + key)?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         return value.isEmpty ? fallback : value
         #else
         return fallback
@@ -125,7 +127,11 @@ final class DeveloperStubRepository: ChannelRepository {
             let bundle = Bundle.main
             let directory: String? = "DeveloperFixtures"
             #endif
-            guard let file = bundle.url(forResource: "mytv-developer-catalog", withExtension: "json", subdirectory: directory) else {
+            guard let file = bundle.url(
+                forResource: "mytv-developer-catalog",
+                withExtension: "json",
+                subdirectory: directory
+            ) else {
                 throw URLError(.fileDoesNotExist)
             }
             return try Data(contentsOf: file)

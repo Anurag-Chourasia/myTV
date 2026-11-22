@@ -14,7 +14,7 @@ import UIComponentsKit
 struct FavoriteButton: View {
     let isFavorite: Bool
     let action: () -> Void
-    
+
     var body: some View {
         SelectionToggleButton(
             isSelected: isFavorite,

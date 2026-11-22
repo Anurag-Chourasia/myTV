@@ -93,7 +93,7 @@ final class AppDI {
             haptics: haptics
         )
     }
-    
+
     func getHaptics() -> HapticService {
         haptics
     }

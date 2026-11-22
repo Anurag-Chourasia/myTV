@@ -8,7 +8,7 @@
 
 extension Stream {
     init(dto: StreamDTO) {
-        self.id = dto.url              
+        self.id = dto.url
         self.title = dto.title
         self.url = dto.url
         self.quality = dto.quality

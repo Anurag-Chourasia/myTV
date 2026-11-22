@@ -384,7 +384,13 @@ private extension ChannelListView {
 
                 // MARK: - Appearance
                 Section(viewModel.appearanceSectionTitle) {
-                    AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { viewModel.selectionHaptic() })
+                    AppearanceMenu(
+                        title: String(\MyTVStrings.appearanceMenuTitle),
+                        systemTitle: String(\MyTVStrings.appearanceSystem),
+                        lightTitle: String(\MyTVStrings.appearanceLight),
+                        darkTitle: String(\MyTVStrings.appearanceDark),
+                        onSelection: { viewModel.selectionHaptic() }
+                    )
                 }
 
                 Divider()
@@ -405,7 +411,6 @@ private extension ChannelListView {
                     .accessibilityHint(\.a11yMenuOptionsHint)
             }
         }
-       
     }
 
     // MARK: - Menu Label Helper
