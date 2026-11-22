@@ -1,6 +1,7 @@
 import DesignTokensKit
 import LocalizationKit
 import UIComponentsKit
+import AuthKit
 //
 //  ChannelListView.swift
 //  myTV
@@ -17,11 +18,16 @@ struct ChannelListView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.scenePhase) private var scenePhase
     @State private var developerPresented = false
+    @State private var showingUserSettings = false
+    private let user: AuthUser?
+    private let sessionManager: SessionManager?
     private let makeStreamListViewModel: () -> StreamListViewModel
     private let makeAboutViewModel: () -> AboutViewModel
 
     init(
         viewModel: ChannelListViewModel,
+        user: AuthUser? = nil,
+        sessionManager: SessionManager? = nil,
         makeStreamListViewModel: @escaping () -> StreamListViewModel = {
             AppDI.shared.makeStreamListViewModel()
         },
@@ -30,6 +36,8 @@ struct ChannelListView: View {
         }
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        self.user = user
+        self.sessionManager = sessionManager
         self.makeStreamListViewModel = makeStreamListViewModel
         self.makeAboutViewModel = makeAboutViewModel
     }
@@ -77,6 +85,16 @@ struct ChannelListView: View {
                             }
                         }
                 }
+            }
+            .sheet(isPresented: $showingUserSettings) {
+                UserSettingsView(
+                    user: user,
+                    sessionManager: sessionManager,
+                    appName: viewModel.navigationTitle,
+                    disclaimerText: String(\MyTVStrings.aboutDisclaimerText),
+                    makeAboutViewModel: makeAboutViewModel,
+                    onDismiss: { showingUserSettings = false }
+                )
             }
             .alert(
                 viewModel.toolbarAlertTitle,
@@ -227,6 +245,17 @@ private extension ChannelListView {
     var menuBar: some ToolbarContent {
         ToolbarItem(placement: .navigationBarTrailing) {
             Menu {
+                // MARK: - User Settings
+                Section {
+                    Button { showingUserSettings = true } label: {
+                        Label(
+                            user?.email ?? String(\CommonStrings.accountTitle),
+                            \.personCropCircle
+                        )
+                    }
+                }
+
+                Divider()
 
                 // MARK: - Sort & Filter
                 Section(viewModel.sortAndFilterSectionTitle) {

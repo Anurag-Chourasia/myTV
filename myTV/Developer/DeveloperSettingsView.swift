@@ -61,9 +61,13 @@ struct TVLaunchView: View {
                 brand: .myTV,
                 backendFactory: AppDI.shared.authBackendFactory,
                 localizer: localization
-            ) { user, _ in
-                ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel(ownerID: user.id))
-                    .id(user.id)
+            ) { user, sessionManager in
+                ChannelListView(
+                    viewModel: AppDI.shared.makeChannelListViewModel(ownerID: user.id),
+                    user: user,
+                    sessionManager: sessionManager
+                )
+                .id(user.id)
             }
         } else {
             ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel())
