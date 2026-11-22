@@ -8,7 +8,6 @@ import UIComponentsKit
 //
 
 import Combine
-import UIKit
 import SwiftUI
 
 @MainActor

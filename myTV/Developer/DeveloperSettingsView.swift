@@ -57,7 +57,11 @@ struct TVLaunchView: View {
 
     @ViewBuilder private var appContent: some View {
         if authenticationEnabled {
-            AppAuthGate(brand: .myTV, localizer: localization) { user, _ in
+            AppAuthGate(
+                brand: .myTV,
+                backendFactory: AppDI.shared.authBackendFactory,
+                localizer: localization
+            ) { user, _ in
                 ChannelListView(viewModel: AppDI.shared.makeChannelListViewModel(ownerID: user.id))
                     .id(user.id)
             }
