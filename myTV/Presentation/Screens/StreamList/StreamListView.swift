@@ -93,7 +93,11 @@ private extension StreamListView {
             }
 
         case .empty:
-            EmptyStateMessageView(symbol: \.antennaRadiowavesLeftAndRightSlash, title: viewModel.emptyStateTitle, message: viewModel.emptyStateMessage)
+            EmptyStateMessageView(
+                symbol: \.antennaRadiowavesLeftAndRightSlash,
+                title: viewModel.emptyStateTitle,
+                message: viewModel.emptyStateMessage
+            )
                 .padding(.all, \.sixteen)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .accessibilityElement(children: .combine)

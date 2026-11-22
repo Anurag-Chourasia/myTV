@@ -20,7 +20,7 @@ final class ChannelListViewModel: ObservableObject {
         case empty
         case error(String)
     }
-    
+
     enum GridAlert: Identifiable {
         case autoList
         case gridUnavailable

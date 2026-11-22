@@ -293,7 +293,15 @@ struct DeveloperSettingsView: View {
                     .textInputAutocapitalization(.never).autocorrectionDisabled()
                 Text(\.channelDeveloperVersionNote)
             }
-            Section(String(\MyTVStrings.appearanceMenuTitle)) { AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { AppDI.shared.getHaptics().selection() }) }
+            Section(String(\MyTVStrings.appearanceMenuTitle)) {
+                AppearanceMenu(
+                    title: String(\MyTVStrings.appearanceMenuTitle),
+                    systemTitle: String(\MyTVStrings.appearanceSystem),
+                    lightTitle: String(\MyTVStrings.appearanceLight),
+                    darkTitle: String(\MyTVStrings.appearanceDark),
+                    onSelection: { AppDI.shared.getHaptics().selection() }
+                )
+            }
             Section(header: Text(\.developerPrivacySupport)) {
                 Link(destination: URL(string: "https://github.com/Anurag-Chourasia/myTV/blob/main/Docs/PrivacyInventory.md")!) {
                     Label(Text(\.developerPrivacyPolicy), \.handRaised)

@@ -100,7 +100,13 @@ private extension AboutView {
                 }
 
                 Section(viewModel.appearanceMenuSectionTitle) {
-                    AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { viewModel.selectionHaptic() })
+                    AppearanceMenu(
+                        title: String(\MyTVStrings.appearanceMenuTitle),
+                        systemTitle: String(\MyTVStrings.appearanceSystem),
+                        lightTitle: String(\MyTVStrings.appearanceLight),
+                        darkTitle: String(\MyTVStrings.appearanceDark),
+                        onSelection: { viewModel.selectionHaptic() }
+                    )
                 }
             } label: {
                 Image(\.line3Horizontal)

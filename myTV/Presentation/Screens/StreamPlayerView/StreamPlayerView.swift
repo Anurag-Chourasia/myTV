@@ -24,7 +24,7 @@ struct StreamPlayerView: UIViewControllerRepresentable {
         controller.exitsFullScreenWhenPlaybackEnds = true
         controller.showsPlaybackControls = true
         PlaybackAudioSession.activate()
-        
+
         return controller
     }
 

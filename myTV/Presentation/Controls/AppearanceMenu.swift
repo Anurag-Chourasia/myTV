@@ -20,7 +20,13 @@ struct ScreenTools: ViewModifier {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
-                        AppearanceMenu(title: String(\MyTVStrings.appearanceMenuTitle), systemTitle: String(\MyTVStrings.appearanceSystem), lightTitle: String(\MyTVStrings.appearanceLight), darkTitle: String(\MyTVStrings.appearanceDark), onSelection: { haptics.selection() })
+                        AppearanceMenu(
+                            title: String(\MyTVStrings.appearanceMenuTitle),
+                            systemTitle: String(\MyTVStrings.appearanceSystem),
+                            lightTitle: String(\MyTVStrings.appearanceLight),
+                            darkTitle: String(\MyTVStrings.appearanceDark),
+                            onSelection: { haptics.selection() }
+                        )
                         Button { developerPresented = true } label: {
                             Label(Text(\.knowYourDeveloper), \.personCropCircle)
                         }

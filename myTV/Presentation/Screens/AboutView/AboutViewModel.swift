@@ -19,7 +19,7 @@ final class AboutViewModel: ObservableObject {
     @AppStorage("channelLayout")
     private var storedLayoutRaw = ChannelLayout.list.rawValue
     @Published private(set) var layout: ChannelLayout = .list
-    
+
     enum GridAlert: Identifiable {
         case autoList
         case gridUnavailable
@@ -35,7 +35,7 @@ final class AboutViewModel: ObservableObject {
     private let reachability: ReachabilityService
     private let haptics: HapticService
     private var cancellables = Set<AnyCancellable>()
-    
+
     var offlineBannerViewModel: OfflineBannerViewModel {
         .default
     }
