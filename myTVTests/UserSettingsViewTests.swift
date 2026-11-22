@@ -128,4 +128,64 @@ final class UserSettingsViewTests: XCTestCase {
         XCTAssertTrue(backend.deleteAccountCalled)
         XCTAssertNil(backend.signedInUser)
     }
+
+    func testUserSettingsAboutSectionRenders() {
+        var profileOpened = false
+        let section = UserSettingsAboutSection(
+            appName: "myTV",
+            version: "1.0",
+            build: "1",
+            disclaimerText: "Disclaimer",
+            onOpenDeveloperProfile: { profileOpened = true }
+        )
+
+        let hosting = UIHostingController(rootView: section)
+        hosting.view.frame = CGRect(x: 0, y: 0, width: 390, height: 300)
+        hosting.view.layoutIfNeeded()
+
+        XCTAssertNotNil(hosting.view)
+        XCTAssertFalse(profileOpened)
+    }
+
+    func testUserSettingsAccountSectionRenders() {
+        var signOutCalled = false
+        var deleteCalled = false
+        let user = AuthUser(id: UUID(), email: "test@example.com")
+
+        let section = UserSettingsAccountSection(
+            user: user,
+            isLoading: false,
+            onSignOut: { signOutCalled = true },
+            onDeleteAccount: { deleteCalled = true }
+        )
+
+        let hosting = UIHostingController(rootView: section)
+        hosting.view.frame = CGRect(x: 0, y: 0, width: 390, height: 300)
+        hosting.view.layoutIfNeeded()
+
+        XCTAssertNotNil(hosting.view)
+        XCTAssertFalse(signOutCalled)
+        XCTAssertFalse(deleteCalled)
+    }
+
+    func testDeveloperSettingsViewRendersWithShowcaseScenario() {
+        UserDefaults.standard.set("stub", forKey: "developer.source")
+        UserDefaults.standard.set("showcase", forKey: "developer.scenario")
+        defer {
+            UserDefaults.standard.removeObject(forKey: "developer.source")
+            UserDefaults.standard.removeObject(forKey: "developer.scenario")
+        }
+
+        var continued = false
+        let view = DeveloperSettingsView(cacheSummaryOverride: "Cache: 10 items") {
+            continued = true
+        }
+
+        let hosting = UIHostingController(rootView: view)
+        hosting.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
+        hosting.view.layoutIfNeeded()
+
+        XCTAssertNotNil(hosting.view)
+        XCTAssertFalse(continued)
+    }
 }

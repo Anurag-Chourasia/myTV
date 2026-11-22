@@ -45,7 +45,7 @@ struct UserSettingsView: View {
             .navigationTitle(String(\CommonStrings.accountTitle))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Button(String(\CommonStrings.done)) {
                         onDismiss()
                     }
@@ -70,7 +70,7 @@ struct UserSettingsView: View {
                 NavigationStack {
                     AboutView(viewModel: makeAboutViewModel())
                         .toolbar {
-                            ToolbarItem(placement: .navigationBarLeading) {
+                            ToolbarItem(placement: .topBarLeading) {
                                 Button {
                                     showingDeveloperProfile = false
                                 } label: {
