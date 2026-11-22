@@ -259,6 +259,7 @@ struct DeveloperSettingsView: View {
                 }
                 if source == "stub" {
                     Picker(String(\.developerScenario), selection: $scenario) {
+                        Text(\.developerPresetShowcase).tag("showcase")
                         Text(\.developerScenarioSuccess).tag("success")
                         Text(\.developerScenarioEmpty).tag("empty")
                         Text(\.developerScenarioOffline).tag("offline")
@@ -307,15 +308,19 @@ struct DeveloperSettingsView: View {
                 )
             }
             Section(header: Text(\.developerPrivacySupport)) {
-                Link(destination: URL(string: "https://github.com/Anurag-Chourasia/myTV/blob/main/Docs/PrivacyInventory.md")!) {
-                    Label(Text(\.developerPrivacyPolicy), \.handRaised)
+                if let privacyURL = URL(string: "https://github.com/Anurag-Chourasia/myTV/blob/main/Docs/PrivacyInventory.md") {
+                    Link(destination: privacyURL) {
+                        Label(Text(\.developerPrivacyPolicy), \.handRaised)
+                    }
+                    .accessibilityIdentifier(.developerPrivacyPolicy)
                 }
-                .accessibilityIdentifier(.developerPrivacyPolicy)
 
-                Link(destination: URL(string: "mailto:anuragchourasiaios@gmail.com")!) {
-                    Label(Text(\.developerSupport), \.envelope)
+                if let supportURL = URL(string: "mailto:anuragchourasiaios@gmail.com") {
+                    Link(destination: supportURL) {
+                        Label(Text(\.developerSupport), \.envelope)
+                    }
+                    .accessibilityIdentifier(.developerSupport)
                 }
-                .accessibilityIdentifier(.developerSupport)
 
                 Text(\.channelDeveloperPrivacy)
                     .font(\.caption)
@@ -331,7 +336,6 @@ struct DeveloperSettingsView: View {
             }
         }
         .navigationTitle(Text(\.developerSettingsTitle))
-        .navigationBarTitleDisplayMode(.inline)
         .navigationBarTitleDisplayMode(.inline)
         .tint(\.primary)
         .toggleStyle(SwitchToggleStyle(tint: ColorTheme.default.green))

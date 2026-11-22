@@ -17,8 +17,14 @@ struct ChannelListView: View {
     @StateObject private var viewModel: ChannelListViewModel
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.scenePhase) private var scenePhase
-    @State private var developerPresented = false
-    @State private var showingUserSettings = false
+    private enum ActiveSheet: Identifiable {
+        case about
+        case userSettings
+
+        var id: Int { hashValue }
+    }
+
+    @State private var activeSheet: ActiveSheet?
     private let user: AuthUser?
     private let sessionManager: SessionManager?
     private let makeStreamListViewModel: () -> StreamListViewModel
@@ -75,26 +81,28 @@ struct ChannelListView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { menuBar }
             .tint(\.action)
-            .sheet(isPresented: $developerPresented) {
-                NavigationStack {
-                    AboutView(viewModel: makeAboutViewModel())
-                        .toolbar {
-                            ToolbarItem(placement: .navigationBarLeading) {
-                                Button { developerPresented = false } label: { Image(\.close) }
-                                    .accessibilityLabel(\.developerCloseProfile)
+            .sheet(item: $activeSheet) { sheet in
+                switch sheet {
+                case .about:
+                    NavigationStack {
+                        AboutView(viewModel: makeAboutViewModel())
+                            .toolbar {
+                                ToolbarItem(placement: .topBarLeading) {
+                                    Button { activeSheet = nil } label: { Image(\.close) }
+                                        .accessibilityLabel(\.developerCloseProfile)
+                                }
                             }
-                        }
+                    }
+                case .userSettings:
+                    UserSettingsView(
+                        user: user,
+                        sessionManager: sessionManager,
+                        appName: viewModel.navigationTitle,
+                        disclaimerText: String(\MyTVStrings.aboutDisclaimerText),
+                        makeAboutViewModel: makeAboutViewModel,
+                        onDismiss: { activeSheet = nil }
+                    )
                 }
-            }
-            .sheet(isPresented: $showingUserSettings) {
-                UserSettingsView(
-                    user: user,
-                    sessionManager: sessionManager,
-                    appName: viewModel.navigationTitle,
-                    disclaimerText: String(\MyTVStrings.aboutDisclaimerText),
-                    makeAboutViewModel: makeAboutViewModel,
-                    onDismiss: { showingUserSettings = false }
-                )
             }
             .alert(
                 viewModel.toolbarAlertTitle,
@@ -247,7 +255,7 @@ private extension ChannelListView {
             Menu {
                 // MARK: - User Settings
                 Section {
-                    Button { showingUserSettings = true } label: {
+                    Button { activeSheet = .userSettings } label: {
                         Label(
                             user?.email ?? String(\CommonStrings.accountTitle),
                             \.personCropCircle
@@ -426,7 +434,7 @@ private extension ChannelListView {
 
                 // MARK: - About
                 Section {
-                    Button { developerPresented = true } label: {
+                    Button { activeSheet = .about } label: {
                         Label(
                             viewModel.aboutSectionTitle,
                             \.infoCircle
