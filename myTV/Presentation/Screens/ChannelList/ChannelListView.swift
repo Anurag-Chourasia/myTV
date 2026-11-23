@@ -96,7 +96,7 @@ struct ChannelListView: View {
                     }
                 case .userSettings:
                     UserSettingsSheet(
-                        user: user,
+                        user: resolvedUser,
                         isLoading: sessionManager?.isLoading ?? false,
                         aboutConfiguration: UserSettingsAboutConfiguration(
                             appName: viewModel.navigationTitle,
@@ -105,6 +105,11 @@ struct ChannelListView: View {
                             disclaimerTitle: String(\MyTVStrings.aboutDisclaimerTitle),
                             disclaimerText: String(\MyTVStrings.aboutDisclaimerText)
                         ),
+                        currentAppScheme: "mytv",
+                        onSaveProfile: { first, last, phone in
+                            Task { await sessionManager?.updateProfile(firstName: first, lastName: last, phone: phone) }
+                        },
+                        onUpdatePassword: { await sessionManager?.updatePassword($0) },
                         onSignOut: {
                             Task {
                                 await sessionManager?.signOut()
@@ -487,6 +492,10 @@ private extension ChannelListView {
             title,
             isSelected ? \.checkmark : symbol
         )
+    }
+
+    private var resolvedUser: AuthUser? {
+        if case .authenticated(let u) = sessionManager?.state { return u } else { return user }
     }
 }
 
