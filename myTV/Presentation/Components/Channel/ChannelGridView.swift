@@ -43,8 +43,7 @@ struct ChannelGridView: View {
 
     private var themedMetrics: CatalogTileMetrics {
         var metrics = CatalogTileMetrics.compactGrid(accessibility: dynamicTypeSize.isAccessibilitySize)
-        metrics.surface.cornerRadius = LayoutPreset.compact.cardRadius
-        metrics.surface.borderWidth = LayoutPreset.compact.borderWidth
+        metrics.surface = LayoutPreset.compact.card
         return metrics
     }
 

@@ -6,11 +6,19 @@
 //
 
 import SwiftUI
+import DesignTokensKit
 
 struct SkeletonListView: View {
     var body: some View {
-        List(0..<4, id: \.self) { _ in
-            SkeletonRow()
+        ScrollView {
+            LazyVStack(spacing: LayoutPreset.compact.itemSpacing) {
+                ForEach(0..<6, id: \.self) { _ in
+                    SkeletonRow()
+                }
+            }
+            .padding(.all, LayoutPreset.compact.screenInset)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(\.background)
     }
 }

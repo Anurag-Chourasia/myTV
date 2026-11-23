@@ -18,14 +18,18 @@ struct ChannelRowView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        CatalogTile(layout: .list, metrics: .plainRow) {
+        CatalogTile(layout: .list, metrics: themedMetrics,
+                    colors: SemanticColors(surface: \.surface, border: \.border)) {
             ChannelLogo(url: channel.logoURL)
         } details: {
             VStack(alignment: .leading, spacing: \.four) {
+                let titleLimit = dynamicTypeSize.isAccessibilitySize
+                    ? CatalogMetrics.accessibleTitleLines : CatalogMetrics.listTitleLines
                 Text(channel.name)
                     .font(\.headline)
+                    .foregroundColor(\.primary)
                     .multilineTextAlignment(.leading)
-                    .lineLimit(dynamicTypeSize.isAccessibilitySize ? CatalogMetrics.accessibleTitleLines : CatalogMetrics.listTitleLines)
+                    .lineLimit(titleLimit)
                 if channel.hasStreams == false {
                     Text(\.channelStreamsUnavailable)
                         .font(\.caption)
@@ -38,5 +42,11 @@ struct ChannelRowView: View {
         } accessory: {
             FavoriteButton(isFavorite: isFavorite, action: onFavoriteToggle)
         }
+    }
+
+    private var themedMetrics: CatalogTileMetrics {
+        var metrics = CatalogTileMetrics.plainRow
+        metrics.surface = LayoutPreset.compact.card
+        return metrics
     }
 }

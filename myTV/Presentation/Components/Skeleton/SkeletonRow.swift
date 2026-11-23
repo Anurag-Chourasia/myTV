@@ -19,6 +19,11 @@ struct SkeletonRow: View {
                 .fill(\.gray, opacity: \.p0_2)
                 .frame(width: \.p80, height: \.p12)
         }
+        .padding(LayoutPreset.compact.cardPadding)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(\.surface)
+        .cornerRadius(\.twelve)
+        .overlayRoundedStroke(cornerRadius: \.twelve, color: \.border, lineWidth: \.one)
         .redacted(reason: .placeholder)
     }
 }

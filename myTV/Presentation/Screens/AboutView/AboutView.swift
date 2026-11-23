@@ -48,7 +48,12 @@ struct AboutView: View {
                 menuBar
             }
         }
-        .background(\.grouped)
+        .background(\.background)
+        .applySheetPresentationBackground()
+        #if os(iOS)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(BrandPalette.current.background, for: .navigationBar)
+        #endif
         .tint(\.action)
         .alert(
             viewModel.gridAlertTitle,
@@ -131,5 +136,22 @@ private extension AboutView {
         labels.errorMessage = viewModel.invalidLinkAlertMessage
         labels.okay = viewModel.invalidLinkAlertOk
         return labels
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func applySheetPresentationBackground() -> some View {
+        #if os(iOS)
+        if #available(iOS 16.4, *) {
+            self
+                .presentationBackground(BrandPalette.current.background)
+                .presentationDragIndicator(.visible)
+        } else {
+            self
+        }
+        #else
+        self
+        #endif
     }
 }

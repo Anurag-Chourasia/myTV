@@ -128,6 +128,7 @@ final class ChannelListViewModel: ObservableObject {
 
     // MARK: - Load
     func load() async {
+        guard channels.isEmpty else { return }
         state = .loading
         do {
             let result = try await fetchChannels.execute()

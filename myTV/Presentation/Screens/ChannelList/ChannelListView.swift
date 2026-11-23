@@ -107,7 +107,15 @@ struct ChannelListView: View {
                         ),
                         currentAppScheme: "mytv",
                         onSaveProfile: { email, first, last, phone in
-                            Task { await sessionManager?.updateProfile(email: email, firstName: first, lastName: last, phone: phone) }
+                            Task {
+                                await sessionManager?.updateProfile(
+                                    email: email, firstName: first, lastName: last, phone: phone
+                                )
+                            }
+                        },
+                        onSendOTP: { try await sessionManager?.sendPasswordResetOTP() },
+                        onChangePassword: { current, new, otp in
+                            await sessionManager?.changePassword(currentPassword: current, newPassword: new, otpCode: otp)
                         },
                         onUpdatePassword: { await sessionManager?.updatePassword($0) },
                         onSignOut: {
@@ -207,9 +215,10 @@ private extension ChannelListView {
     }
 
     var channelList: some View {
-        List {
-            ForEach(viewModel.groupedResult, id: \.0) { section, channels in
-                Section(viewModel.sectionTitle(for: section)) {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: LayoutPreset.compact.itemSpacing) {
+                ForEach(viewModel.groupedResult, id: \.0) { section, channels in
+                    ChannelSectionHeader(title: viewModel.sectionTitle(for: section))
                     ForEach(channels) { channel in
                         NavigationLink {
                             StreamListView(
@@ -226,10 +235,12 @@ private extension ChannelListView {
                                 }
                             )
                         }
+                        .buttonStyle(.plain)
                         .accessibilityHint(\.a11yChannelOpenHint)
                     }
                 }
             }
+            .padding(.all, LayoutPreset.compact.screenInset)
         }
     }
 
@@ -255,6 +266,7 @@ private extension ChannelListView {
                                     }
                                 )
                             }
+                            .buttonStyle(.plain)
                             .accessibilityHint(\.a11yChannelOpenHint)
                         }
                     }
@@ -278,10 +290,7 @@ private extension ChannelListView {
                 // MARK: - User Settings
                 Section {
                     Button { activeSheet = .userSettings } label: {
-                        Label(
-                            user?.email ?? String(\CommonStrings.accountTitle),
-                            \.personCropCircle
-                        )
+                        Label(String(\CommonStrings.authSectionProfile), \.personCropCircle)
                     }
                 }
 

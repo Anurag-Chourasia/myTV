@@ -25,6 +25,12 @@ struct StreamListView: View {
                 LoadingOverlayView(message: viewModel.loadingViewModel.message)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(\.background)
+        #if os(iOS)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarBackground(BrandPalette.current.background, for: .navigationBar)
+        #endif
     }
 
     private var content: some View {
@@ -34,6 +40,7 @@ struct StreamListView: View {
             }
             streamBody
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationTitle(channelName)
         .screenTools()
         .navigationBarTitleDisplayMode(.inline)
@@ -131,7 +138,10 @@ private extension StreamListView {
             .accessibilityHint(\.a11yStreamPlayHint)
             .accessibilityLabel(Text(stream.title))
             .accessibilityValue(Text(stream.quality ?? ""))
+            .listRowBackground(Color.clear)
         }
+        .scrollContentBackground(.hidden)
+        .background(\.background)
         .refreshable {
             await viewModel.reload(channelId: channelId)
         }

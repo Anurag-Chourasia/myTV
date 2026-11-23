@@ -45,17 +45,24 @@ final class AppDI {
         )
     }
 
+    private var cachedChannelListViewModel: ChannelListViewModel?
+    private var cachedOwnerID: UUID?
+    private var hasActiveCache = false
+
     @MainActor
     func makeChannelListViewModel(
         favorites: (any FavoriteChannelStoring)? = nil,
         ownerID: UUID? = nil
     ) -> ChannelListViewModel {
+        if favorites == nil, let cached = cachedChannelListViewModel, cachedOwnerID == ownerID, hasActiveCache {
+            return cached
+        }
         let repository = makeChannelRepository()
         let fetchChannels = DefaultFetchChannelsUseCase(repository: repository)
         let filterChannels = DefaultFilterChannelsUseCase()
         let manageCache = DefaultManageChannelCacheUseCase(repository: repository)
         let resolvedFavorites = favorites ?? FavoriteChannelStore(ownerID: ownerID)
-        return ChannelListViewModel(
+        let vm = ChannelListViewModel(
             fetchChannels: fetchChannels,
             filterChannels: filterChannels,
             manageCache: manageCache,
@@ -64,6 +71,12 @@ final class AppDI {
             favorites: resolvedFavorites,
             imageCache: imageCache
         )
+        if favorites == nil {
+            cachedChannelListViewModel = vm
+            cachedOwnerID = ownerID
+            hasActiveCache = true
+        }
+        return vm
     }
 
     @MainActor
