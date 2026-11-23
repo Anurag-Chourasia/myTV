@@ -1,6 +1,7 @@
 import XCTest
 import SwiftUI
 @testable import AuthKit
+@testable import AuthKitUI
 @testable import myTV
 
 @MainActor
@@ -55,14 +56,21 @@ final class UserSettingsViewTests: XCTestCase {
         let session = SessionManager(authService: AuthService(backend: backend))
         var dismissed = false
 
-        let view = UserSettingsView(
+        let view = UserSettingsSheet(
             user: user,
-            sessionManager: session,
-            appName: "myTV",
-            disclaimerText: "Streaming disclaimer",
-            makeAboutViewModel: { AppDI.shared.makeAboutViewModel() },
+            isLoading: session.isLoading,
+            aboutConfiguration: UserSettingsAboutConfiguration(
+                appName: "myTV",
+                version: "1.0",
+                build: "1",
+                disclaimerText: "Streaming disclaimer"
+            ),
+            onSignOut: {},
+            onDeleteAccount: {},
             onDismiss: { dismissed = true }
-        )
+        ) {
+            EmptyView()
+        }
 
         let hosting = UIHostingController(rootView: view)
         hosting.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
@@ -76,14 +84,21 @@ final class UserSettingsViewTests: XCTestCase {
     func testUserSettingsViewRendersInGuestMode() {
         var dismissed = false
 
-        let view = UserSettingsView(
+        let view = UserSettingsSheet(
             user: nil,
-            sessionManager: nil,
-            appName: "myTV",
-            disclaimerText: "Streaming disclaimer",
-            makeAboutViewModel: { AppDI.shared.makeAboutViewModel() },
+            isLoading: false,
+            aboutConfiguration: UserSettingsAboutConfiguration(
+                appName: "myTV",
+                version: "1.0",
+                build: "1",
+                disclaimerText: "Streaming disclaimer"
+            ),
+            onSignOut: {},
+            onDeleteAccount: {},
             onDismiss: { dismissed = true }
-        )
+        ) {
+            EmptyView()
+        }
 
         let hosting = UIHostingController(rootView: view)
         hosting.view.frame = CGRect(x: 0, y: 0, width: 390, height: 844)
@@ -131,13 +146,15 @@ final class UserSettingsViewTests: XCTestCase {
 
     func testUserSettingsAboutSectionRenders() {
         var profileOpened = false
-        let section = UserSettingsAboutSection(
+        let config = UserSettingsAboutConfiguration(
             appName: "myTV",
             version: "1.0",
             build: "1",
-            disclaimerText: "Disclaimer",
+            disclaimerTitle: "Disclaimer",
+            disclaimerText: "Streaming disclaimer",
             onOpenDeveloperProfile: { profileOpened = true }
         )
+        let section = UserSettingsAboutSection(configuration: config)
 
         let hosting = UIHostingController(rootView: section)
         hosting.view.frame = CGRect(x: 0, y: 0, width: 390, height: 300)

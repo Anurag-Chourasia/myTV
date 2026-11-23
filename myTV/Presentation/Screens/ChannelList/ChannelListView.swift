@@ -2,6 +2,7 @@ import DesignTokensKit
 import LocalizationKit
 import UIComponentsKit
 import AuthKit
+import AuthKitUI
 //
 //  ChannelListView.swift
 //  myTV
@@ -94,14 +95,41 @@ struct ChannelListView: View {
                             }
                     }
                 case .userSettings:
-                    UserSettingsView(
+                    UserSettingsSheet(
                         user: user,
-                        sessionManager: sessionManager,
-                        appName: viewModel.navigationTitle,
-                        disclaimerText: String(\MyTVStrings.aboutDisclaimerText),
-                        makeAboutViewModel: makeAboutViewModel,
+                        isLoading: sessionManager?.isLoading ?? false,
+                        aboutConfiguration: UserSettingsAboutConfiguration(
+                            appName: viewModel.navigationTitle,
+                            version: AppRuntime.version,
+                            build: AppRuntime.build,
+                            disclaimerTitle: String(\MyTVStrings.aboutDisclaimerTitle),
+                            disclaimerText: String(\MyTVStrings.aboutDisclaimerText),
+                            developerProfileTitle: String(\MyTVStrings.aboutTitle)
+                        ),
+                        onSignOut: {
+                            Task {
+                                await sessionManager?.signOut()
+                                activeSheet = nil
+                            }
+                        },
+                        onDeleteAccount: {
+                            Task {
+                                await sessionManager?.deleteAccount()
+                                activeSheet = nil
+                            }
+                        },
                         onDismiss: { activeSheet = nil }
-                    )
+                    ) {
+                        NavigationStack {
+                            AboutView(viewModel: makeAboutViewModel())
+                                .toolbar {
+                                    ToolbarItem(placement: .topBarLeading) {
+                                        Button { activeSheet = nil } label: { Image(\.close) }
+                                            .accessibilityLabel(\.developerCloseProfile)
+                                    }
+                                }
+                        }
+                    }
                 }
             }
             .alert(
