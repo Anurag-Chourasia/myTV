@@ -103,8 +103,7 @@ struct ChannelListView: View {
                             version: AppRuntime.version,
                             build: AppRuntime.build,
                             disclaimerTitle: String(\MyTVStrings.aboutDisclaimerTitle),
-                            disclaimerText: String(\MyTVStrings.aboutDisclaimerText),
-                            developerProfileTitle: String(\MyTVStrings.aboutTitle)
+                            disclaimerText: String(\MyTVStrings.aboutDisclaimerText)
                         ),
                         onSignOut: {
                             Task {
@@ -119,17 +118,7 @@ struct ChannelListView: View {
                             }
                         },
                         onDismiss: { activeSheet = nil }
-                    ) {
-                        NavigationStack {
-                            AboutView(viewModel: makeAboutViewModel())
-                                .toolbar {
-                                    ToolbarItem(placement: .topBarLeading) {
-                                        Button { activeSheet = nil } label: { Image(\.close) }
-                                            .accessibilityLabel(\.developerCloseProfile)
-                                    }
-                                }
-                        }
-                    }
+                    )
                 }
             }
             .alert(
