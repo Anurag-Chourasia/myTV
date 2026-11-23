@@ -51,7 +51,8 @@ xcrun xcodebuild test -project myTV.xcodeproj -scheme myTV \
     -only-testing:myTVTests/ChannelAvailabilityTests \
     -only-testing:myTVTests/StreamPlaybackTests \
     -only-testing:myTVTests/AboutViewModelTests \
-    -only-testing:myTVTests/ComponentViewModelsTests
+    -only-testing:myTVTests/ComponentViewModelsTests \
+    -only-testing:myTVTests/UserSettingsViewTests
 
 python3 Scripts/check_coverage.py "$result" --governance
 

@@ -10,6 +10,7 @@ with tempfile.TemporaryDirectory(prefix='mytv-favorites-') as directory:
     package = Path(directory)
     (package / 'Sources/Favorites').mkdir(parents=True)
     (package / 'Tests/FavoritesTests').mkdir(parents=True)
+    shutil.copy2(root / 'myTV/Domain/Repositories/FavoriteChannelStoring.swift', package / 'Sources/Favorites/FavoriteChannelStoring.swift')
     shutil.copy2(root / 'myTV/Data/Cache/FavoriteChannelStore.swift', package / 'Sources/Favorites/Store.swift')
     (package / 'Package.swift').write_text('''// swift-tools-version: 6.0
 import PackageDescription
