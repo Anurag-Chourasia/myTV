@@ -489,6 +489,7 @@ final class ChannelListViewModel: ObservableObject {
 private extension ChannelListViewModel {
 
     func observeReachability() {
+        showOfflineBanner = !reachability.isOnline
         reachability.isOnlinePublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] online in

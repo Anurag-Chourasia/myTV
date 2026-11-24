@@ -19,7 +19,7 @@ struct ChannelLogo: View {
         CachedAsyncImage(url: url) {
             ZStack {
                 Rectangle()
-                    .fill(\.grouped)
+                    .fill(\.surface)
 
                 Image(\.tv)
                     .foregroundColor(\.secondary)
@@ -27,7 +27,7 @@ struct ChannelLogo: View {
         }
         .scaledToFit()
         .frame(width: width, height: height)
-        .background(\.grouped)
+        .background(\.clear)
         .cornerRadius(\.six)
         .contentShape(Rectangle())
         .highPriorityGesture(LongPressGesture().onEnded { _ in

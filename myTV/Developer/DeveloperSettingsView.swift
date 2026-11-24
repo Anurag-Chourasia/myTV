@@ -44,6 +44,7 @@ struct TVLaunchView: View {
                     }
             }
         }
+        .background(\.background)
         .environment(\.layoutDirection, localization.isRightToLeft ? .rightToLeft : .leftToRight)
         .background(DebugSettingsPresenter(isLaunchSettingsVisible: showingLaunchSettings) {
             authenticationEnabled = AppRuntime.authenticationEnabled
@@ -51,6 +52,7 @@ struct TVLaunchView: View {
         })
         #else
         appContent
+            .background(\.background)
             .environment(\.layoutDirection, localization.isRightToLeft ? .rightToLeft : .leftToRight)
         #endif
     }

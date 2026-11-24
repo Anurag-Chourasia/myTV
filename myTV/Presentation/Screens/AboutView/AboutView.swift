@@ -26,99 +26,69 @@ struct AboutView: View {
 
     // MARK: - Body
     var body: some View {
-        Group {
-            VStack(spacing: \.zero) {
-
-                if viewModel.showOfflineBanner {
-                    OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
-                }
-
-                DeveloperProfileView(
-                    app: DeveloperAppInfo(name: viewModel.appName,
-                                          version: AppRuntime.version,
-                                          build: AppRuntime.build,
-                                          disclaimer: viewModel.disclaimerText),
-                    layout: viewModel.layout == .grid ? .grid : .list,
-                    labels: profileLabels
+        content
+            .background(\.background)
+            .applyModalSheetStyle()
+            #if os(iOS)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(BrandPalette.current.background, for: .navigationBar)
+            #endif
+            .tint(\.action)
+            .alert(
+                viewModel.gridAlertTitle,
+                isPresented: Binding(
+                    get: { viewModel.gridAlert != nil },
+                    set: { if !$0 { viewModel.clearGridAlert() } }
                 )
+            ) {
+                Button(viewModel.gridAlertOk, role: .cancel) {}
+            } message: {
+                Text(viewModel.gridAlertMessage)
             }
-            .navigationTitle(viewModel.navigationTitle)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                menuBar
-            }
-        }
-        .background(\.background)
-        .applySheetPresentationBackground()
-        #if os(iOS)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarBackground(BrandPalette.current.background, for: .navigationBar)
-        #endif
-        .tint(\.action)
-        .alert(
-            viewModel.gridAlertTitle,
-            isPresented: Binding(
-                get: { viewModel.gridAlert != nil },
-                set: { if !$0 { viewModel.clearGridAlert() } }
-            )
-        ) {
-            Button(viewModel.gridAlertOk, role: .cancel) {}
-        } message: {
-            Text(viewModel.gridAlertMessage)
-        }
-        .onAppear {
-            viewModel.refreshAccessibilityLayoutState(
-                isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
-            )
-        }
-        .onChange(of: dynamicTypeSize) { _ in
-            viewModel.refreshAccessibilityLayoutState(
-                isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
-            )
-        }
-        .onChange(of: scenePhase) { phase in
-            guard phase == .active else { return }
-            Task { @MainActor in
-                await Task.yield()
+            .onAppear {
                 viewModel.refreshAccessibilityLayoutState(
                     isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
                 )
             }
-        }
-    }
-}
-
-// MARK: - Toolbar
-private extension AboutView {
-    var menuBar: some ToolbarContent {
-        ToolbarItem(placement: .navigationBarTrailing) {
-            Menu {
-                Section(viewModel.layoutMenuSectionTitle) {
-                    LayoutSwitchMenu(
-                        selectedLayout: viewModel.layout,
-                        onSelectLayout: viewModel.setLayout,
-                        onGridUnavailable: viewModel.handleGridUnavailable,
-                        isAccessibilitySize: dynamicTypeSize.isAccessibilitySize,
-                        menuTitle: viewModel.layoutMenuTitle,
-                        titleForLayout: viewModel.title(for:)
-                    )
-                }
-
-                Section(viewModel.appearanceMenuSectionTitle) {
-                    AppearanceMenu(
-                        title: String(\MyTVStrings.appearanceMenuTitle),
-                        systemTitle: String(\MyTVStrings.appearanceSystem),
-                        lightTitle: String(\MyTVStrings.appearanceLight),
-                        darkTitle: String(\MyTVStrings.appearanceDark),
-                        onSelection: { viewModel.selectionHaptic() }
-                    )
-                }
-            } label: {
-                Image(\.line3Horizontal)
-                    .accessibilityLabel(\.a11yMenuOptions)
-                    .accessibilityHint(\.a11yMenuOptionsHint)
+            .onChange(of: dynamicTypeSize) { _ in
+                viewModel.refreshAccessibilityLayoutState(
+                    isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+                )
             }
+            .onChange(of: scenePhase) { phase in
+                guard phase == .active else { return }
+                Task { @MainActor in
+                    await Task.yield()
+                    viewModel.refreshAccessibilityLayoutState(
+                        isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
+                    )
+                }
+            }
+    }
+
+    private var appInfo: DeveloperAppInfo {
+        DeveloperAppInfo(
+            name: viewModel.appName,
+            version: AppRuntime.version,
+            build: AppRuntime.build,
+            disclaimer: viewModel.disclaimerText
+        )
+    }
+
+    private var content: some View {
+        VStack(spacing: \.zero) {
+            if viewModel.showOfflineBanner {
+                OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
+            }
+
+            DeveloperProfileView(
+                app: appInfo,
+                layout: viewModel.layout == .grid ? .grid : .list,
+                labels: profileLabels
+            )
         }
+        .navigationTitle(viewModel.navigationTitle)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -136,22 +106,5 @@ private extension AboutView {
         labels.errorMessage = viewModel.invalidLinkAlertMessage
         labels.okay = viewModel.invalidLinkAlertOk
         return labels
-    }
-}
-
-private extension View {
-    @ViewBuilder
-    func applySheetPresentationBackground() -> some View {
-        #if os(iOS)
-        if #available(iOS 16.4, *) {
-            self
-                .presentationBackground(BrandPalette.current.background)
-                .presentationDragIndicator(.visible)
-        } else {
-            self
-        }
-        #else
-        self
-        #endif
     }
 }

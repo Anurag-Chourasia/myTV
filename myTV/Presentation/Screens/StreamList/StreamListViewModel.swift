@@ -96,6 +96,7 @@ final class StreamListViewModel: ObservableObject {
 private extension StreamListViewModel {
 
     func observeReachability() {
+        showOfflineBanner = !reachability.isOnline
         reachability.isOnlinePublisher
             .receive(on: RunLoop.main)
             .sink { [weak self] isOnline in

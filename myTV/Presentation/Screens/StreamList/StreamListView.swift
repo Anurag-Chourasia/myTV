@@ -26,7 +26,7 @@ struct StreamListView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(\.background)
+        .background(\.background, ignoresSafeAreaEdges: .all)
         #if os(iOS)
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarBackground(BrandPalette.current.background, for: .navigationBar)
@@ -35,7 +35,7 @@ struct StreamListView: View {
 
     private var content: some View {
         VStack(spacing: \.zero) {
-            if viewModel.showOfflineBanner {
+            if viewModel.showOfflineBanner && !viewModel.streams.isEmpty {
                 OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
             }
             streamBody
@@ -93,21 +93,51 @@ private extension StreamListView {
             SkeletonListView()
 
         case .error(let message):
-            ErrorView(viewModel: .generic, message: message) {
-                Task {
-                    await viewModel.reload(channelId: channelId)
+            if viewModel.showOfflineBanner {
+                EmptyStateMessageView(
+                    symbol: \.wifiSlash,
+                    title: String(\CommonStrings.offline),
+                    message: String(\CommonStrings.offlineMessage)
+                ) {
+                    Button(String(\CommonStrings.retry)) {
+                        Task { await viewModel.reload(channelId: channelId) }
+                    }
+                }
+                .padding(.all, \.sixteen)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityElement(children: .combine)
+            } else {
+                ErrorView(viewModel: .generic, message: message) {
+                    Task {
+                        await viewModel.reload(channelId: channelId)
+                    }
                 }
             }
 
         case .empty:
-            EmptyStateMessageView(
-                symbol: \.antennaRadiowavesLeftAndRightSlash,
-                title: viewModel.emptyStateTitle,
-                message: viewModel.emptyStateMessage
-            )
+            if viewModel.showOfflineBanner {
+                EmptyStateMessageView(
+                    symbol: \.wifiSlash,
+                    title: String(\CommonStrings.offline),
+                    message: String(\CommonStrings.offlineMessage)
+                ) {
+                    Button(String(\CommonStrings.retry)) {
+                        Task { await viewModel.reload(channelId: channelId) }
+                    }
+                }
                 .padding(.all, \.sixteen)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .accessibilityElement(children: .combine)
+            } else {
+                EmptyStateMessageView(
+                    symbol: \.antennaRadiowavesLeftAndRightSlash,
+                    title: viewModel.emptyStateTitle,
+                    message: viewModel.emptyStateMessage
+                )
+                .padding(.all, \.sixteen)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityElement(children: .combine)
+            }
 
         case .loaded:
             streamList

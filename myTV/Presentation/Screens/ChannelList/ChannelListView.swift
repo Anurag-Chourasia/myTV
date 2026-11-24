@@ -52,7 +52,7 @@ struct ChannelListView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: \.zero) {
-                if viewModel.showOfflineBanner {
+                if viewModel.showOfflineBanner && !viewModel.channels.isEmpty {
                     OfflineBanner(viewModel: viewModel.offlineBannerViewModel)
                 }
 
@@ -64,7 +64,11 @@ struct ChannelListView: View {
                 )
 
                 content
-                    .task { await viewModel.load() }
+                    .task {
+                        if viewModel.channels.isEmpty {
+                            await viewModel.load()
+                        }
+                    }
                     .onAppear {
                         viewModel.refreshAccessibilityLayoutState(
                             isAccessibilitySize: dynamicTypeSize.isAccessibilitySize
@@ -115,7 +119,9 @@ struct ChannelListView: View {
                         },
                         onSendOTP: { try await sessionManager?.sendPasswordResetOTP() },
                         onChangePassword: { current, new, otp in
-                            await sessionManager?.changePassword(currentPassword: current, newPassword: new, otpCode: otp)
+                            try await sessionManager?.changePassword(
+                                currentPassword: current, newPassword: new, otpCode: otp
+                            )
                         },
                         onUpdatePassword: { await sessionManager?.updatePassword($0) },
                         onSignOut: {
@@ -179,15 +185,49 @@ private extension ChannelListView {
             SkeletonListView()
 
         case .error(let message):
-            ErrorView(viewModel: viewModel.errorViewModel, message: message) {
-                Task { await viewModel.load() }
-            }
-
-        case .empty:
-            EmptyStateMessageView(symbol: \.tvSlash, title: viewModel.channelEmptyTitle, message: viewModel.channelEmptyMessage)
+            if viewModel.showOfflineBanner {
+                EmptyStateMessageView(
+                    symbol: \.wifiSlash,
+                    title: String(\CommonStrings.offline),
+                    message: String(\CommonStrings.offlineMessage)
+                ) {
+                    Button(String(\CommonStrings.retry)) {
+                        Task { await viewModel.load() }
+                    }
+                }
                 .padding(.all, \.sixteen)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .accessibilityElement(children: .combine)
+            } else {
+                ErrorView(viewModel: viewModel.errorViewModel, message: message) {
+                    Task { await viewModel.load() }
+                }
+            }
+
+        case .empty:
+            if viewModel.showOfflineBanner {
+                EmptyStateMessageView(
+                    symbol: \.wifiSlash,
+                    title: String(\CommonStrings.offline),
+                    message: String(\CommonStrings.offlineMessage)
+                ) {
+                    Button(String(\CommonStrings.retry)) {
+                        Task { await viewModel.load() }
+                    }
+                }
+                .padding(.all, \.sixteen)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityElement(children: .combine)
+            } else {
+                EmptyStateMessageView(
+                    symbol: \.tvSlash,
+                    title: viewModel.channelEmptyTitle,
+                    message: viewModel.channelEmptyMessage
+                )
+                .padding(.all, \.sixteen)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .accessibilityElement(children: .combine)
+            }
 
         case .loaded:
             if viewModel.isFilteredEmpty {

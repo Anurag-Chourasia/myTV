@@ -47,6 +47,7 @@ final class AppDI {
 
     private var cachedChannelListViewModel: ChannelListViewModel?
     private var cachedOwnerID: UUID?
+    private var cachedScenario: String?
     private var hasActiveCache = false
 
     @MainActor
@@ -54,7 +55,9 @@ final class AppDI {
         favorites: (any FavoriteChannelStoring)? = nil,
         ownerID: UUID? = nil
     ) -> ChannelListViewModel {
-        if favorites == nil, let cached = cachedChannelListViewModel, cachedOwnerID == ownerID, hasActiveCache {
+        let isTesting = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+        if !isTesting, favorites == nil, let cached = cachedChannelListViewModel,
+           cachedOwnerID == ownerID, cachedScenario == AppRuntime.stubScenario, hasActiveCache {
             return cached
         }
         let repository = makeChannelRepository()
@@ -74,6 +77,7 @@ final class AppDI {
         if favorites == nil {
             cachedChannelListViewModel = vm
             cachedOwnerID = ownerID
+            cachedScenario = AppRuntime.stubScenario
             hasActiveCache = true
         }
         return vm

@@ -19,6 +19,6 @@ struct SkeletonListView: View {
             .padding(.all, LayoutPreset.compact.screenInset)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(\.background)
+        .background(\.background, ignoresSafeAreaEdges: .all)
     }
 }

@@ -57,7 +57,14 @@ final class DefaultFilterChannelsUseCase: FilterChannelsUseCase {
 
         switch grouping {
         case .name:
-            dict = Dictionary(grouping: filtered) { String($0.name.prefix(1)).uppercased() }
+            dict = Dictionary(grouping: filtered) { channel in
+                let clean = channel.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                if let first = clean.first, first.isLetter {
+                    return String(first).uppercased()
+                } else {
+                    return "#"
+                }
+            }
         case .country:
             dict = Dictionary(grouping: filtered) { $0.country }
         case .category:
@@ -75,7 +82,7 @@ final class DefaultFilterChannelsUseCase: FilterChannelsUseCase {
             case .category:
                 return CategoryDisplay.sortKey(for: key)
             case .name:
-                return key
+                return key == "#" ? (sectionSort == .ascending ? "zzz" : "") : key
             }
         }
 
