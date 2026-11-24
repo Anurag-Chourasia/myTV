@@ -20,7 +20,7 @@ struct ChannelRowView: View {
     var body: some View {
         CatalogTile(layout: .list, metrics: themedMetrics,
                     colors: SemanticColors(surface: \.surface, border: \.border)) {
-            ChannelLogo(url: channel.logoURL)
+            ChannelLogo(url: channel.logoURL, height: DesignMetric.p48, width: DesignMetric.p64)
         } details: {
             VStack(alignment: .leading, spacing: \.four) {
                 let titleLimit = dynamicTypeSize.isAccessibilitySize
@@ -38,7 +38,6 @@ struct ChannelRowView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
-            .padding(.horizontal, \.eight)
         } accessory: {
             FavoriteButton(isFavorite: isFavorite, action: onFavoriteToggle)
         }
@@ -47,6 +46,7 @@ struct ChannelRowView: View {
     private var themedMetrics: CatalogTileMetrics {
         var metrics = CatalogTileMetrics.plainRow
         metrics.surface = LayoutPreset.compact.card
+        metrics.spacing = LayoutPreset.compact.itemSpacing
         return metrics
     }
 }

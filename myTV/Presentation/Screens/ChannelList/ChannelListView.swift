@@ -80,10 +80,20 @@ struct ChannelListView: View {
                         )
                     }
             }
-            .background(\.background)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(\.background, ignoresSafeAreaEdges: .all)
+            .navigationDestination(for: Channel.self) { channel in
+                StreamListView(
+                    viewModel: makeStreamListViewModel(),
+                    channelId: channel.id,
+                    channelName: channel.name
+                )
+            }
             .searchable(text: $viewModel.searchText)
             .navigationTitle(viewModel.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(BrandPalette.current.background, for: .navigationBar)
             .toolbar { menuBar }
             .tint(\.action)
             .sheet(item: $activeSheet) { sheet in
@@ -260,13 +270,7 @@ private extension ChannelListView {
                 ForEach(viewModel.groupedResult, id: \.0) { section, channels in
                     ChannelSectionHeader(title: viewModel.sectionTitle(for: section))
                     ForEach(channels) { channel in
-                        NavigationLink {
-                            StreamListView(
-                                viewModel: makeStreamListViewModel(),
-                                channelId: channel.id,
-                                channelName: channel.name
-                            )
-                        } label: {
+                        NavigationLink(value: channel) {
                             ChannelRowView(
                                 channel: channel,
                                 isFavorite: viewModel.favoriteChannelIDs.contains(channel.id),
@@ -291,13 +295,7 @@ private extension ChannelListView {
                     ChannelSectionHeader(title: viewModel.sectionTitle(for: section))
                     LazyVGrid(columns: [.init(.adaptive(minimum: gridMinWidth), spacing: LayoutPreset.compact.itemSpacing)]) {
                         ForEach(channels) { channel in
-                            NavigationLink {
-                                StreamListView(
-                                    viewModel: makeStreamListViewModel(),
-                                    channelId: channel.id,
-                                    channelName: channel.name
-                                )
-                            } label: {
+                            NavigationLink(value: channel) {
                                 ChannelGridView(
                                     channel: channel,
                                     isFavorite: viewModel.favoriteChannelIDs.contains(channel.id),

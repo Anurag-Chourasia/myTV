@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Channel: Identifiable, Equatable {
+struct Channel: Identifiable, Equatable, Hashable {
     let id: String
     let name: String
     let country: String
@@ -19,5 +19,9 @@ struct Channel: Identifiable, Equatable {
 
     static func == (lhs: Channel, rhs: Channel) -> Bool {
         lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
