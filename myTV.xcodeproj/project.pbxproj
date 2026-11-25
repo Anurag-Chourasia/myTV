@@ -685,7 +685,7 @@
 			repositoryURL = "https://github.com/Anurag-Chourasia/AuthKit.git";
 			requirement = {
 				kind = exactVersion;
-				version = 0.19.1;
+				version = 0.20.0;
 			};
 		};
 		50ED332846C85C80EDC0293F /* XCRemoteSwiftPackageReference "UIComponentsKit" */ = {
